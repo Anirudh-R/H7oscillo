@@ -1,0 +1,6 @@
+measure.c:23:9:calcMeasure	8	static
+measure.c:57:9:calcVrms	8	static
+measure.c:76:9:calcVmax	0	static
+measure.c:94:9:calcVmin	0	static
+measure.c:112:9:calcVpp	4	static
+measure.c:127:9:calcVavg	0	static

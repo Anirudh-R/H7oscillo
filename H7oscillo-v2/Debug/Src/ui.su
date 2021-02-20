@@ -1,0 +1,8 @@
+ui.c:365:6:window_2_callback	0	static
+ui.c:460:6:window_4_callback	0	static
+ui.c:482:6:window_5_callback	16	static
+ui.c:330:6:window_1_callback	32	static
+ui.c:74:6:initUI	56	static
+ui.c:273:6:drawGrid	4	static
+ui.c:371:6:window_3_callback	32	static
+ui.c:301:6:voltsToStr	16	static

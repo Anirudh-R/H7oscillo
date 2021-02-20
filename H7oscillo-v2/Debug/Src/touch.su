@@ -1,0 +1,6 @@
+touch.c:21:6:TS_init	0	static
+touch.c:33:9:TS_DetectNumTouches	8	static
+touch.c:53:6:TS_GetXY	24	static
+touch.c:67:9:TS_GetGesture	0	static
+touch.c:82:9:TS_WriteSingle	0	static
+touch.c:92:9:TS_ReadSingle	0	static
