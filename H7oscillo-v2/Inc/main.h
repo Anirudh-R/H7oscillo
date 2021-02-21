@@ -29,6 +29,7 @@
 #include "stm32_assert.h"
 #endif /* USE_FULL_ASSERT */
 
+#include "arm_math.h"
 #include "inits.h"
 #include "params.h"
 #include "globals.h"

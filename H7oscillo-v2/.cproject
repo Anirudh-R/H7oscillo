@@ -39,7 +39,7 @@
 									<listOptionValue builtIn="false" value="../Inc"/>
 									<listOptionValue builtIn="false" value="C:\Users\Anirudh\STM32Cube\Repository\STM32Cube_FW_F7_V1.15.0/Drivers/CMSIS/Device/ST/STM32F7xx/Include"/>
 									<listOptionValue builtIn="false" value="C:\Users\Anirudh\STM32Cube\Repository\STM32Cube_FW_F7_V1.15.0/Drivers/STM32F7xx_HAL_Driver/Inc"/>
-									<listOptionValue builtIn="false" value="C:\Users\Anirudh\STM32Cube\Repository\STM32Cube_FW_F7_V1.15.0/Drivers/CMSIS/Include"/>
+									<listOptionValue builtIn="false" value="${cmsis_pack_root}\ARM\CMSIS\5.7.0\CMSIS\Include"/>
 									<listOptionValue builtIn="false" value="C:\Users\Anirudh\STM32Cube\Repository\STM32Cube_FW_F7_V1.15.0\Drivers\BSP\Components\ft5336"/>
 								</option>
 								<option id="com.atollic.truestudio.gcc.symbols.defined.656644738" name="Defined symbols" superClass="com.atollic.truestudio.gcc.symbols.defined" useByScannerDiscovery="false" valueType="definedSymbols">
@@ -62,6 +62,12 @@
 								<option id="com.atollic.truestudio.common_options.target.fpu.2016028164" name="Floating point" superClass="com.atollic.truestudio.common_options.target.fpu" useByScannerDiscovery="false" value="com.atollic.truestudio.common_options.target.fpu.hard" valueType="enumerated"/>
 								<option id="com.atollic.truestudio.common_options.target.fpucore.1063704271" name="FPU" superClass="com.atollic.truestudio.common_options.target.fpucore" useByScannerDiscovery="false" value="com.atollic.truestudio.common_options.target.fpucore.fpv5-sp-d16" valueType="enumerated"/>
 								<option id="com.atollic.truestudio.ld.misc.genmapfile.1920038268" name="Create map file" superClass="com.atollic.truestudio.ld.misc.genmapfile" useByScannerDiscovery="false"/>
+								<option id="com.atollic.truestudio.ld.libraries.list.730254038" name="Libraries" superClass="com.atollic.truestudio.ld.libraries.list" useByScannerDiscovery="false" valueType="libs">
+									<listOptionValue builtIn="false" value="arm_cortexM7lfsp_math"/>
+								</option>
+								<option id="com.atollic.truestudio.ld.libraries.searchpath.54452815" name="Library search path" superClass="com.atollic.truestudio.ld.libraries.searchpath" useByScannerDiscovery="false" valueType="libPaths">
+									<listOptionValue builtIn="false" value="&quot;${cmsis_pack_root}\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC&quot;"/>
+								</option>
 								<inputType id="com.atollic.truestudio.ld.input.1394214850" name="Input" superClass="com.atollic.truestudio.ld.input">
 									<additionalInput kind="additionalinputdependency" paths="$(USER_OBJS)"/>
 									<additionalInput kind="additionalinput" paths="$(LIBS)"/>
