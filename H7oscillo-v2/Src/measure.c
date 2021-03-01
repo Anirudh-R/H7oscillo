@@ -12,7 +12,22 @@
 
 Measure_TypeDef measure1, measure2, measure3, measure4;
 const char measParamTexts[][5] = {"None", "Freq", "Duty", "Vrms", "Vmax", "Vmin", "Vpp ", "Vavg"};
+static arm_rfft_fast_instance_f32 S_rfft_512;
+static arm_cfft_instance_f32 S_cfft_1024;
 
+static void czt(uint8_t* x, float32_t* oup, float32_t f1, float32_t f2, uint32_t M);
+
+
+/**
+  * @brief  Initialize the FFT instances.
+  * @param  None
+  * @retval None
+  */
+void measure_init(void)
+{
+	arm_rfft_fast_init_f32(&S_rfft_512, 512);
+	arm_cfft_init_f32(&S_cfft_1024, 1024);
+}
 
 /**
   * @brief  Calculate the given parameter of a particular channel signal.
@@ -20,7 +35,7 @@ const char measParamTexts[][5] = {"None", "Freq", "Duty", "Vrms", "Vmax", "Vmin"
   * @param  param: parameter to calculate
   * @retval calculated value
   */
-uint8_t calcMeasure(uint8_t channel, uint8_t param)
+float32_t calcMeasure(uint8_t channel, uint8_t param)
 {
 	uint8_t* x;
 
@@ -30,7 +45,7 @@ uint8_t calcMeasure(uint8_t channel, uint8_t param)
 		x = (uint8_t *)CH2_ADC_vals;
 
 	if(param == MEAS_FREQ)
-		return 0;
+		return calcFreq(x);
 	else if(param == MEAS_DUTY)
 		return 0;
 	else if(param == MEAS_VRMS)
@@ -50,6 +65,48 @@ uint8_t calcMeasure(uint8_t channel, uint8_t param)
 }
 
 /**
+  * @brief  Calculate Frequency of signal.
+  * @param  x: input signal
+  * @retval calculated Frequency
+  */
+float32_t calcFreq(uint8_t* x)
+{
+	float32_t inp[512], oup[545];
+	float32_t maxmag, f1, f2;
+	uint32_t maxidx, i;
+
+	/* create a zero-padded copy of x */
+	for(i = 0; i < ADC_BUF_SIZE; i++)
+		inp[i] = x[i];
+	for(i = ADC_BUF_SIZE; i < 512; i++)
+		inp[i] = 0;
+
+	/* calculate FFT and its magnitude */
+	arm_rfft_fast_f32(&S_rfft_512, inp, oup, 0);
+	arm_cmplx_mag_squared_f32(oup, inp, 256);	/* reuse inp array */
+
+	/* find the dominant frequency (excluding DC) */
+	inp[0] = 0;
+	arm_max_f32(inp, 256, &maxmag, &maxidx);
+
+	/* there is only DC component */
+	if(maxmag == 0){
+		return 0;
+	}
+	/* use chirp-z transform to zoom the FFT and find the exact frequency */
+	else{
+		f1 = (maxidx - 1)/256.0;	/* zoom-in one bin to the left and right */
+		f2 = (maxidx + 1)/256.0;
+		czt(x, oup, f1, f2, 545);
+		arm_max_f32(oup, 545, &maxmag, &maxidx);
+
+		return f1 + maxidx*(1/128.0)/545.0;
+	}
+
+	return 0;
+}
+
+/**
   * @brief  Calculate Vrms of signal.
   * @param  x: input signal
   * @retval calculated Vrms
@@ -57,15 +114,17 @@ uint8_t calcMeasure(uint8_t channel, uint8_t param)
 uint8_t calcVrms(uint8_t* x)
 {
 	uint32_t i;
-	float temp;
+	float32_t temp, out;
 
 	temp = 0;
 	for(i = 0; i < ADC_BUF_SIZE; i++)
-		temp += (float)x[i]*x[i];
+		temp += (float32_t)x[i]*x[i];
 
 	temp /= ADC_BUF_SIZE;
 
-	return sqrt(temp);
+	arm_sqrt_f32(temp, &out);
+
+	return out;
 }
 
 /**
@@ -135,5 +194,77 @@ uint8_t calcVavg(uint8_t* x)
 	vavg /= ADC_BUF_SIZE;
 
 	return vavg;
+}
+
+/**
+  * @brief  Compute the chirp-z transform of the signal in given frequency range.
+  * @param  x: input signal (say of length N)
+  * @param  oup: transformed output magnitude of length m
+  * @param  f1: start frequency as a fraction of fs
+  * @param  f2: end frequency as a fraction of fs
+  * @param  M: no. of output transform points. Should be such that N+M-1 is a power of 2.
+  * @retval None
+  */
+static void czt(uint8_t* x, float32_t* oup, float32_t f1, float32_t f2, uint32_t M)
+{
+	uint32_t N, L, i;
+	float32_t theta0, phi0;		/* A = exp(j*theta0), W = exp(j*phi0) */
+	float32_t c1, c2, s1, s2;
+
+	N = ADC_BUF_SIZE;
+	L = N + M - 1;
+	theta0 = 2*M_PI*f1;
+	phi0 = -2*M_PI*(f2 - f1)/M;
+
+	float32_t yY[2*L], vV[2*L];
+
+	/* yn = A^-n * W^(n^2/2) * xn */
+	for(i = 0; i < N; i++){
+		c1 = arm_cos_f32(-i*theta0);
+		c2 = arm_cos_f32(i*i*phi0/2);
+		s1 = arm_sin_f32(-i*theta0);
+		s2 = arm_sin_f32(i*i*phi0/2);
+		yY[2*i] = (c1*c2 - s1*s2) * x[i];		/* real */
+		yY[2*i+1] = (c1*s2 + c2*s1) * x[i];		/* imaginary */
+	}
+	for(i = N; i < L; i++){
+		yY[2*i] = 0;
+		yY[2*i+1] = 0;
+	}
+
+	/* FFT(yY) */
+	arm_cfft_f32(&S_cfft_1024, yY, 0, 0);
+
+	/* vn = W^(-n^2/2) for 0<=n<=M-1 */
+	for(i = 0; i < M; i++){
+		vV[2*i] = arm_cos_f32(-i*i*phi0/2);
+		vV[2*i+1] = arm_sin_f32(-i*i*phi0/2);
+	}
+	/* vn = W^(-(L-n)^2/2) for M<=n<=L-1 */
+	for(i = M; i < L; i++){
+		vV[2*i] = vV[2*(L-i)];		/* exploit symmetry to reuse values from 0 to M-1 */
+		vV[2*i+1] = vV[2*(L-i)+1];
+	}
+
+	/* FFT(vV) */
+	arm_cfft_f32(&S_cfft_1024, vV, 0, 0);
+
+	/* FFT(yY)*FFT(vV) */
+	arm_cmplx_mult_cmplx_f32(yY, vV, yY, L);
+
+	/* gn = IFFT[FFT(yY)*FFT(vV)] */
+	arm_cfft_f32(&S_cfft_1024, yY, 1, 0);
+
+	/* oup[n] = W^(n^2/2)*gn */
+	for(i = 0; i < M; i++){
+		c1 = arm_cos_f32(i*i*phi0/2);
+		s1 = arm_sin_f32(i*i*phi0/2);
+		vV[2*i] = c1*yY[2*i] - s1*yY[2*i+1];
+		vV[2*i+1] = s1*yY[2*i] + c1*yY[2*i+1];
+	}
+
+	arm_cmplx_mag_squared_f32(vV, oup, M);
+
+	return;
 }
 

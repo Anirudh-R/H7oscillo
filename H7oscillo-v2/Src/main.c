@@ -55,6 +55,9 @@ int main(void)
 	/* Create windows and other GUI elements */
 	initUI();
 
+	/* Initialize measurement module */
+	measure_init();
+
 	/* Main loop */
 	while(1)
 	{
@@ -99,9 +102,15 @@ int main(void)
 
 			/* Display measurements */
 			if(measure1.param != MEAS_NONE){
-				strcpy(buf1, measParamTexts[measure1.param]);
-				strcat(buf1, ":");
-				voltsToStr(calcMeasure(measure1.src, measure1.param), buf1 + 5);
+				if(measure1.param == MEAS_FREQ){
+					strcpy(buf1, "F:");
+					hertzToStr(calcMeasure(measure1.src, MEAS_FREQ) * 24000, buf1 + 2);
+				}
+				else{
+					strcpy(buf1, measParamTexts[measure1.param]);
+					strcat(buf1, ":");
+					voltsToStr(calcMeasure(measure1.src, measure1.param), buf1 + 5);
+				}
 				UG_TextboxSetBackColor(&window_2, TXB_ID_3, (measure1.src == CHANNEL1) ? CH1_COLOR : CH2_COLOR);
 				UG_TextboxSetText(&window_2, TXB_ID_3, buf1);
 			}

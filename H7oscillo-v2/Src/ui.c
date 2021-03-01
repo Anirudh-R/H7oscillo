@@ -295,12 +295,12 @@ void drawGrid(void)
 /**
   * @brief  Convert a 8-bit ADC value to mV/V voltage constant-length string.
   * @param  val: 8-bit ADC value
-  * @param  buf: output string of length 10
+  * @param  buf: output string of length 5
   * @retval None
   */
 void voltsToStr(uint8_t val, char* buf)
 {
-	float volts;
+	float32_t volts;
 	char buf2[5];
 	uint8_t len;
 
@@ -321,8 +321,61 @@ void voltsToStr(uint8_t val, char* buf)
 	}
 	else{
 		gcvt(volts, 3, buf2);
+
+		/* append spaces to make it constant-length string */
+		len = strlen(buf2);
+		if(len == 3)
+			strcat(buf, " ");
+		else if(len == 1)
+			strcat(buf, "   ");
+
 		strcat(buf, buf2);
 		strcat(buf, "V");
+	}
+}
+
+/**
+  * @brief  Convert a frequency value to Hz/KHz constant-length string.
+  * @param  freq: frequency to display
+  * @param  buf: output string of length 8
+  * @retval None
+  */
+void hertzToStr(uint32_t freq, char* buf)
+{
+	float32_t Khz;
+	char buf2[5];
+	uint8_t len;
+
+	if(freq < 1000){
+		itoa(freq, buf2, 10);
+
+		/* append spaces to make it constant-length string (good for displaying) */
+		len = strlen(buf2);
+		if(len == 1)
+			strcat(buf, "     ");
+		else if(len == 2)
+			strcat(buf, "    ");
+		else if(len == 3)
+			strcat(buf, "   ");
+
+		strcat(buf, buf2);
+		strcat(buf, "Hz");
+	}
+	else{
+		Khz = freq/1000.0;
+		gcvt(Khz, 4, buf2);
+
+		/* append spaces to make it constant-length string */
+		len = strlen(buf2);
+		if(len == 1)
+			strcat(buf, "    ");
+		else if(len == 3)
+			strcat(buf, "  ");
+		else if(len == 4)
+			strcat(buf, " ");
+
+		strcat(buf, buf2);
+		strcat(buf, "KHz");
 	}
 }
 

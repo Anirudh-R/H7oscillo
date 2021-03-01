@@ -100,6 +100,7 @@ char* gcvt(double value, int ndigit, char* buf);
 void initUI(void);
 void drawGrid(void);
 void voltsToStr(uint8_t val, char* buf);
+void hertzToStr(uint32_t freq, char* buf);
 void window_1_callback(UG_MESSAGE* msg);
 void window_2_callback(UG_MESSAGE* msg);
 void window_3_callback(UG_MESSAGE* msg);

@@ -24,12 +24,13 @@
 #include "stm32f7xx_ll_dma.h"
 #include "stm32f7xx_ll_tim.h"
 #include "stm32f7xx_ll_i2c.h"
+#include "arm_math.h"
+#include "math.h"
 
 #if defined(USE_FULL_ASSERT)
 #include "stm32_assert.h"
 #endif /* USE_FULL_ASSERT */
 
-#include "arm_math.h"
 #include "inits.h"
 #include "params.h"
 #include "globals.h"

@@ -12,7 +12,6 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
-#include <math.h>
 
 
 #define MEASURE_NONE	0
@@ -38,7 +37,9 @@ typedef struct{
 extern Measure_TypeDef measure1, measure2, measure3, measure4;
 extern const char measParamTexts[][5];
 
-uint8_t calcMeasure(uint8_t channel, uint8_t param);
+void measure_init(void);
+float32_t calcMeasure(uint8_t channel, uint8_t param);
+float32_t calcFreq(uint8_t* x);
 uint8_t calcVrms(uint8_t* x);
 uint8_t calcVmax(uint8_t* x);
 uint8_t calcVmin(uint8_t* x);

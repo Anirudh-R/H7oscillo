@@ -1,6 +1,8 @@
-measure.c:23:9:calcMeasure	8	static
-measure.c:57:9:calcVrms	8	static
-measure.c:76:9:calcVmax	0	static
-measure.c:94:9:calcVmin	0	static
-measure.c:112:9:calcVpp	4	static
-measure.c:127:9:calcVavg	0	static
+measure.c:26:6:measure_init	8	static
+measure.c:72:11:calcFreq	20720	dynamic,bounded
+measure.c:38:11:calcMeasure	16	static
+measure.c:114:9:calcVrms	8	static
+measure.c:135:9:calcVmax	0	static
+measure.c:153:9:calcVmin	0	static
+measure.c:171:9:calcVpp	4	static
+measure.c:186:9:calcVavg	0	static

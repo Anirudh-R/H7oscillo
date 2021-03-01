@@ -1,2 +1,2 @@
-main.c:19:5:main	48	static
-main.c:189:19:Get_tick	0	static
+main.c:19:5:main	56	static
+main.c:198:19:Get_tick	0	static
