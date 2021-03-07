@@ -34,6 +34,8 @@ c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../lib/gc
                               Src\startup_stm32f746xx.o (__libc_init_array)
 c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu/fpv5-sp-d16\libc_nano.a(lib_a-itoa.o)
                               Src\ui.o (itoa)
+c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu/fpv5-sp-d16\libc_nano.a(lib_a-memcpy-stub.o)
+                              Src\measure.o (memcpy)
 c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu/fpv5-sp-d16\libc_nano.a(lib_a-memset.o)
                               Src\measure.o (memset)
 c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu/fpv5-sp-d16\libc_nano.a(lib_a-stpcpy.o)
@@ -60,8 +62,6 @@ c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../lib/gc
                               c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu/fpv5-sp-d16\libc_nano.a(lib_a-ecvtbuf.o) (_dtoa_r)
 c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu/fpv5-sp-d16\libc_nano.a(lib_a-malloc.o)
                               c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu/fpv5-sp-d16\libc_nano.a(lib_a-mprec.o) (malloc)
-c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu/fpv5-sp-d16\libc_nano.a(lib_a-memcpy-stub.o)
-                              c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu/fpv5-sp-d16\libc_nano.a(lib_a-mprec.o) (memcpy)
 c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu/fpv5-sp-d16\libc_nano.a(lib_a-mlock.o)
                               c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu/fpv5-sp-d16\libc_nano.a(lib_a-nano-mallocr.o) (__malloc_lock)
 c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu/fpv5-sp-d16\libc_nano.a(lib_a-nano-freer.o)
@@ -107,6 +107,7 @@ txtb2_0             0x14              Src\ui.o
 obj_buff_wnd_1      0x140             Src\ui.o
 button4_0           0x18              Src\ui.o
 measure3            0x2               Src\measure.o
+cztout              0x884             Src\measure.o
 button3_3           0x18              Src\ui.o
 txtb4_0             0x14              Src\ui.o
 CH2_ADC_vals        0x1e0             Src\globals.o
@@ -2130,6 +2131,9 @@ Discarded input sections
  .text          0x00000000        0x0 c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu/fpv5-sp-d16\libc_nano.a(lib_a-itoa.o)
  .data          0x00000000        0x0 c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu/fpv5-sp-d16\libc_nano.a(lib_a-itoa.o)
  .bss           0x00000000        0x0 c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu/fpv5-sp-d16\libc_nano.a(lib_a-itoa.o)
+ .text          0x00000000        0x0 c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu/fpv5-sp-d16\libc_nano.a(lib_a-memcpy-stub.o)
+ .data          0x00000000        0x0 c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu/fpv5-sp-d16\libc_nano.a(lib_a-memcpy-stub.o)
+ .bss           0x00000000        0x0 c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu/fpv5-sp-d16\libc_nano.a(lib_a-memcpy-stub.o)
  .text          0x00000000        0x0 c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu/fpv5-sp-d16\libc_nano.a(lib_a-memset.o)
  .data          0x00000000        0x0 c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu/fpv5-sp-d16\libc_nano.a(lib_a-memset.o)
  .bss           0x00000000        0x0 c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu/fpv5-sp-d16\libc_nano.a(lib_a-memset.o)
@@ -2188,9 +2192,6 @@ Discarded input sections
  .data          0x00000000        0x0 c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu/fpv5-sp-d16\libc_nano.a(lib_a-malloc.o)
  .bss           0x00000000        0x0 c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu/fpv5-sp-d16\libc_nano.a(lib_a-malloc.o)
  .text.free     0x00000000       0x10 c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu/fpv5-sp-d16\libc_nano.a(lib_a-malloc.o)
- .text          0x00000000        0x0 c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu/fpv5-sp-d16\libc_nano.a(lib_a-memcpy-stub.o)
- .data          0x00000000        0x0 c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu/fpv5-sp-d16\libc_nano.a(lib_a-memcpy-stub.o)
- .bss           0x00000000        0x0 c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu/fpv5-sp-d16\libc_nano.a(lib_a-memcpy-stub.o)
  .text          0x00000000        0x0 c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu/fpv5-sp-d16\libc_nano.a(lib_a-mlock.o)
  .data          0x00000000        0x0 c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu/fpv5-sp-d16\libc_nano.a(lib_a-mlock.o)
  .bss           0x00000000        0x0 c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu/fpv5-sp-d16\libc_nano.a(lib_a-mlock.o)
@@ -2310,7 +2311,7 @@ LOAD c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../l
                 0x08000000                g_pfnVectors
                 0x080001c8                . = ALIGN (0x4)
 
-.text           0x080001c8     0x81a4
+.text           0x080001c8     0x825c
                 0x080001c8                . = ALIGN (0x4)
  *(.text)
  .text          0x080001c8       0x40 c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/armv7e-m/fpu/fpv5-sp-d16/crtbegin.o
@@ -2420,656 +2421,655 @@ LOAD c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../l
                 0x08001fc8       0x94 Src\inits.o
                 0x08001fc8                CPU_CACHE_Enable
  .text.startup.main
-                0x0800205c      0x4bc Src\main.o
+                0x0800205c      0x4b4 Src\main.o
                 0x0800205c                main
  .text.Get_tick
-                0x08002518        0xc Src\main.o
-                0x08002518                Get_tick
+                0x08002510        0xc Src\main.o
+                0x08002510                Get_tick
  .text.measure_init
-                0x08002524       0x24 Src\measure.o
-                0x08002524                measure_init
+                0x0800251c       0x24 Src\measure.o
+                0x0800251c                measure_init
  .text.calcFreq
-                0x08002548      0x320 Src\measure.o
-                0x08002548                calcFreq
+                0x08002540      0x3cc Src\measure.o
+                0x08002540                calcFreq
  .text.calcMeasure
-                0x08002868      0x13c Src\measure.o
-                0x08002868                calcMeasure
+                0x0800290c      0x13c Src\measure.o
+                0x0800290c                calcMeasure
  .text.Reset_Handler
-                0x080029a4       0x50 Src\startup_stm32f746xx.o
-                0x080029a4                Reset_Handler
+                0x08002a48       0x50 Src\startup_stm32f746xx.o
+                0x08002a48                Reset_Handler
  .text.Default_Handler
-                0x080029f4        0x2 Src\startup_stm32f746xx.o
-                0x080029f4                RTC_Alarm_IRQHandler
-                0x080029f4                EXTI2_IRQHandler
-                0x080029f4                TIM8_CC_IRQHandler
-                0x080029f4                UART8_IRQHandler
-                0x080029f4                SPI4_IRQHandler
-                0x080029f4                TIM1_CC_IRQHandler
-                0x080029f4                DMA2_Stream5_IRQHandler
-                0x080029f4                DMA1_Stream5_IRQHandler
-                0x080029f4                PVD_IRQHandler
-                0x080029f4                TAMP_STAMP_IRQHandler
-                0x080029f4                CAN2_RX1_IRQHandler
-                0x080029f4                EXTI3_IRQHandler
-                0x080029f4                TIM8_TRG_COM_TIM14_IRQHandler
-                0x080029f4                TIM1_UP_TIM10_IRQHandler
-                0x080029f4                TIM8_UP_TIM13_IRQHandler
-                0x080029f4                I2C3_ER_IRQHandler
-                0x080029f4                EXTI0_IRQHandler
-                0x080029f4                I2C2_EV_IRQHandler
-                0x080029f4                DMA1_Stream2_IRQHandler
-                0x080029f4                CAN1_RX0_IRQHandler
-                0x080029f4                FPU_IRQHandler
-                0x080029f4                OTG_HS_WKUP_IRQHandler
-                0x080029f4                CAN2_SCE_IRQHandler
-                0x080029f4                DMA2_Stream2_IRQHandler
-                0x080029f4                SPI1_IRQHandler
-                0x080029f4                TIM6_DAC_IRQHandler
-                0x080029f4                TIM1_BRK_TIM9_IRQHandler
-                0x080029f4                DCMI_IRQHandler
-                0x080029f4                CAN2_RX0_IRQHandler
-                0x080029f4                DMA2_Stream3_IRQHandler
-                0x080029f4                SAI2_IRQHandler
-                0x080029f4                USART6_IRQHandler
-                0x080029f4                USART3_IRQHandler
-                0x080029f4                CAN1_RX1_IRQHandler
-                0x080029f4                UART5_IRQHandler
-                0x080029f4                QUADSPI_IRQHandler
-                0x080029f4                I2C1_EV_IRQHandler
-                0x080029f4                DMA1_Stream6_IRQHandler
-                0x080029f4                DMA1_Stream1_IRQHandler
-                0x080029f4                UART4_IRQHandler
-                0x080029f4                TIM3_IRQHandler
-                0x080029f4                RCC_IRQHandler
-                0x080029f4                TIM8_BRK_TIM12_IRQHandler
-                0x080029f4                Default_Handler
-                0x080029f4                CEC_IRQHandler
-                0x080029f4                ADC_IRQHandler
-                0x080029f4                DMA1_Stream7_IRQHandler
-                0x080029f4                SPI5_IRQHandler
-                0x080029f4                TIM7_IRQHandler
-                0x080029f4                SDMMC1_IRQHandler
-                0x080029f4                CAN2_TX_IRQHandler
-                0x080029f4                TIM5_IRQHandler
-                0x080029f4                DMA2_Stream7_IRQHandler
-                0x080029f4                I2C3_EV_IRQHandler
-                0x080029f4                RTC_WKUP_IRQHandler
-                0x080029f4                LTDC_IRQHandler
-                0x080029f4                ETH_WKUP_IRQHandler
-                0x080029f4                SPDIF_RX_IRQHandler
-                0x080029f4                SPI2_IRQHandler
-                0x080029f4                OTG_HS_EP1_IN_IRQHandler
-                0x080029f4                DMA1_Stream0_IRQHandler
-                0x080029f4                CAN1_TX_IRQHandler
-                0x080029f4                EXTI4_IRQHandler
-                0x080029f4                RNG_IRQHandler
-                0x080029f4                ETH_IRQHandler
-                0x080029f4                OTG_HS_EP1_OUT_IRQHandler
-                0x080029f4                WWDG_IRQHandler
-                0x080029f4                SPI6_IRQHandler
-                0x080029f4                I2C4_EV_IRQHandler
-                0x080029f4                TIM2_IRQHandler
-                0x080029f4                OTG_FS_WKUP_IRQHandler
-                0x080029f4                TIM1_TRG_COM_TIM11_IRQHandler
-                0x080029f4                OTG_HS_IRQHandler
-                0x080029f4                EXTI1_IRQHandler
-                0x080029f4                UART7_IRQHandler
-                0x080029f4                USART2_IRQHandler
-                0x080029f4                I2C2_ER_IRQHandler
-                0x080029f4                CAN1_SCE_IRQHandler
-                0x080029f4                FLASH_IRQHandler
-                0x080029f4                DMA2_Stream4_IRQHandler
-                0x080029f4                USART1_IRQHandler
-                0x080029f4                OTG_FS_IRQHandler
-                0x080029f4                SPI3_IRQHandler
-                0x080029f4                DMA1_Stream4_IRQHandler
-                0x080029f4                I2C1_ER_IRQHandler
-                0x080029f4                FMC_IRQHandler
-                0x080029f4                LPTIM1_IRQHandler
-                0x080029f4                I2C4_ER_IRQHandler
-                0x080029f4                DMA2_Stream6_IRQHandler
-                0x080029f4                SAI1_IRQHandler
-                0x080029f4                DMA1_Stream3_IRQHandler
- *fill*         0x080029f6        0x2 
+                0x08002a98        0x2 Src\startup_stm32f746xx.o
+                0x08002a98                RTC_Alarm_IRQHandler
+                0x08002a98                EXTI2_IRQHandler
+                0x08002a98                TIM8_CC_IRQHandler
+                0x08002a98                UART8_IRQHandler
+                0x08002a98                SPI4_IRQHandler
+                0x08002a98                TIM1_CC_IRQHandler
+                0x08002a98                DMA2_Stream5_IRQHandler
+                0x08002a98                DMA1_Stream5_IRQHandler
+                0x08002a98                PVD_IRQHandler
+                0x08002a98                TAMP_STAMP_IRQHandler
+                0x08002a98                CAN2_RX1_IRQHandler
+                0x08002a98                EXTI3_IRQHandler
+                0x08002a98                TIM8_TRG_COM_TIM14_IRQHandler
+                0x08002a98                TIM1_UP_TIM10_IRQHandler
+                0x08002a98                TIM8_UP_TIM13_IRQHandler
+                0x08002a98                I2C3_ER_IRQHandler
+                0x08002a98                EXTI0_IRQHandler
+                0x08002a98                I2C2_EV_IRQHandler
+                0x08002a98                DMA1_Stream2_IRQHandler
+                0x08002a98                CAN1_RX0_IRQHandler
+                0x08002a98                FPU_IRQHandler
+                0x08002a98                OTG_HS_WKUP_IRQHandler
+                0x08002a98                CAN2_SCE_IRQHandler
+                0x08002a98                DMA2_Stream2_IRQHandler
+                0x08002a98                SPI1_IRQHandler
+                0x08002a98                TIM6_DAC_IRQHandler
+                0x08002a98                TIM1_BRK_TIM9_IRQHandler
+                0x08002a98                DCMI_IRQHandler
+                0x08002a98                CAN2_RX0_IRQHandler
+                0x08002a98                DMA2_Stream3_IRQHandler
+                0x08002a98                SAI2_IRQHandler
+                0x08002a98                USART6_IRQHandler
+                0x08002a98                USART3_IRQHandler
+                0x08002a98                CAN1_RX1_IRQHandler
+                0x08002a98                UART5_IRQHandler
+                0x08002a98                QUADSPI_IRQHandler
+                0x08002a98                I2C1_EV_IRQHandler
+                0x08002a98                DMA1_Stream6_IRQHandler
+                0x08002a98                DMA1_Stream1_IRQHandler
+                0x08002a98                UART4_IRQHandler
+                0x08002a98                TIM3_IRQHandler
+                0x08002a98                RCC_IRQHandler
+                0x08002a98                TIM8_BRK_TIM12_IRQHandler
+                0x08002a98                Default_Handler
+                0x08002a98                CEC_IRQHandler
+                0x08002a98                ADC_IRQHandler
+                0x08002a98                DMA1_Stream7_IRQHandler
+                0x08002a98                SPI5_IRQHandler
+                0x08002a98                TIM7_IRQHandler
+                0x08002a98                SDMMC1_IRQHandler
+                0x08002a98                CAN2_TX_IRQHandler
+                0x08002a98                TIM5_IRQHandler
+                0x08002a98                DMA2_Stream7_IRQHandler
+                0x08002a98                I2C3_EV_IRQHandler
+                0x08002a98                RTC_WKUP_IRQHandler
+                0x08002a98                LTDC_IRQHandler
+                0x08002a98                ETH_WKUP_IRQHandler
+                0x08002a98                SPDIF_RX_IRQHandler
+                0x08002a98                SPI2_IRQHandler
+                0x08002a98                OTG_HS_EP1_IN_IRQHandler
+                0x08002a98                DMA1_Stream0_IRQHandler
+                0x08002a98                CAN1_TX_IRQHandler
+                0x08002a98                EXTI4_IRQHandler
+                0x08002a98                RNG_IRQHandler
+                0x08002a98                ETH_IRQHandler
+                0x08002a98                OTG_HS_EP1_OUT_IRQHandler
+                0x08002a98                WWDG_IRQHandler
+                0x08002a98                SPI6_IRQHandler
+                0x08002a98                I2C4_EV_IRQHandler
+                0x08002a98                TIM2_IRQHandler
+                0x08002a98                OTG_FS_WKUP_IRQHandler
+                0x08002a98                TIM1_TRG_COM_TIM11_IRQHandler
+                0x08002a98                OTG_HS_IRQHandler
+                0x08002a98                EXTI1_IRQHandler
+                0x08002a98                UART7_IRQHandler
+                0x08002a98                USART2_IRQHandler
+                0x08002a98                I2C2_ER_IRQHandler
+                0x08002a98                CAN1_SCE_IRQHandler
+                0x08002a98                FLASH_IRQHandler
+                0x08002a98                DMA2_Stream4_IRQHandler
+                0x08002a98                USART1_IRQHandler
+                0x08002a98                OTG_FS_IRQHandler
+                0x08002a98                SPI3_IRQHandler
+                0x08002a98                DMA1_Stream4_IRQHandler
+                0x08002a98                I2C1_ER_IRQHandler
+                0x08002a98                FMC_IRQHandler
+                0x08002a98                LPTIM1_IRQHandler
+                0x08002a98                I2C4_ER_IRQHandler
+                0x08002a98                DMA2_Stream6_IRQHandler
+                0x08002a98                SAI1_IRQHandler
+                0x08002a98                DMA1_Stream3_IRQHandler
+ *fill*         0x08002a9a        0x2 
  .text.NMI_Handler
-                0x080029f8        0x4 Src\stm32f7xx_it.o
-                0x080029f8                NMI_Handler
+                0x08002a9c        0x4 Src\stm32f7xx_it.o
+                0x08002a9c                NMI_Handler
  .text.HardFault_Handler
-                0x080029fc        0x4 Src\stm32f7xx_it.o
-                0x080029fc                HardFault_Handler
+                0x08002aa0        0x4 Src\stm32f7xx_it.o
+                0x08002aa0                HardFault_Handler
  .text.MemManage_Handler
-                0x08002a00        0x4 Src\stm32f7xx_it.o
-                0x08002a00                MemManage_Handler
+                0x08002aa4        0x4 Src\stm32f7xx_it.o
+                0x08002aa4                MemManage_Handler
  .text.BusFault_Handler
-                0x08002a04        0x4 Src\stm32f7xx_it.o
-                0x08002a04                BusFault_Handler
+                0x08002aa8        0x4 Src\stm32f7xx_it.o
+                0x08002aa8                BusFault_Handler
  .text.UsageFault_Handler
-                0x08002a08        0x4 Src\stm32f7xx_it.o
-                0x08002a08                UsageFault_Handler
+                0x08002aac        0x4 Src\stm32f7xx_it.o
+                0x08002aac                UsageFault_Handler
  .text.SVC_Handler
-                0x08002a0c        0x4 Src\stm32f7xx_it.o
-                0x08002a0c                SVC_Handler
+                0x08002ab0        0x4 Src\stm32f7xx_it.o
+                0x08002ab0                SVC_Handler
  .text.DebugMon_Handler
-                0x08002a10        0x4 Src\stm32f7xx_it.o
-                0x08002a10                DebugMon_Handler
+                0x08002ab4        0x4 Src\stm32f7xx_it.o
+                0x08002ab4                DebugMon_Handler
  .text.PendSV_Handler
-                0x08002a14        0x4 Src\stm32f7xx_it.o
-                0x08002a14                PendSV_Handler
+                0x08002ab8        0x4 Src\stm32f7xx_it.o
+                0x08002ab8                PendSV_Handler
  .text.SysTick_Handler
-                0x08002a18       0x10 Src\stm32f7xx_it.o
-                0x08002a18                SysTick_Handler
+                0x08002abc       0x10 Src\stm32f7xx_it.o
+                0x08002abc                SysTick_Handler
  .text.EXTI9_5_IRQHandler
-                0x08002a28       0x34 Src\stm32f7xx_it.o
-                0x08002a28                EXTI9_5_IRQHandler
+                0x08002acc       0x34 Src\stm32f7xx_it.o
+                0x08002acc                EXTI9_5_IRQHandler
  .text.EXTI15_10_IRQHandler
-                0x08002a5c       0x1c Src\stm32f7xx_it.o
-                0x08002a5c                EXTI15_10_IRQHandler
+                0x08002b00       0x1c Src\stm32f7xx_it.o
+                0x08002b00                EXTI15_10_IRQHandler
  .text.DMA2_Stream0_IRQHandler
-                0x08002a78       0x1c Src\stm32f7xx_it.o
-                0x08002a78                DMA2_Stream0_IRQHandler
+                0x08002b1c       0x1c Src\stm32f7xx_it.o
+                0x08002b1c                DMA2_Stream0_IRQHandler
  .text.DMA2_Stream1_IRQHandler
-                0x08002a94       0x1c Src\stm32f7xx_it.o
-                0x08002a94                DMA2_Stream1_IRQHandler
+                0x08002b38       0x1c Src\stm32f7xx_it.o
+                0x08002b38                DMA2_Stream1_IRQHandler
  .text.LTDC_ER_IRQHandler
-                0x08002ab0       0x24 Src\stm32f7xx_it.o
-                0x08002ab0                LTDC_ER_IRQHandler
+                0x08002b54       0x24 Src\stm32f7xx_it.o
+                0x08002b54                LTDC_ER_IRQHandler
  .text.DMA2D_IRQHandler
-                0x08002ad4       0x24 Src\stm32f7xx_it.o
-                0x08002ad4                DMA2D_IRQHandler
+                0x08002b78       0x24 Src\stm32f7xx_it.o
+                0x08002b78                DMA2D_IRQHandler
  .text.TIM4_IRQHandler
-                0x08002af8       0x1c Src\stm32f7xx_it.o
-                0x08002af8                TIM4_IRQHandler
+                0x08002b9c       0x1c Src\stm32f7xx_it.o
+                0x08002b9c                TIM4_IRQHandler
  .text.SystemInit
-                0x08002b14       0x50 Src\system_stm32f7xx.o
-                0x08002b14                SystemInit
+                0x08002bb8       0x50 Src\system_stm32f7xx.o
+                0x08002bb8                SystemInit
  .text.TS_DetectNumTouches
-                0x08002b64       0x18 Src\touch.o
-                0x08002b64                TS_DetectNumTouches
+                0x08002c08       0x18 Src\touch.o
+                0x08002c08                TS_DetectNumTouches
  .text.TS_GetXY
-                0x08002b7c       0x50 Src\touch.o
-                0x08002b7c                TS_GetXY
- .text.UG_Init  0x08002bcc       0x74 Src\ugui.o
-                0x08002bcc                UG_Init
+                0x08002c20       0x50 Src\touch.o
+                0x08002c20                TS_GetXY
+ .text.UG_Init  0x08002c70       0x74 Src\ugui.o
+                0x08002c70                UG_Init
  .text.UG_FillScreen
-                0x08002c40       0x88 Src\ugui.o
-                0x08002c40                UG_FillScreen
+                0x08002ce4       0x88 Src\ugui.o
+                0x08002ce4                UG_FillScreen
  .text.UG_DrawLine
-                0x08002cc8      0x130 Src\ugui.o
-                0x08002cc8                UG_DrawLine
+                0x08002d6c      0x130 Src\ugui.o
+                0x08002d6c                UG_DrawLine
  .text._UG_PutChar
-                0x08002df8      0x424 Src\ugui.o
-                0x08002df8                _UG_PutChar
+                0x08002e9c      0x424 Src\ugui.o
+                0x08002e9c                _UG_PutChar
  .text._UG_PutText
-                0x0800321c      0x188 Src\ugui.o
-                0x0800321c                _UG_PutText
+                0x080032c0      0x188 Src\ugui.o
+                0x080032c0                _UG_PutText
  .text._UG_TextboxUpdate
-                0x080033a4      0x210 Src\ugui.o
-                0x080033a4                _UG_TextboxUpdate
+                0x08003448      0x210 Src\ugui.o
+                0x08003448                _UG_TextboxUpdate
  .text._UG_ProcessTouchData
-                0x080035b4       0xc8 Src\ugui.o
-                0x080035b4                _UG_ProcessTouchData
+                0x08003658       0xc8 Src\ugui.o
+                0x08003658                _UG_ProcessTouchData
  .text._UG_DrawObjectFrame
-                0x0800367c      0x140 Src\ugui.o
-                0x0800367c                _UG_DrawObjectFrame
+                0x08003720      0x140 Src\ugui.o
+                0x08003720                _UG_DrawObjectFrame
  .text._UG_ButtonUpdate
-                0x080037bc      0x374 Src\ugui.o
-                0x080037bc                _UG_ButtonUpdate
+                0x08003860      0x374 Src\ugui.o
+                0x08003860                _UG_ButtonUpdate
  .text.UG_DriverRegister
-                0x08003b30       0x1c Src\ugui.o
-                0x08003b30                UG_DriverRegister
+                0x08003bd4       0x1c Src\ugui.o
+                0x08003bd4                UG_DriverRegister
  .text.UG_DriverEnable
-                0x08003b4c       0x24 Src\ugui.o
-                0x08003b4c                UG_DriverEnable
+                0x08003bf0       0x24 Src\ugui.o
+                0x08003bf0                UG_DriverEnable
  .text.UG_TouchUpdate
-                0x08003b70       0x10 Src\ugui.o
-                0x08003b70                UG_TouchUpdate
+                0x08003c14       0x10 Src\ugui.o
+                0x08003c14                UG_TouchUpdate
  .text.UG_WindowCreate
-                0x08003b80       0xa0 Src\ugui.o
-                0x08003b80                UG_WindowCreate
+                0x08003c24       0xa0 Src\ugui.o
+                0x08003c24                UG_WindowCreate
  .text.UG_WindowShow
-                0x08003c20       0x24 Src\ugui.o
-                0x08003c20                UG_WindowShow
+                0x08003cc4       0x24 Src\ugui.o
+                0x08003cc4                UG_WindowShow
  .text.UG_WindowResize
-                0x08003c44      0x2a0 Src\ugui.o
-                0x08003c44                UG_WindowResize
+                0x08003ce8      0x2a0 Src\ugui.o
+                0x08003ce8                UG_WindowResize
  .text.UG_WindowSetBackColor
-                0x08003ee4       0x1c Src\ugui.o
-                0x08003ee4                UG_WindowSetBackColor
+                0x08003f88       0x1c Src\ugui.o
+                0x08003f88                UG_WindowSetBackColor
  .text.UG_WindowSetStyle
-                0x08003f00       0x3c Src\ugui.o
-                0x08003f00                UG_WindowSetStyle
+                0x08003fa4       0x3c Src\ugui.o
+                0x08003fa4                UG_WindowSetStyle
  .text._UG_WindowDrawTitle
-                0x08003f3c      0x160 Src\ugui.o
-                0x08003f3c                _UG_WindowDrawTitle
+                0x08003fe0      0x160 Src\ugui.o
+                0x08003fe0                _UG_WindowDrawTitle
  .text._UG_WindowUpdate
-                0x0800409c      0x1ac Src\ugui.o
-                0x0800409c                _UG_WindowUpdate
+                0x08004140      0x1ac Src\ugui.o
+                0x08004140                _UG_WindowUpdate
  .text.UG_Update
-                0x08004248      0x160 Src\ugui.o
-                0x08004248                UG_Update
+                0x080042ec      0x160 Src\ugui.o
+                0x080042ec                UG_Update
  .text.UG_ButtonCreate
-                0x080043a8       0xd8 Src\ugui.o
-                0x080043a8                UG_ButtonCreate
+                0x0800444c       0xd8 Src\ugui.o
+                0x0800444c                UG_ButtonCreate
  .text.UG_ButtonSetBackColor
-                0x08004480       0x48 Src\ugui.o
-                0x08004480                UG_ButtonSetBackColor
+                0x08004524       0x48 Src\ugui.o
+                0x08004524                UG_ButtonSetBackColor
  .text.UG_ButtonSetText
-                0x080044c8       0x48 Src\ugui.o
-                0x080044c8                UG_ButtonSetText
+                0x0800456c       0x48 Src\ugui.o
+                0x0800456c                UG_ButtonSetText
  .text.UG_ButtonSetFont
-                0x08004510       0x48 Src\ugui.o
-                0x08004510                UG_ButtonSetFont
+                0x080045b4       0x48 Src\ugui.o
+                0x080045b4                UG_ButtonSetFont
  .text.UG_TextboxCreate
-                0x08004558       0xcc Src\ugui.o
-                0x08004558                UG_TextboxCreate
+                0x080045fc       0xcc Src\ugui.o
+                0x080045fc                UG_TextboxCreate
  .text.UG_TextboxSetBackColor
-                0x08004624       0x48 Src\ugui.o
-                0x08004624                UG_TextboxSetBackColor
+                0x080046c8       0x48 Src\ugui.o
+                0x080046c8                UG_TextboxSetBackColor
  .text.UG_TextboxSetText
-                0x0800466c       0x48 Src\ugui.o
-                0x0800466c                UG_TextboxSetText
+                0x08004710       0x48 Src\ugui.o
+                0x08004710                UG_TextboxSetText
  .text.UG_TextboxSetFont
-                0x080046b4       0x48 Src\ugui.o
-                0x080046b4                UG_TextboxSetFont
+                0x08004758       0x48 Src\ugui.o
+                0x08004758                UG_TextboxSetFont
  .text.UG_TextboxSetAlignment
-                0x080046fc       0x48 Src\ugui.o
-                0x080046fc                UG_TextboxSetAlignment
+                0x080047a0       0x48 Src\ugui.o
+                0x080047a0                UG_TextboxSetAlignment
  .text.window_2_callback
-                0x08004744        0x4 Src\ui.o
-                0x08004744                window_2_callback
+                0x080047e8        0x4 Src\ui.o
+                0x080047e8                window_2_callback
  .text.window_4_callback
-                0x08004748       0x30 Src\ui.o
-                0x08004748                window_4_callback
+                0x080047ec       0x30 Src\ui.o
+                0x080047ec                window_4_callback
  .text.window_5_callback
-                0x08004778       0xec Src\ui.o
-                0x08004778                window_5_callback
+                0x0800481c       0xec Src\ui.o
+                0x0800481c                window_5_callback
  .text.window_1_callback
-                0x08004864       0xb4 Src\ui.o
-                0x08004864                window_1_callback
- .text.initUI   0x08004918      0x930 Src\ui.o
-                0x08004918                initUI
+                0x08004908       0xb4 Src\ui.o
+                0x08004908                window_1_callback
+ .text.initUI   0x080049bc      0x930 Src\ui.o
+                0x080049bc                initUI
  .text.drawGrid
-                0x08005248       0x54 Src\ui.o
-                0x08005248                drawGrid
+                0x080052ec       0x54 Src\ui.o
+                0x080052ec                drawGrid
  .text.window_3_callback
-                0x0800529c      0x144 Src\ui.o
-                0x0800529c                window_3_callback
+                0x08005340      0x144 Src\ui.o
+                0x08005340                window_3_callback
+ *fill*         0x08005484        0x4 
  .text.voltsToStr
-                0x080053e0      0x110 Src\ui.o
-                0x080053e0                voltsToStr
+                0x08005488      0x110 Src\ui.o
+                0x08005488                voltsToStr
  .text.hertzToStr
-                0x080054f0      0x134 Src\ui.o
-                0x080054f0                hertzToStr
+                0x08005598      0x148 Src\ui.o
+                0x08005598                hertzToStr
  .text.arm_max_f32
-                0x08005624       0xd4 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_max_f32.o)
-                0x08005624                arm_max_f32
+                0x080056e0       0xd4 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_max_f32.o)
+                0x080056e0                arm_max_f32
  .text.arm_cfft_init_f32
-                0x080056f8       0xa0 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_cfft_init_f32.o)
-                0x080056f8                arm_cfft_init_f32
+                0x080057b4       0xa0 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_cfft_init_f32.o)
+                0x080057b4                arm_cfft_init_f32
  .text.arm_rfft_32_fast_init_f32
-                0x08005798       0x24 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_rfft_fast_init_f32.o)
+                0x08005854       0x24 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_rfft_fast_init_f32.o)
  .text.arm_rfft_64_fast_init_f32
-                0x080057bc       0x24 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_rfft_fast_init_f32.o)
+                0x08005878       0x24 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_rfft_fast_init_f32.o)
  .text.arm_rfft_128_fast_init_f32
-                0x080057e0       0x24 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_rfft_fast_init_f32.o)
+                0x0800589c       0x24 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_rfft_fast_init_f32.o)
  .text.arm_rfft_256_fast_init_f32
-                0x08005804       0x24 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_rfft_fast_init_f32.o)
+                0x080058c0       0x24 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_rfft_fast_init_f32.o)
  .text.arm_rfft_512_fast_init_f32
-                0x08005828       0x28 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_rfft_fast_init_f32.o)
+                0x080058e4       0x28 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_rfft_fast_init_f32.o)
  .text.arm_rfft_1024_fast_init_f32
-                0x08005850       0x28 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_rfft_fast_init_f32.o)
+                0x0800590c       0x28 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_rfft_fast_init_f32.o)
  .text.arm_rfft_2048_fast_init_f32
-                0x08005878       0x28 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_rfft_fast_init_f32.o)
+                0x08005934       0x28 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_rfft_fast_init_f32.o)
  .text.arm_rfft_4096_fast_init_f32
-                0x080058a0       0x28 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_rfft_fast_init_f32.o)
+                0x0800595c       0x28 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_rfft_fast_init_f32.o)
  .text.arm_rfft_fast_init_f32
-                0x080058c8       0x74 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_rfft_fast_init_f32.o)
-                0x080058c8                arm_rfft_fast_init_f32
+                0x08005984       0x74 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_rfft_fast_init_f32.o)
+                0x08005984                arm_rfft_fast_init_f32
  .text.stage_rfft_f32
-                0x0800593c       0xbc C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_rfft_fast_f32.o)
-                0x0800593c                stage_rfft_f32
+                0x080059f8       0xbc C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_rfft_fast_f32.o)
+                0x080059f8                stage_rfft_f32
  .text.merge_rfft_f32
-                0x080059f8       0xac C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_rfft_fast_f32.o)
-                0x080059f8                merge_rfft_f32
+                0x08005ab4       0xac C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_rfft_fast_f32.o)
+                0x08005ab4                merge_rfft_f32
  .text.arm_rfft_fast_f32
-                0x08005aa4       0x38 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_rfft_fast_f32.o)
-                0x08005aa4                arm_rfft_fast_f32
+                0x08005b60       0x38 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_rfft_fast_f32.o)
+                0x08005b60                arm_rfft_fast_f32
  .text.arm_cfft_radix8by2_f32
-                0x08005adc      0x19c C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_cfft_f32.o)
-                0x08005adc                arm_cfft_radix8by2_f32
+                0x08005b98      0x19c C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_cfft_f32.o)
+                0x08005b98                arm_cfft_radix8by2_f32
  .text.arm_cfft_radix8by4_f32
-                0x08005c78      0x4bc C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_cfft_f32.o)
-                0x08005c78                arm_cfft_radix8by4_f32
+                0x08005d34      0x4bc C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_cfft_f32.o)
+                0x08005d34                arm_cfft_radix8by4_f32
  .text.arm_cfft_f32
-                0x08006134       0xec C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_cfft_f32.o)
-                0x08006134                arm_cfft_f32
+                0x080061f0       0xec C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_cfft_f32.o)
+                0x080061f0                arm_cfft_f32
  .text.arm_bitreversal_32
-                0x08006220       0x50 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_bitreversal2.o)
-                0x08006220                arm_bitreversal_32
+                0x080062dc       0x50 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_bitreversal2.o)
+                0x080062dc                arm_bitreversal_32
  .text.arm_cmplx_mult_cmplx_f32
-                0x08006270      0x194 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_cmplx_mult_cmplx_f32.o)
-                0x08006270                arm_cmplx_mult_cmplx_f32
+                0x0800632c      0x194 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_cmplx_mult_cmplx_f32.o)
+                0x0800632c                arm_cmplx_mult_cmplx_f32
  .text.arm_cmplx_mag_squared_f32
-                0x08006404       0xe0 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_cmplx_mag_squared_f32.o)
-                0x08006404                arm_cmplx_mag_squared_f32
+                0x080064c0       0xe0 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_cmplx_mag_squared_f32.o)
+                0x080064c0                arm_cmplx_mag_squared_f32
  .text.arm_sin_f32
-                0x080064e4       0x8c C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_sin_f32.o)
-                0x080064e4                arm_sin_f32
+                0x080065a0       0x8c C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_sin_f32.o)
+                0x080065a0                arm_sin_f32
  .text.arm_cos_f32
-                0x08006570       0x94 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_cos_f32.o)
-                0x08006570                arm_cos_f32
+                0x0800662c       0x94 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_cos_f32.o)
+                0x0800662c                arm_cos_f32
  .text.arm_radix8_butterfly_f32
-                0x08006604      0x580 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_cfft_radix8_f32.o)
-                0x08006604                arm_radix8_butterfly_f32
- .text.gcvt     0x08006b84       0x58 c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu/fpv5-sp-d16\libc_nano.a(lib_a-efgcvt.o)
-                0x08006b84                gcvt
+                0x080066c0      0x580 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_cfft_radix8_f32.o)
+                0x080066c0                arm_radix8_butterfly_f32
+ .text.gcvt     0x08006c40       0x58 c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu/fpv5-sp-d16\libc_nano.a(lib_a-efgcvt.o)
+                0x08006c40                gcvt
  .text.__libc_init_array
-                0x08006bdc       0x48 c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu/fpv5-sp-d16\libc_nano.a(lib_a-init.o)
-                0x08006bdc                __libc_init_array
- .text.__itoa   0x08006c24       0x30 c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu/fpv5-sp-d16\libc_nano.a(lib_a-itoa.o)
-                0x08006c24                __itoa
- .text.itoa     0x08006c54        0x4 c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu/fpv5-sp-d16\libc_nano.a(lib_a-itoa.o)
-                0x08006c54                itoa
- .text.memset   0x08006c58       0x10 c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu/fpv5-sp-d16\libc_nano.a(lib_a-memset.o)
-                0x08006c58                memset
- .text.stpcpy   0x08006c68       0x12 c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu/fpv5-sp-d16\libc_nano.a(lib_a-stpcpy.o)
-                0x08006c68                stpcpy
- *fill*         0x08006c7a        0x2 
- .text.__utoa   0x08006c7c       0x80 c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu/fpv5-sp-d16\libc_nano.a(lib_a-utoa.o)
-                0x08006c7c                __utoa
- .text.print_e  0x08006cfc       0xe8 c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu/fpv5-sp-d16\libc_nano.a(lib_a-ecvtbuf.o)
- *fill*         0x08006de4        0x4 
- .text._gcvt    0x08006de8      0x18c c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu/fpv5-sp-d16\libc_nano.a(lib_a-ecvtbuf.o)
-                0x08006de8                _gcvt
- .text._Balloc  0x08006f74       0x68 c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu/fpv5-sp-d16\libc_nano.a(lib_a-mprec.o)
-                0x08006f74                _Balloc
- .text._Bfree   0x08006fdc       0x2e c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu/fpv5-sp-d16\libc_nano.a(lib_a-mprec.o)
-                0x08006fdc                _Bfree
+                0x08006c98       0x48 c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu/fpv5-sp-d16\libc_nano.a(lib_a-init.o)
+                0x08006c98                __libc_init_array
+ .text.__itoa   0x08006ce0       0x30 c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu/fpv5-sp-d16\libc_nano.a(lib_a-itoa.o)
+                0x08006ce0                __itoa
+ .text.itoa     0x08006d10        0x4 c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu/fpv5-sp-d16\libc_nano.a(lib_a-itoa.o)
+                0x08006d10                itoa
+ .text.memcpy   0x08006d14       0x16 c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu/fpv5-sp-d16\libc_nano.a(lib_a-memcpy-stub.o)
+                0x08006d14                memcpy
+ .text.memset   0x08006d2a       0x10 c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu/fpv5-sp-d16\libc_nano.a(lib_a-memset.o)
+                0x08006d2a                memset
+ .text.stpcpy   0x08006d3a       0x12 c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu/fpv5-sp-d16\libc_nano.a(lib_a-stpcpy.o)
+                0x08006d3a                stpcpy
+ .text.__utoa   0x08006d4c       0x80 c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu/fpv5-sp-d16\libc_nano.a(lib_a-utoa.o)
+                0x08006d4c                __utoa
+ .text.print_e  0x08006dcc       0xe8 c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu/fpv5-sp-d16\libc_nano.a(lib_a-ecvtbuf.o)
+ *fill*         0x08006eb4        0x4 
+ .text._gcvt    0x08006eb8      0x18c c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu/fpv5-sp-d16\libc_nano.a(lib_a-ecvtbuf.o)
+                0x08006eb8                _gcvt
+ .text._Balloc  0x08007044       0x68 c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu/fpv5-sp-d16\libc_nano.a(lib_a-mprec.o)
+                0x08007044                _Balloc
+ .text._Bfree   0x080070ac       0x2e c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu/fpv5-sp-d16\libc_nano.a(lib_a-mprec.o)
+                0x080070ac                _Bfree
  .text.__multadd
-                0x0800700a       0x76 c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu/fpv5-sp-d16\libc_nano.a(lib_a-mprec.o)
-                0x0800700a                __multadd
+                0x080070da       0x76 c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu/fpv5-sp-d16\libc_nano.a(lib_a-mprec.o)
+                0x080070da                __multadd
  .text.__hi0bits
-                0x08007080       0x3e c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu/fpv5-sp-d16\libc_nano.a(lib_a-mprec.o)
-                0x08007080                __hi0bits
+                0x08007150       0x3e c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu/fpv5-sp-d16\libc_nano.a(lib_a-mprec.o)
+                0x08007150                __hi0bits
  .text.__lo0bits
-                0x080070be       0x5e c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu/fpv5-sp-d16\libc_nano.a(lib_a-mprec.o)
-                0x080070be                __lo0bits
- .text.__i2b    0x0800711c       0x12 c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu/fpv5-sp-d16\libc_nano.a(lib_a-mprec.o)
-                0x0800711c                __i2b
+                0x0800718e       0x5e c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu/fpv5-sp-d16\libc_nano.a(lib_a-mprec.o)
+                0x0800718e                __lo0bits
+ .text.__i2b    0x080071ec       0x12 c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu/fpv5-sp-d16\libc_nano.a(lib_a-mprec.o)
+                0x080071ec                __i2b
  .text.__multiply
-                0x0800712e      0x11a c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu/fpv5-sp-d16\libc_nano.a(lib_a-mprec.o)
-                0x0800712e                __multiply
+                0x080071fe      0x11a c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu/fpv5-sp-d16\libc_nano.a(lib_a-mprec.o)
+                0x080071fe                __multiply
  .text.__pow5mult
-                0x08007248       0x9c c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu/fpv5-sp-d16\libc_nano.a(lib_a-mprec.o)
-                0x08007248                __pow5mult
+                0x08007318       0x9c c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu/fpv5-sp-d16\libc_nano.a(lib_a-mprec.o)
+                0x08007318                __pow5mult
  .text.__lshift
-                0x080072e4       0xa2 c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu/fpv5-sp-d16\libc_nano.a(lib_a-mprec.o)
-                0x080072e4                __lshift
- .text.__mcmp   0x08007386       0x34 c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu/fpv5-sp-d16\libc_nano.a(lib_a-mprec.o)
-                0x08007386                __mcmp
- .text.__mdiff  0x080073ba       0xbc c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu/fpv5-sp-d16\libc_nano.a(lib_a-mprec.o)
-                0x080073ba                __mdiff
- .text.__d2b    0x08007476       0x9e c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu/fpv5-sp-d16\libc_nano.a(lib_a-mprec.o)
-                0x08007476                __d2b
+                0x080073b4       0xa2 c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu/fpv5-sp-d16\libc_nano.a(lib_a-mprec.o)
+                0x080073b4                __lshift
+ .text.__mcmp   0x08007456       0x34 c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu/fpv5-sp-d16\libc_nano.a(lib_a-mprec.o)
+                0x08007456                __mcmp
+ .text.__mdiff  0x0800748a       0xbc c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu/fpv5-sp-d16\libc_nano.a(lib_a-mprec.o)
+                0x0800748a                __mdiff
+ .text.__d2b    0x08007546       0x9e c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu/fpv5-sp-d16\libc_nano.a(lib_a-mprec.o)
+                0x08007546                __d2b
  .text._mprec_log10
-                0x08007514       0x3c c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu/fpv5-sp-d16\libc_nano.a(lib_a-mprec.o)
-                0x08007514                _mprec_log10
+                0x080075e4       0x3c c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu/fpv5-sp-d16\libc_nano.a(lib_a-mprec.o)
+                0x080075e4                _mprec_log10
  .text._calloc_r
-                0x08007550       0x1c c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu/fpv5-sp-d16\libc_nano.a(lib_a-nano-callocr.o)
-                0x08007550                _calloc_r
+                0x08007620       0x1c c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu/fpv5-sp-d16\libc_nano.a(lib_a-nano-callocr.o)
+                0x08007620                _calloc_r
  .text._malloc_r
-                0x0800756c       0xbc c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu/fpv5-sp-d16\libc_nano.a(lib_a-nano-mallocr.o)
-                0x0800756c                _malloc_r
- .text._sbrk_r  0x08007628       0x20 c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu/fpv5-sp-d16\libc_nano.a(lib_a-sbrkr.o)
-                0x08007628                _sbrk_r
- .text.strcpy   0x08007648       0x10 c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu/fpv5-sp-d16\libc_nano.a(lib_a-strcpy.o)
-                0x08007648                strcpy
- .text.quorem   0x08007658      0x118 c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu/fpv5-sp-d16\libc_nano.a(lib_a-dtoa.o)
- .text._dtoa_r  0x08007770      0xb9c c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu/fpv5-sp-d16\libc_nano.a(lib_a-dtoa.o)
-                0x08007770                _dtoa_r
- .text.malloc   0x0800830c       0x10 c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu/fpv5-sp-d16\libc_nano.a(lib_a-malloc.o)
-                0x0800830c                malloc
- .text.memcpy   0x0800831c       0x16 c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu/fpv5-sp-d16\libc_nano.a(lib_a-memcpy-stub.o)
-                0x0800831c                memcpy
+                0x0800763c       0xbc c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu/fpv5-sp-d16\libc_nano.a(lib_a-nano-mallocr.o)
+                0x0800763c                _malloc_r
+ .text._sbrk_r  0x080076f8       0x20 c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu/fpv5-sp-d16\libc_nano.a(lib_a-sbrkr.o)
+                0x080076f8                _sbrk_r
+ .text.strcpy   0x08007718       0x10 c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu/fpv5-sp-d16\libc_nano.a(lib_a-strcpy.o)
+                0x08007718                strcpy
+ .text.quorem   0x08007728      0x118 c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu/fpv5-sp-d16\libc_nano.a(lib_a-dtoa.o)
+ .text._dtoa_r  0x08007840      0xb9c c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu/fpv5-sp-d16\libc_nano.a(lib_a-dtoa.o)
+                0x08007840                _dtoa_r
+ .text.malloc   0x080083dc       0x10 c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu/fpv5-sp-d16\libc_nano.a(lib_a-malloc.o)
+                0x080083dc                malloc
  .text.__malloc_lock
-                0x08008332        0x2 c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu/fpv5-sp-d16\libc_nano.a(lib_a-mlock.o)
-                0x08008332                __malloc_lock
+                0x080083ec        0x2 c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu/fpv5-sp-d16\libc_nano.a(lib_a-mlock.o)
+                0x080083ec                __malloc_lock
  .text.__malloc_unlock
-                0x08008334        0x2 c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu/fpv5-sp-d16\libc_nano.a(lib_a-mlock.o)
-                0x08008334                __malloc_unlock
- *fill*         0x08008336        0x2 
- .text._sbrk    0x08008338       0x1c c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu/fpv5-sp-d16\libnosys.a(sbrk.o)
-                0x08008338                _sbrk
+                0x080083ee        0x2 c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu/fpv5-sp-d16\libc_nano.a(lib_a-mlock.o)
+                0x080083ee                __malloc_unlock
+ .text._sbrk    0x080083f0       0x1c c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu/fpv5-sp-d16\libnosys.a(sbrk.o)
+                0x080083f0                _sbrk
  *(.glue_7)
- .glue_7        0x08008354        0x0 linker stubs
+ .glue_7        0x0800840c        0x0 linker stubs
  *(.glue_7t)
- .glue_7t       0x08008354        0x0 linker stubs
+ .glue_7t       0x0800840c        0x0 linker stubs
  *(.eh_frame)
- .eh_frame      0x08008354        0x0 c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/armv7e-m/fpu/fpv5-sp-d16/crtbegin.o
+ .eh_frame      0x0800840c        0x0 c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/armv7e-m/fpu/fpv5-sp-d16/crtbegin.o
  *(.init)
- .init          0x08008354        0x4 c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/armv7e-m/fpu/fpv5-sp-d16/crti.o
-                0x08008354                _init
- .init          0x08008358        0x8 c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/armv7e-m/fpu/fpv5-sp-d16/crtn.o
+ .init          0x0800840c        0x4 c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/armv7e-m/fpu/fpv5-sp-d16/crti.o
+                0x0800840c                _init
+ .init          0x08008410        0x8 c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/armv7e-m/fpu/fpv5-sp-d16/crtn.o
  *(.fini)
- .fini          0x08008360        0x4 c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/armv7e-m/fpu/fpv5-sp-d16/crti.o
-                0x08008360                _fini
- .fini          0x08008364        0x8 c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/armv7e-m/fpu/fpv5-sp-d16/crtn.o
-                0x0800836c                . = ALIGN (0x4)
-                0x0800836c                _etext = .
+ .fini          0x08008418        0x4 c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/armv7e-m/fpu/fpv5-sp-d16/crti.o
+                0x08008418                _fini
+ .fini          0x0800841c        0x8 c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/armv7e-m/fpu/fpv5-sp-d16/crtn.o
+                0x08008424                . = ALIGN (0x4)
+                0x08008424                _etext = .
 
-.vfp11_veneer   0x0800836c        0x0
- .vfp11_veneer  0x0800836c        0x0 linker stubs
+.vfp11_veneer   0x08008424        0x0
+ .vfp11_veneer  0x08008424        0x0 linker stubs
 
-.v4_bx          0x0800836c        0x0
- .v4_bx         0x0800836c        0x0 linker stubs
+.v4_bx          0x08008424        0x0
+ .v4_bx         0x08008424        0x0 linker stubs
 
-.iplt           0x0800836c        0x0
- .iplt          0x0800836c        0x0 c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/armv7e-m/fpu/fpv5-sp-d16/crtbegin.o
+.iplt           0x08008424        0x0
+ .iplt          0x08008424        0x0 c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/armv7e-m/fpu/fpv5-sp-d16/crtbegin.o
 
-.rodata         0x08008370    0x1f34c
-                0x08008370                . = ALIGN (0x4)
+.rodata         0x08008428    0x1f34c
+                0x08008428                . = ALIGN (0x4)
  *(.rodata)
  *(.rodata*)
  .rodata.CSWTCH.65
-                0x08008370       0x18 Src\inits.o
+                0x08008428       0x18 Src\inits.o
  .rodata.main.str1.4
-                0x08008388        0xb Src\main.o
- *fill*         0x08008393        0x1 
+                0x08008440        0xb Src\main.o
+ *fill*         0x0800844b        0x1 
  .rodata.measParamTexts
-                0x08008394       0x28 Src\measure.o
-                0x08008394                measParamTexts
+                0x0800844c       0x28 Src\measure.o
+                0x0800844c                measParamTexts
  .rodata.FONT_6X8
-                0x080083bc       0x14 Src\ugui.o
-                0x080083bc                FONT_6X8
+                0x08008474       0x14 Src\ugui.o
+                0x08008474                FONT_6X8
  .rodata.FONT_8X12
-                0x080083d0       0x14 Src\ugui.o
-                0x080083d0                FONT_8X12
+                0x08008488       0x14 Src\ugui.o
+                0x08008488                FONT_8X12
  .rodata.UG_ButtonCreate.str1.4
-                0x080083e4        0x2 Src\ugui.o
- *fill*         0x080083e6        0x2 
+                0x0800849c        0x2 Src\ugui.o
+ *fill*         0x0800849e        0x2 
  .rodata.font_6x8
-                0x080083e8      0x800 Src\ugui.o
-                0x080083e8                font_6x8
+                0x080084a0      0x800 Src\ugui.o
+                0x080084a0                font_6x8
  .rodata.font_8x12
-                0x08008be8      0xc00 Src\ugui.o
-                0x08008be8                font_8x12
+                0x08008ca0      0xc00 Src\ugui.o
+                0x08008ca0                font_8x12
  .rodata.pal_button_pressed
-                0x080097e8       0x18 Src\ugui.o
-                0x080097e8                pal_button_pressed
+                0x080098a0       0x18 Src\ugui.o
+                0x080098a0                pal_button_pressed
  .rodata.pal_button_released
-                0x08009800       0x18 Src\ugui.o
-                0x08009800                pal_button_released
+                0x080098b8       0x18 Src\ugui.o
+                0x080098b8                pal_button_released
  .rodata.pal_window
-                0x08009818       0x18 Src\ugui.o
-                0x08009818                pal_window
+                0x080098d0       0x18 Src\ugui.o
+                0x080098d0                pal_window
  .rodata.hertzToStr.str1.4
-                0x08009830       0x14 Src\ui.o
+                0x080098e8       0x14 Src\ui.o
                                  0x18 (size before relaxing)
  .rodata.initUI.str1.4
-                0x08009844       0xc1 Src\ui.o
+                0x080098fc       0xc1 Src\ui.o
                                  0xc5 (size before relaxing)
- *fill*         0x08009905        0x3 
+ *fill*         0x080099bd        0x3 
  .rodata.voltsToStr.str1.4
-                0x08009908        0xc Src\ui.o
+                0x080099c0        0xc Src\ui.o
                                  0x12 (size before relaxing)
  .rodata.window_5_callback.str1.4
-                0x08009914        0x8 Src\ui.o
+                0x080099cc        0x8 Src\ui.o
  .rodata.arm_cfft_sR_f32_len1024
-                0x0800991c       0x10 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_const_structs.o)
-                0x0800991c                arm_cfft_sR_f32_len1024
+                0x080099d4       0x10 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_const_structs.o)
+                0x080099d4                arm_cfft_sR_f32_len1024
  .rodata.arm_cfft_sR_f32_len128
-                0x0800992c       0x10 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_const_structs.o)
-                0x0800992c                arm_cfft_sR_f32_len128
+                0x080099e4       0x10 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_const_structs.o)
+                0x080099e4                arm_cfft_sR_f32_len128
  .rodata.arm_cfft_sR_f32_len16
-                0x0800993c       0x10 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_const_structs.o)
-                0x0800993c                arm_cfft_sR_f32_len16
+                0x080099f4       0x10 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_const_structs.o)
+                0x080099f4                arm_cfft_sR_f32_len16
  .rodata.arm_cfft_sR_f32_len2048
-                0x0800994c       0x10 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_const_structs.o)
-                0x0800994c                arm_cfft_sR_f32_len2048
+                0x08009a04       0x10 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_const_structs.o)
+                0x08009a04                arm_cfft_sR_f32_len2048
  .rodata.arm_cfft_sR_f32_len256
-                0x0800995c       0x10 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_const_structs.o)
-                0x0800995c                arm_cfft_sR_f32_len256
+                0x08009a14       0x10 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_const_structs.o)
+                0x08009a14                arm_cfft_sR_f32_len256
  .rodata.arm_cfft_sR_f32_len32
-                0x0800996c       0x10 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_const_structs.o)
-                0x0800996c                arm_cfft_sR_f32_len32
+                0x08009a24       0x10 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_const_structs.o)
+                0x08009a24                arm_cfft_sR_f32_len32
  .rodata.arm_cfft_sR_f32_len4096
-                0x0800997c       0x10 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_const_structs.o)
-                0x0800997c                arm_cfft_sR_f32_len4096
+                0x08009a34       0x10 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_const_structs.o)
+                0x08009a34                arm_cfft_sR_f32_len4096
  .rodata.arm_cfft_sR_f32_len512
-                0x0800998c       0x10 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_const_structs.o)
-                0x0800998c                arm_cfft_sR_f32_len512
+                0x08009a44       0x10 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_const_structs.o)
+                0x08009a44                arm_cfft_sR_f32_len512
  .rodata.arm_cfft_sR_f32_len64
-                0x0800999c       0x10 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_const_structs.o)
-                0x0800999c                arm_cfft_sR_f32_len64
+                0x08009a54       0x10 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_const_structs.o)
+                0x08009a54                arm_cfft_sR_f32_len64
  .rodata.armBitRevIndexTable1024
-                0x080099ac      0xe10 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_common_tables.o)
-                0x080099ac                armBitRevIndexTable1024
+                0x08009a64      0xe10 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_common_tables.o)
+                0x08009a64                armBitRevIndexTable1024
  .rodata.armBitRevIndexTable128
-                0x0800a7bc      0x1a0 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_common_tables.o)
-                0x0800a7bc                armBitRevIndexTable128
+                0x0800a874      0x1a0 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_common_tables.o)
+                0x0800a874                armBitRevIndexTable128
  .rodata.armBitRevIndexTable16
-                0x0800a95c       0x28 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_common_tables.o)
-                0x0800a95c                armBitRevIndexTable16
+                0x0800aa14       0x28 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_common_tables.o)
+                0x0800aa14                armBitRevIndexTable16
  .rodata.armBitRevIndexTable2048
-                0x0800a984     0x1dc0 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_common_tables.o)
-                0x0800a984                armBitRevIndexTable2048
+                0x0800aa3c     0x1dc0 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_common_tables.o)
+                0x0800aa3c                armBitRevIndexTable2048
  .rodata.armBitRevIndexTable256
-                0x0800c744      0x370 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_common_tables.o)
-                0x0800c744                armBitRevIndexTable256
+                0x0800c7fc      0x370 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_common_tables.o)
+                0x0800c7fc                armBitRevIndexTable256
  .rodata.armBitRevIndexTable32
-                0x0800cab4       0x60 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_common_tables.o)
-                0x0800cab4                armBitRevIndexTable32
+                0x0800cb6c       0x60 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_common_tables.o)
+                0x0800cb6c                armBitRevIndexTable32
  .rodata.armBitRevIndexTable4096
-                0x0800cb14     0x1f80 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_common_tables.o)
-                0x0800cb14                armBitRevIndexTable4096
+                0x0800cbcc     0x1f80 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_common_tables.o)
+                0x0800cbcc                armBitRevIndexTable4096
  .rodata.armBitRevIndexTable512
-                0x0800ea94      0x380 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_common_tables.o)
-                0x0800ea94                armBitRevIndexTable512
+                0x0800eb4c      0x380 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_common_tables.o)
+                0x0800eb4c                armBitRevIndexTable512
  .rodata.armBitRevIndexTable64
-                0x0800ee14       0x70 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_common_tables.o)
-                0x0800ee14                armBitRevIndexTable64
+                0x0800eecc       0x70 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_common_tables.o)
+                0x0800eecc                armBitRevIndexTable64
  .rodata.sinTable_f32
-                0x0800ee84      0x804 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_common_tables.o)
-                0x0800ee84                sinTable_f32
+                0x0800ef3c      0x804 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_common_tables.o)
+                0x0800ef3c                sinTable_f32
  .rodata.twiddleCoef_1024
-                0x0800f688     0x2000 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_common_tables.o)
-                0x0800f688                twiddleCoef_1024
+                0x0800f740     0x2000 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_common_tables.o)
+                0x0800f740                twiddleCoef_1024
  .rodata.twiddleCoef_128
-                0x08011688      0x400 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_common_tables.o)
-                0x08011688                twiddleCoef_128
+                0x08011740      0x400 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_common_tables.o)
+                0x08011740                twiddleCoef_128
  .rodata.twiddleCoef_16
-                0x08011a88       0x80 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_common_tables.o)
-                0x08011a88                twiddleCoef_16
+                0x08011b40       0x80 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_common_tables.o)
+                0x08011b40                twiddleCoef_16
  .rodata.twiddleCoef_2048
-                0x08011b08     0x4000 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_common_tables.o)
-                0x08011b08                twiddleCoef_2048
+                0x08011bc0     0x4000 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_common_tables.o)
+                0x08011bc0                twiddleCoef_2048
  .rodata.twiddleCoef_256
-                0x08015b08      0x800 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_common_tables.o)
-                0x08015b08                twiddleCoef_256
+                0x08015bc0      0x800 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_common_tables.o)
+                0x08015bc0                twiddleCoef_256
  .rodata.twiddleCoef_32
-                0x08016308      0x100 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_common_tables.o)
-                0x08016308                twiddleCoef_32
+                0x080163c0      0x100 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_common_tables.o)
+                0x080163c0                twiddleCoef_32
  .rodata.twiddleCoef_4096
-                0x08016408     0x8000 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_common_tables.o)
-                0x08016408                twiddleCoef_4096
+                0x080164c0     0x8000 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_common_tables.o)
+                0x080164c0                twiddleCoef_4096
  .rodata.twiddleCoef_512
-                0x0801e408     0x1000 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_common_tables.o)
-                0x0801e408                twiddleCoef_512
+                0x0801e4c0     0x1000 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_common_tables.o)
+                0x0801e4c0                twiddleCoef_512
  .rodata.twiddleCoef_64
-                0x0801f408      0x200 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_common_tables.o)
-                0x0801f408                twiddleCoef_64
+                0x0801f4c0      0x200 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_common_tables.o)
+                0x0801f4c0                twiddleCoef_64
  .rodata.twiddleCoef_rfft_1024
-                0x0801f608     0x1000 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_common_tables.o)
-                0x0801f608                twiddleCoef_rfft_1024
+                0x0801f6c0     0x1000 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_common_tables.o)
+                0x0801f6c0                twiddleCoef_rfft_1024
  .rodata.twiddleCoef_rfft_128
-                0x08020608      0x200 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_common_tables.o)
-                0x08020608                twiddleCoef_rfft_128
+                0x080206c0      0x200 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_common_tables.o)
+                0x080206c0                twiddleCoef_rfft_128
  .rodata.twiddleCoef_rfft_2048
-                0x08020808     0x2000 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_common_tables.o)
-                0x08020808                twiddleCoef_rfft_2048
+                0x080208c0     0x2000 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_common_tables.o)
+                0x080208c0                twiddleCoef_rfft_2048
  .rodata.twiddleCoef_rfft_256
-                0x08022808      0x400 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_common_tables.o)
-                0x08022808                twiddleCoef_rfft_256
+                0x080228c0      0x400 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_common_tables.o)
+                0x080228c0                twiddleCoef_rfft_256
  .rodata.twiddleCoef_rfft_32
-                0x08022c08       0x80 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_common_tables.o)
-                0x08022c08                twiddleCoef_rfft_32
+                0x08022cc0       0x80 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_common_tables.o)
+                0x08022cc0                twiddleCoef_rfft_32
  .rodata.twiddleCoef_rfft_4096
-                0x08022c88     0x4000 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_common_tables.o)
-                0x08022c88                twiddleCoef_rfft_4096
+                0x08022d40     0x4000 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_common_tables.o)
+                0x08022d40                twiddleCoef_rfft_4096
  .rodata.twiddleCoef_rfft_512
-                0x08026c88      0x800 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_common_tables.o)
-                0x08026c88                twiddleCoef_rfft_512
+                0x08026d40      0x800 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_common_tables.o)
+                0x08026d40                twiddleCoef_rfft_512
  .rodata.twiddleCoef_rfft_64
-                0x08027488      0x100 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_common_tables.o)
-                0x08027488                twiddleCoef_rfft_64
+                0x08027540      0x100 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_common_tables.o)
+                0x08027540                twiddleCoef_rfft_64
  .rodata.__utoa.str1.1
-                0x08027588       0x25 c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu/fpv5-sp-d16\libc_nano.a(lib_a-utoa.o)
- *fill*         0x080275ad        0x3 
+                0x08027640       0x25 c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu/fpv5-sp-d16\libc_nano.a(lib_a-utoa.o)
+ *fill*         0x08027665        0x3 
  .rodata.__mprec_bigtens
-                0x080275b0       0x28 c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu/fpv5-sp-d16\libc_nano.a(lib_a-mprec.o)
-                0x080275b0                __mprec_bigtens
+                0x08027668       0x28 c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu/fpv5-sp-d16\libc_nano.a(lib_a-mprec.o)
+                0x08027668                __mprec_bigtens
  .rodata.__mprec_tens
-                0x080275d8       0xc8 c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu/fpv5-sp-d16\libc_nano.a(lib_a-mprec.o)
-                0x080275d8                __mprec_tens
+                0x08027690       0xc8 c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu/fpv5-sp-d16\libc_nano.a(lib_a-mprec.o)
+                0x08027690                __mprec_tens
  .rodata.p05.7175
-                0x080276a0        0xc c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu/fpv5-sp-d16\libc_nano.a(lib_a-mprec.o)
+                0x08027758        0xc c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu/fpv5-sp-d16\libc_nano.a(lib_a-mprec.o)
  .rodata._dtoa_r.str1.1
-                0x080276ac        0xf c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu/fpv5-sp-d16\libc_nano.a(lib_a-dtoa.o)
-                0x080276bc                . = ALIGN (0x4)
- *fill*         0x080276bb        0x1 
+                0x08027764        0xf c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu/fpv5-sp-d16\libc_nano.a(lib_a-dtoa.o)
+                0x08027774                . = ALIGN (0x4)
+ *fill*         0x08027773        0x1 
 
-.rel.dyn        0x080276bc        0x0
- .rel.iplt      0x080276bc        0x0 c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/armv7e-m/fpu/fpv5-sp-d16/crtbegin.o
+.rel.dyn        0x08027774        0x0
+ .rel.iplt      0x08027774        0x0 c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/armv7e-m/fpu/fpv5-sp-d16/crtbegin.o
 
 .ARM.extab
  *(.ARM.extab* .gnu.linkonce.armextab.*)
 
-.ARM            0x080276bc        0x0
-                0x080276bc                __exidx_start = .
+.ARM            0x08027774        0x0
+                0x08027774                __exidx_start = .
  *(.ARM.exidx*)
-                0x080276bc                __exidx_end = .
+                0x08027774                __exidx_end = .
 
-.preinit_array  0x080276bc        0x0
-                0x080276bc                PROVIDE (__preinit_array_start, .)
+.preinit_array  0x08027774        0x0
+                0x08027774                PROVIDE (__preinit_array_start, .)
  *(.preinit_array*)
-                0x080276bc                PROVIDE (__preinit_array_end, .)
+                0x08027774                PROVIDE (__preinit_array_end, .)
 
-.init_array     0x080276bc        0x4
-                0x080276bc                PROVIDE (__init_array_start, .)
+.init_array     0x08027774        0x4
+                0x08027774                PROVIDE (__init_array_start, .)
  *(SORT(.init_array.*))
  *(.init_array*)
- .init_array    0x080276bc        0x4 c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/armv7e-m/fpu/fpv5-sp-d16/crtbegin.o
-                0x080276c0                PROVIDE (__init_array_end, .)
+ .init_array    0x08027774        0x4 c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/armv7e-m/fpu/fpv5-sp-d16/crtbegin.o
+                0x08027778                PROVIDE (__init_array_end, .)
 
-.fini_array     0x080276c0        0x4
+.fini_array     0x08027778        0x4
                 [!provide]                PROVIDE (__fini_array_start, .)
  *(SORT(.fini_array.*))
  *(.fini_array*)
- .fini_array    0x080276c0        0x4 c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/armv7e-m/fpu/fpv5-sp-d16/crtbegin.o
+ .fini_array    0x08027778        0x4 c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/armv7e-m/fpu/fpv5-sp-d16/crtbegin.o
                 [!provide]                PROVIDE (__fini_array_end, .)
-                0x080276c4                _sidata = LOADADDR (.data)
+                0x0802777c                _sidata = LOADADDR (.data)
 
-.data           0x20000000       0x6c load address 0x080276c4
+.data           0x20000000       0x6c load address 0x0802777c
                 0x20000000                . = ALIGN (0x4)
                 0x20000000                _sdata = .
  *(.data)
@@ -3087,11 +3087,11 @@ LOAD c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../l
                 0x2000006c                . = ALIGN (0x4)
                 0x2000006c                _edata = .
 
-.igot.plt       0x2000006c        0x0 load address 0x08027730
+.igot.plt       0x2000006c        0x0 load address 0x080277e8
  .igot.plt      0x2000006c        0x0 c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/armv7e-m/fpu/fpv5-sp-d16/crtbegin.o
                 0x2000006c                . = ALIGN (0x4)
 
-.bss            0x2000006c      0xec8 load address 0x08027730
+.bss            0x2000006c     0x174c load address 0x080277e8
                 0x2000006c                _sbss = .
                 0x2000006c                __bss_start__ = _sbss
  *(.bss)
@@ -3158,75 +3158,75 @@ LOAD c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../l
                 0x200004bc                buf1
                 0x200004c8                buf2
  *fill*         0x200004d3        0x1 
- COMMON         0x200004d4        0xe Src\measure.o
+ COMMON         0x200004d4      0x892 Src\measure.o
                 0x200004d4                measure1
                 0x200004d8                measure3
-                0x200004dc                measure2
-                0x200004e0                measure4
- COMMON         0x200004e2        0x4 Src\touch.o
-                0x200004e2                TS_X
-                0x200004e4                TS_Y
- *fill*         0x200004e6        0x2 
- COMMON         0x200004e8      0xa48 Src\ui.o
-                0x200004e8                txtb2_4
-                0x200004fc                obj_buff_wnd_2
-                0x2000063c                button4_1
-                0x20000654                button3_1
-                0x2000066c                window_5
-                0x200006a0                txtb5_0
-                0x200006b4                button5_1
-                0x200006cc                button3_2
-                0x200006e4                txtb1_2
-                0x200006f8                button4_4
-                0x20000710                txtb2_5
-                0x20000724                txtb2_0
-                0x20000738                obj_buff_wnd_1
-                0x20000878                button4_0
-                0x20000890                button3_3
-                0x200008a8                txtb4_0
-                0x200008bc                txtb2_3
-                0x200008d0                obj_buff_wnd_3
-                0x20000a10                window_2
-                0x20000a44                window_1
-                0x20000a78                txtb3_0
-                0x20000a8c                txtb2_2
-                0x20000aa0                txtb1_0
-                0x20000ab4                button5_0
-                0x20000acc                gui
-                0x20000b30                txtb1_5
-                0x20000b44                button1_0
-                0x20000b5c                txtb1_6
-                0x20000b70                button4_2
-                0x20000b88                obj_buff_wnd_5
-                0x20000cc8                button3_4
-                0x20000ce0                button3_0
-                0x20000cf8                txtb1_4
-                0x20000d0c                txtb2_6
-                0x20000d20                txtb2_1
-                0x20000d34                txtb1_3
-                0x20000d48                window_3
-                0x20000d7c                window_4
-                0x20000db0                button4_3
-                0x20000dc8                txtb1_1
-                0x20000ddc                txtb5_1
-                0x20000df0                obj_buff_wnd_4
- COMMON         0x20000f30        0x4 c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu/fpv5-sp-d16\libc_nano.a(lib_a-reent.o)
-                0x20000f30                errno
-                0x20000f34                . = ALIGN (0x4)
-                0x20000f34                _ebss = .
-                0x20000f34                __bss_end__ = _ebss
+                0x200004dc                cztout
+                0x20000d60                measure2
+                0x20000d64                measure4
+ COMMON         0x20000d66        0x4 Src\touch.o
+                0x20000d66                TS_X
+                0x20000d68                TS_Y
+ *fill*         0x20000d6a        0x2 
+ COMMON         0x20000d6c      0xa48 Src\ui.o
+                0x20000d6c                txtb2_4
+                0x20000d80                obj_buff_wnd_2
+                0x20000ec0                button4_1
+                0x20000ed8                button3_1
+                0x20000ef0                window_5
+                0x20000f24                txtb5_0
+                0x20000f38                button5_1
+                0x20000f50                button3_2
+                0x20000f68                txtb1_2
+                0x20000f7c                button4_4
+                0x20000f94                txtb2_5
+                0x20000fa8                txtb2_0
+                0x20000fbc                obj_buff_wnd_1
+                0x200010fc                button4_0
+                0x20001114                button3_3
+                0x2000112c                txtb4_0
+                0x20001140                txtb2_3
+                0x20001154                obj_buff_wnd_3
+                0x20001294                window_2
+                0x200012c8                window_1
+                0x200012fc                txtb3_0
+                0x20001310                txtb2_2
+                0x20001324                txtb1_0
+                0x20001338                button5_0
+                0x20001350                gui
+                0x200013b4                txtb1_5
+                0x200013c8                button1_0
+                0x200013e0                txtb1_6
+                0x200013f4                button4_2
+                0x2000140c                obj_buff_wnd_5
+                0x2000154c                button3_4
+                0x20001564                button3_0
+                0x2000157c                txtb1_4
+                0x20001590                txtb2_6
+                0x200015a4                txtb2_1
+                0x200015b8                txtb1_3
+                0x200015cc                window_3
+                0x20001600                window_4
+                0x20001634                button4_3
+                0x2000164c                txtb1_1
+                0x20001660                txtb5_1
+                0x20001674                obj_buff_wnd_4
+ COMMON         0x200017b4        0x4 c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu/fpv5-sp-d16\libc_nano.a(lib_a-reent.o)
+                0x200017b4                errno
+                0x200017b8                . = ALIGN (0x4)
+                0x200017b8                _ebss = .
+                0x200017b8                __bss_end__ = _ebss
 
 ._user_heap_stack
-                0x20000f34      0x604 load address 0x08027730
-                0x20000f38                . = ALIGN (0x8)
- *fill*         0x20000f34        0x4 
-                0x20000f38                PROVIDE (end, .)
+                0x200017b8      0x600 load address 0x080277e8
+                0x200017b8                . = ALIGN (0x8)
+                0x200017b8                PROVIDE (end, .)
                 [!provide]                PROVIDE (_end, .)
-                0x20001138                . = (. + _Min_Heap_Size)
- *fill*         0x20000f38      0x200 
-                0x20001538                . = (. + _Min_Stack_Size)
- *fill*         0x20001138      0x400 
-                0x20001538                . = ALIGN (0x8)
+                0x200019b8                . = (. + _Min_Heap_Size)
+ *fill*         0x200017b8      0x200 
+                0x20001db8                . = (. + _Min_Stack_Size)
+ *fill*         0x200019b8      0x400 
+                0x20001db8                . = ALIGN (0x8)
 
 /DISCARD/
  libc.a(*)
@@ -3301,31 +3301,31 @@ LOAD c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../l
  .ARM.attributes
                 0x0000063d       0x34 c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu/fpv5-sp-d16\libc_nano.a(lib_a-itoa.o)
  .ARM.attributes
-                0x00000671       0x34 c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu/fpv5-sp-d16\libc_nano.a(lib_a-memset.o)
+                0x00000671       0x34 c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu/fpv5-sp-d16\libc_nano.a(lib_a-memcpy-stub.o)
  .ARM.attributes
-                0x000006a5       0x34 c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu/fpv5-sp-d16\libc_nano.a(lib_a-stpcpy.o)
+                0x000006a5       0x34 c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu/fpv5-sp-d16\libc_nano.a(lib_a-memset.o)
  .ARM.attributes
-                0x000006d9       0x1b c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu/fpv5-sp-d16\libc_nano.a(lib_a-strlen.o)
+                0x000006d9       0x34 c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu/fpv5-sp-d16\libc_nano.a(lib_a-stpcpy.o)
  .ARM.attributes
-                0x000006f4       0x34 c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu/fpv5-sp-d16\libc_nano.a(lib_a-utoa.o)
+                0x0000070d       0x1b c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu/fpv5-sp-d16\libc_nano.a(lib_a-strlen.o)
  .ARM.attributes
-                0x00000728       0x34 c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu/fpv5-sp-d16\libc_nano.a(lib_a-ecvtbuf.o)
+                0x00000728       0x34 c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu/fpv5-sp-d16\libc_nano.a(lib_a-utoa.o)
  .ARM.attributes
-                0x0000075c       0x34 c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu/fpv5-sp-d16\libc_nano.a(lib_a-mprec.o)
+                0x0000075c       0x34 c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu/fpv5-sp-d16\libc_nano.a(lib_a-ecvtbuf.o)
  .ARM.attributes
-                0x00000790       0x34 c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu/fpv5-sp-d16\libc_nano.a(lib_a-nano-callocr.o)
+                0x00000790       0x34 c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu/fpv5-sp-d16\libc_nano.a(lib_a-mprec.o)
  .ARM.attributes
-                0x000007c4       0x34 c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu/fpv5-sp-d16\libc_nano.a(lib_a-nano-mallocr.o)
+                0x000007c4       0x34 c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu/fpv5-sp-d16\libc_nano.a(lib_a-nano-callocr.o)
  .ARM.attributes
-                0x000007f8       0x34 c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu/fpv5-sp-d16\libc_nano.a(lib_a-sbrkr.o)
+                0x000007f8       0x34 c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu/fpv5-sp-d16\libc_nano.a(lib_a-nano-mallocr.o)
  .ARM.attributes
-                0x0000082c       0x34 c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu/fpv5-sp-d16\libc_nano.a(lib_a-strcpy.o)
+                0x0000082c       0x34 c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu/fpv5-sp-d16\libc_nano.a(lib_a-sbrkr.o)
  .ARM.attributes
-                0x00000860       0x34 c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu/fpv5-sp-d16\libc_nano.a(lib_a-dtoa.o)
+                0x00000860       0x34 c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu/fpv5-sp-d16\libc_nano.a(lib_a-strcpy.o)
  .ARM.attributes
-                0x00000894       0x34 c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu/fpv5-sp-d16\libc_nano.a(lib_a-malloc.o)
+                0x00000894       0x34 c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu/fpv5-sp-d16\libc_nano.a(lib_a-dtoa.o)
  .ARM.attributes
-                0x000008c8       0x34 c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu/fpv5-sp-d16\libc_nano.a(lib_a-memcpy-stub.o)
+                0x000008c8       0x34 c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu/fpv5-sp-d16\libc_nano.a(lib_a-malloc.o)
  .ARM.attributes
                 0x000008fc       0x34 c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu/fpv5-sp-d16\libc_nano.a(lib_a-mlock.o)
  .ARM.attributes
@@ -3346,85 +3346,85 @@ LOAD c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../l
                 0x00000a42       0x22 c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/armv7e-m/fpu/fpv5-sp-d16/crtn.o
 OUTPUT(H7oscillo-v2.elf elf32-littlearm)
 
-.debug_info     0x00000000    0x2e973
+.debug_info     0x00000000    0x2e9e1
  .debug_info    0x00000000      0xc9f Drivers\STM32F7xx_LL_Driver\stm32f7xx_ll_utils.o
  .debug_info    0x00000c9f     0x17f6 Src\display.o
  .debug_info    0x00002495      0x30f Src\globals.o
  .debug_info    0x000027a4     0x1b2c Src\i2c.o
  .debug_info    0x000042d0     0x4cd1 Src\inits.o
  .debug_info    0x00008fa1     0x1e7b Src\main.o
- .debug_info    0x0000ae1c     0x1ff3 Src\measure.o
- .debug_info    0x0000ce0f       0x7a Src\startup_stm32f746xx.o
- .debug_info    0x0000ce89     0x1c25 Src\stm32f7xx_it.o
- .debug_info    0x0000eaae      0x6f0 Src\system_stm32f7xx.o
- .debug_info    0x0000f19e     0x1892 Src\touch.o
- .debug_info    0x00010a30     0x8717 Src\ugui.o
- .debug_info    0x00019147     0x35ef Src\ui.o
- .debug_info    0x0001c736      0xb46 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_max_f32.o)
- .debug_info    0x0001d27c     0x1c05 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_cfft_init_f32.o)
- .debug_info    0x0001ee81     0x1c2f C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_rfft_fast_init_f32.o)
- .debug_info    0x00020ab0      0xfb7 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_rfft_fast_f32.o)
- .debug_info    0x00021a67     0x1edd C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_cfft_f32.o)
- .debug_info    0x00023944     0x19b0 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_bitreversal2.o)
- .debug_info    0x000252f4      0xb3c C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_cmplx_mult_cmplx_f32.o)
- .debug_info    0x00025e30      0xb08 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_cmplx_mag_squared_f32.o)
- .debug_info    0x00026938     0x1874 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_sin_f32.o)
- .debug_info    0x000281ac     0x1874 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_cos_f32.o)
- .debug_info    0x00029a20     0x21e3 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_const_structs.o)
- .debug_info    0x0002bc03     0x1e86 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_common_tables.o)
- .debug_info    0x0002da89      0xeea C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_cfft_radix8_f32.o)
+ .debug_info    0x0000ae1c     0x2055 Src\measure.o
+ .debug_info    0x0000ce71       0x7a Src\startup_stm32f746xx.o
+ .debug_info    0x0000ceeb     0x1c25 Src\stm32f7xx_it.o
+ .debug_info    0x0000eb10      0x6f0 Src\system_stm32f7xx.o
+ .debug_info    0x0000f200     0x1892 Src\touch.o
+ .debug_info    0x00010a92     0x8717 Src\ugui.o
+ .debug_info    0x000191a9     0x35fb Src\ui.o
+ .debug_info    0x0001c7a4      0xb46 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_max_f32.o)
+ .debug_info    0x0001d2ea     0x1c05 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_cfft_init_f32.o)
+ .debug_info    0x0001eeef     0x1c2f C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_rfft_fast_init_f32.o)
+ .debug_info    0x00020b1e      0xfb7 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_rfft_fast_f32.o)
+ .debug_info    0x00021ad5     0x1edd C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_cfft_f32.o)
+ .debug_info    0x000239b2     0x19b0 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_bitreversal2.o)
+ .debug_info    0x00025362      0xb3c C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_cmplx_mult_cmplx_f32.o)
+ .debug_info    0x00025e9e      0xb08 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_cmplx_mag_squared_f32.o)
+ .debug_info    0x000269a6     0x1874 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_sin_f32.o)
+ .debug_info    0x0002821a     0x1874 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_cos_f32.o)
+ .debug_info    0x00029a8e     0x21e3 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_const_structs.o)
+ .debug_info    0x0002bc71     0x1e86 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_common_tables.o)
+ .debug_info    0x0002daf7      0xeea C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_cfft_radix8_f32.o)
 
-.debug_abbrev   0x00000000     0x3ece
+.debug_abbrev   0x00000000     0x3ee1
  .debug_abbrev  0x00000000      0x2db Drivers\STM32F7xx_LL_Driver\stm32f7xx_ll_utils.o
  .debug_abbrev  0x000002db      0x285 Src\display.o
  .debug_abbrev  0x00000560       0xda Src\globals.o
  .debug_abbrev  0x0000063a      0x2a5 Src\i2c.o
  .debug_abbrev  0x000008df      0x442 Src\inits.o
  .debug_abbrev  0x00000d21      0x2b7 Src\main.o
- .debug_abbrev  0x00000fd8      0x407 Src\measure.o
- .debug_abbrev  0x000013df       0x12 Src\startup_stm32f746xx.o
- .debug_abbrev  0x000013f1      0x2d1 Src\stm32f7xx_it.o
- .debug_abbrev  0x000016c2      0x12d Src\system_stm32f7xx.o
- .debug_abbrev  0x000017ef      0x2fc Src\touch.o
- .debug_abbrev  0x00001aeb      0x3ed Src\ugui.o
- .debug_abbrev  0x00001ed8      0x3be Src\ui.o
- .debug_abbrev  0x00002296      0x212 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_max_f32.o)
- .debug_abbrev  0x000024a8      0x232 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_cfft_init_f32.o)
- .debug_abbrev  0x000026da      0x2c9 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_rfft_fast_init_f32.o)
- .debug_abbrev  0x000029a3      0x260 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_rfft_fast_f32.o)
- .debug_abbrev  0x00002c03      0x288 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_cfft_f32.o)
- .debug_abbrev  0x00002e8b      0x21a C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_bitreversal2.o)
- .debug_abbrev  0x000030a5      0x1ff C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_cmplx_mult_cmplx_f32.o)
- .debug_abbrev  0x000032a4      0x1eb C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_cmplx_mag_squared_f32.o)
- .debug_abbrev  0x0000348f      0x22c C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_sin_f32.o)
- .debug_abbrev  0x000036bb      0x22c C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_cos_f32.o)
- .debug_abbrev  0x000038e7      0x1f0 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_const_structs.o)
- .debug_abbrev  0x00003ad7      0x1ec C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_common_tables.o)
- .debug_abbrev  0x00003cc3      0x20b C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_cfft_radix8_f32.o)
+ .debug_abbrev  0x00000fd8      0x41a Src\measure.o
+ .debug_abbrev  0x000013f2       0x12 Src\startup_stm32f746xx.o
+ .debug_abbrev  0x00001404      0x2d1 Src\stm32f7xx_it.o
+ .debug_abbrev  0x000016d5      0x12d Src\system_stm32f7xx.o
+ .debug_abbrev  0x00001802      0x2fc Src\touch.o
+ .debug_abbrev  0x00001afe      0x3ed Src\ugui.o
+ .debug_abbrev  0x00001eeb      0x3be Src\ui.o
+ .debug_abbrev  0x000022a9      0x212 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_max_f32.o)
+ .debug_abbrev  0x000024bb      0x232 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_cfft_init_f32.o)
+ .debug_abbrev  0x000026ed      0x2c9 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_rfft_fast_init_f32.o)
+ .debug_abbrev  0x000029b6      0x260 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_rfft_fast_f32.o)
+ .debug_abbrev  0x00002c16      0x288 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_cfft_f32.o)
+ .debug_abbrev  0x00002e9e      0x21a C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_bitreversal2.o)
+ .debug_abbrev  0x000030b8      0x1ff C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_cmplx_mult_cmplx_f32.o)
+ .debug_abbrev  0x000032b7      0x1eb C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_cmplx_mag_squared_f32.o)
+ .debug_abbrev  0x000034a2      0x22c C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_sin_f32.o)
+ .debug_abbrev  0x000036ce      0x22c C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_cos_f32.o)
+ .debug_abbrev  0x000038fa      0x1f0 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_const_structs.o)
+ .debug_abbrev  0x00003aea      0x1ec C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_common_tables.o)
+ .debug_abbrev  0x00003cd6      0x20b C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_cfft_radix8_f32.o)
 
-.debug_loc      0x00000000    0x141e0
+.debug_loc      0x00000000    0x1419f
  .debug_loc     0x00000000      0x65d Drivers\STM32F7xx_LL_Driver\stm32f7xx_ll_utils.o
  .debug_loc     0x0000065d      0x1c8 Src\display.o
  .debug_loc     0x00000825      0x3e7 Src\i2c.o
  .debug_loc     0x00000c0c     0x144c Src\inits.o
  .debug_loc     0x00002058      0x136 Src\main.o
- .debug_loc     0x0000218e      0x929 Src\measure.o
- .debug_loc     0x00002ab7       0x83 Src\stm32f7xx_it.o
- .debug_loc     0x00002b3a      0x14c Src\system_stm32f7xx.o
- .debug_loc     0x00002c86      0x146 Src\touch.o
- .debug_loc     0x00002dcc     0xc98e Src\ugui.o
- .debug_loc     0x0000f75a      0x4c0 Src\ui.o
- .debug_loc     0x0000fc1a      0x31e C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_max_f32.o)
- .debug_loc     0x0000ff38      0x1ee C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_cfft_init_f32.o)
- .debug_loc     0x00010126      0x519 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_rfft_fast_init_f32.o)
- .debug_loc     0x0001063f      0xaa5 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_rfft_fast_f32.o)
- .debug_loc     0x000110e4     0x1789 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_cfft_f32.o)
- .debug_loc     0x0001286d      0x3a9 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_bitreversal2.o)
- .debug_loc     0x00012c16      0x598 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_cmplx_mult_cmplx_f32.o)
- .debug_loc     0x000131ae      0x42e C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_cmplx_mag_squared_f32.o)
- .debug_loc     0x000135dc       0xfa C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_sin_f32.o)
- .debug_loc     0x000136d6       0xfa C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_cos_f32.o)
- .debug_loc     0x000137d0      0xa10 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_cfft_radix8_f32.o)
+ .debug_loc     0x0000218e      0x85c Src\measure.o
+ .debug_loc     0x000029ea       0x83 Src\stm32f7xx_it.o
+ .debug_loc     0x00002a6d      0x14c Src\system_stm32f7xx.o
+ .debug_loc     0x00002bb9      0x146 Src\touch.o
+ .debug_loc     0x00002cff     0xc98e Src\ugui.o
+ .debug_loc     0x0000f68d      0x54c Src\ui.o
+ .debug_loc     0x0000fbd9      0x31e C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_max_f32.o)
+ .debug_loc     0x0000fef7      0x1ee C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_cfft_init_f32.o)
+ .debug_loc     0x000100e5      0x519 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_rfft_fast_init_f32.o)
+ .debug_loc     0x000105fe      0xaa5 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_rfft_fast_f32.o)
+ .debug_loc     0x000110a3     0x1789 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_cfft_f32.o)
+ .debug_loc     0x0001282c      0x3a9 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_bitreversal2.o)
+ .debug_loc     0x00012bd5      0x598 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_cmplx_mult_cmplx_f32.o)
+ .debug_loc     0x0001316d      0x42e C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_cmplx_mag_squared_f32.o)
+ .debug_loc     0x0001359b       0xfa C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_sin_f32.o)
+ .debug_loc     0x00013695       0xfa C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_cos_f32.o)
+ .debug_loc     0x0001378f      0xa10 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_cfft_radix8_f32.o)
 
 .debug_aranges  0x00000000      0xac8
  .debug_aranges
@@ -3480,30 +3480,30 @@ OUTPUT(H7oscillo-v2.elf elf32-littlearm)
  .debug_aranges
                 0x00000aa8       0x20 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_cfft_radix8_f32.o)
 
-.debug_ranges   0x00000000     0x2918
+.debug_ranges   0x00000000     0x28e8
  .debug_ranges  0x00000000      0x250 Drivers\STM32F7xx_LL_Driver\stm32f7xx_ll_utils.o
  .debug_ranges  0x00000250       0x38 Src\display.o
  .debug_ranges  0x00000288       0x98 Src\i2c.o
  .debug_ranges  0x00000320     0x12c0 Src\inits.o
  .debug_ranges  0x000015e0       0x18 Src\main.o
- .debug_ranges  0x000015f8       0xc0 Src\measure.o
- .debug_ranges  0x000016b8       0x20 Src\startup_stm32f746xx.o
- .debug_ranges  0x000016d8       0xb8 Src\stm32f7xx_it.o
- .debug_ranges  0x00001790       0x18 Src\system_stm32f7xx.o
- .debug_ranges  0x000017a8       0xa8 Src\touch.o
- .debug_ranges  0x00001850      0xeb8 Src\ugui.o
- .debug_ranges  0x00002708       0xf0 Src\ui.o
- .debug_ranges  0x000027f8       0x10 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_max_f32.o)
- .debug_ranges  0x00002808       0x10 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_cfft_init_f32.o)
- .debug_ranges  0x00002818       0x50 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_rfft_fast_init_f32.o)
- .debug_ranges  0x00002868       0x20 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_rfft_fast_f32.o)
- .debug_ranges  0x00002888       0x20 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_cfft_f32.o)
- .debug_ranges  0x000028a8       0x20 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_bitreversal2.o)
- .debug_ranges  0x000028c8       0x10 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_cmplx_mult_cmplx_f32.o)
- .debug_ranges  0x000028d8       0x10 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_cmplx_mag_squared_f32.o)
- .debug_ranges  0x000028e8       0x10 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_sin_f32.o)
- .debug_ranges  0x000028f8       0x10 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_cos_f32.o)
- .debug_ranges  0x00002908       0x10 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_cfft_radix8_f32.o)
+ .debug_ranges  0x000015f8       0x90 Src\measure.o
+ .debug_ranges  0x00001688       0x20 Src\startup_stm32f746xx.o
+ .debug_ranges  0x000016a8       0xb8 Src\stm32f7xx_it.o
+ .debug_ranges  0x00001760       0x18 Src\system_stm32f7xx.o
+ .debug_ranges  0x00001778       0xa8 Src\touch.o
+ .debug_ranges  0x00001820      0xeb8 Src\ugui.o
+ .debug_ranges  0x000026d8       0xf0 Src\ui.o
+ .debug_ranges  0x000027c8       0x10 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_max_f32.o)
+ .debug_ranges  0x000027d8       0x10 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_cfft_init_f32.o)
+ .debug_ranges  0x000027e8       0x50 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_rfft_fast_init_f32.o)
+ .debug_ranges  0x00002838       0x20 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_rfft_fast_f32.o)
+ .debug_ranges  0x00002858       0x20 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_cfft_f32.o)
+ .debug_ranges  0x00002878       0x20 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_bitreversal2.o)
+ .debug_ranges  0x00002898       0x10 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_cmplx_mult_cmplx_f32.o)
+ .debug_ranges  0x000028a8       0x10 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_cmplx_mag_squared_f32.o)
+ .debug_ranges  0x000028b8       0x10 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_sin_f32.o)
+ .debug_ranges  0x000028c8       0x10 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_cos_f32.o)
+ .debug_ranges  0x000028d8       0x10 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_cfft_radix8_f32.o)
 
 .debug_macro    0x00000000    0x217f3
  .debug_macro   0x00000000      0x1e7 Drivers\STM32F7xx_LL_Driver\stm32f7xx_ll_utils.o
@@ -3582,35 +3582,35 @@ OUTPUT(H7oscillo-v2.elf elf32-littlearm)
  .debug_macro   0x00021490       0x28 Src\ugui.o
  .debug_macro   0x000214b8      0x33b Src\ui.o
 
-.debug_line     0x00000000     0xd649
+.debug_line     0x00000000     0xd62b
  .debug_line    0x00000000      0x728 Drivers\STM32F7xx_LL_Driver\stm32f7xx_ll_utils.o
  .debug_line    0x00000728      0x934 Src\display.o
  .debug_line    0x0000105c      0x3b2 Src\globals.o
  .debug_line    0x0000140e      0x94e Src\i2c.o
  .debug_line    0x00001d5c     0x18c5 Src\inits.o
  .debug_line    0x00003621      0x94e Src\main.o
- .debug_line    0x00003f6f      0xa23 Src\measure.o
- .debug_line    0x00004992       0x7a Src\startup_stm32f746xx.o
- .debug_line    0x00004a0c      0x95b Src\stm32f7xx_it.o
- .debug_line    0x00005367      0x3d5 Src\system_stm32f7xx.o
- .debug_line    0x0000573c      0x8b7 Src\touch.o
- .debug_line    0x00005ff3     0x2a59 Src\ugui.o
- .debug_line    0x00008a4c      0xb1e Src\ui.o
- .debug_line    0x0000956a      0x336 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_max_f32.o)
- .debug_line    0x000098a0      0x2b2 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_cfft_init_f32.o)
- .debug_line    0x00009b52      0x538 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_rfft_fast_init_f32.o)
- .debug_line    0x0000a08a      0x4b3 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_rfft_fast_f32.o)
- .debug_line    0x0000a53d      0xfb1 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_cfft_f32.o)
- .debug_line    0x0000b4ee      0x3a1 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_bitreversal2.o)
- .debug_line    0x0000b88f      0x3c6 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_cmplx_mult_cmplx_f32.o)
- .debug_line    0x0000bc55      0x342 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_cmplx_mag_squared_f32.o)
- .debug_line    0x0000bf97      0x285 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_sin_f32.o)
- .debug_line    0x0000c21c      0x28e C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_cos_f32.o)
- .debug_line    0x0000c4aa      0x20e C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_const_structs.o)
- .debug_line    0x0000c6b8      0x1f7 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_common_tables.o)
- .debug_line    0x0000c8af      0xd9a C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_cfft_radix8_f32.o)
+ .debug_line    0x00003f6f      0xa04 Src\measure.o
+ .debug_line    0x00004973       0x7a Src\startup_stm32f746xx.o
+ .debug_line    0x000049ed      0x95b Src\stm32f7xx_it.o
+ .debug_line    0x00005348      0x3d5 Src\system_stm32f7xx.o
+ .debug_line    0x0000571d      0x8b7 Src\touch.o
+ .debug_line    0x00005fd4     0x2a59 Src\ugui.o
+ .debug_line    0x00008a2d      0xb1f Src\ui.o
+ .debug_line    0x0000954c      0x336 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_max_f32.o)
+ .debug_line    0x00009882      0x2b2 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_cfft_init_f32.o)
+ .debug_line    0x00009b34      0x538 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_rfft_fast_init_f32.o)
+ .debug_line    0x0000a06c      0x4b3 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_rfft_fast_f32.o)
+ .debug_line    0x0000a51f      0xfb1 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_cfft_f32.o)
+ .debug_line    0x0000b4d0      0x3a1 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_bitreversal2.o)
+ .debug_line    0x0000b871      0x3c6 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_cmplx_mult_cmplx_f32.o)
+ .debug_line    0x0000bc37      0x342 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_cmplx_mag_squared_f32.o)
+ .debug_line    0x0000bf79      0x285 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_sin_f32.o)
+ .debug_line    0x0000c1fe      0x28e C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_cos_f32.o)
+ .debug_line    0x0000c48c      0x20e C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_const_structs.o)
+ .debug_line    0x0000c69a      0x1f7 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_common_tables.o)
+ .debug_line    0x0000c891      0xd9a C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_cfft_radix8_f32.o)
 
-.debug_str      0x00000000    0xbf56f
+.debug_str      0x00000000    0xbf582
  .debug_str     0x00000000    0xa1c0e Drivers\STM32F7xx_LL_Driver\stm32f7xx_ll_utils.o
                               0xa1e09 (size before relaxing)
  .debug_str     0x000a1c0e    0x19fcc Src\display.o
@@ -3623,43 +3623,43 @@ OUTPUT(H7oscillo-v2.elf elf32-littlearm)
                               0xbb609 (size before relaxing)
  .debug_str     0x000bca06      0x133 Src\main.o
                               0xba831 (size before relaxing)
- .debug_str     0x000bcb39      0x266 Src\measure.o
-                              0xba7e0 (size before relaxing)
- .debug_str     0x000bcd9f      0x112 Src\stm32f7xx_it.o
+ .debug_str     0x000bcb39      0x279 Src\measure.o
+                              0xba7f3 (size before relaxing)
+ .debug_str     0x000bcdb2      0x112 Src\stm32f7xx_it.o
                               0xba8af (size before relaxing)
- .debug_str     0x000bceb1       0xa9 Src\system_stm32f7xx.o
+ .debug_str     0x000bcec4       0xa9 Src\system_stm32f7xx.o
                               0x9755a (size before relaxing)
- .debug_str     0x000bcf5a       0x4d Src\touch.o
+ .debug_str     0x000bcf6d       0x4d Src\touch.o
                               0xba632 (size before relaxing)
- .debug_str     0x000bcfa7      0xda1 Src\ugui.o
+ .debug_str     0x000bcfba      0xda1 Src\ugui.o
                               0x99fc2 (size before relaxing)
- .debug_str     0x000bdd48       0xb5 Src\ui.o
+ .debug_str     0x000bdd5b       0xb5 Src\ui.o
                               0xba76e (size before relaxing)
- .debug_str     0x000bddfd      0x1d1 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_max_f32.o)
+ .debug_str     0x000bde10      0x1d1 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_max_f32.o)
                                 0x68f (size before relaxing)
- .debug_str     0x000bdfce      0xcdc C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_cfft_init_f32.o)
+ .debug_str     0x000bdfe1      0xcdc C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_cfft_init_f32.o)
                                0x1414 (size before relaxing)
- .debug_str     0x000becaa      0x124 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_rfft_fast_init_f32.o)
+ .debug_str     0x000becbd      0x124 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_rfft_fast_init_f32.o)
                                0x11cb (size before relaxing)
- .debug_str     0x000bedce       0x62 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_rfft_fast_f32.o)
+ .debug_str     0x000bede1       0x62 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_rfft_fast_f32.o)
                                 0x73d (size before relaxing)
- .debug_str     0x000bee30      0x10e C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_cfft_f32.o)
+ .debug_str     0x000bee43      0x10e C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_cfft_f32.o)
                                0x10f5 (size before relaxing)
- .debug_str     0x000bef3e       0x6e C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_bitreversal2.o)
+ .debug_str     0x000bef51       0x6e C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_bitreversal2.o)
                                0x1000 (size before relaxing)
- .debug_str     0x000befac       0x59 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_cmplx_mult_cmplx_f32.o)
+ .debug_str     0x000befbf       0x59 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_cmplx_mult_cmplx_f32.o)
                                 0x692 (size before relaxing)
- .debug_str     0x000bf005       0x48 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_cmplx_mag_squared_f32.o)
+ .debug_str     0x000bf018       0x48 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_cmplx_mag_squared_f32.o)
                                 0x697 (size before relaxing)
- .debug_str     0x000bf04d       0x41 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_sin_f32.o)
+ .debug_str     0x000bf060       0x41 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_sin_f32.o)
                                 0xfb9 (size before relaxing)
- .debug_str     0x000bf08e       0x34 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_cos_f32.o)
+ .debug_str     0x000bf0a1       0x34 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_cos_f32.o)
                                 0xfb9 (size before relaxing)
- .debug_str     0x000bf0c2      0x432 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_const_structs.o)
+ .debug_str     0x000bf0d5      0x432 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_const_structs.o)
                                0x17be (size before relaxing)
- .debug_str     0x000bf4f4       0x2e C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_common_tables.o)
+ .debug_str     0x000bf507       0x2e C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_common_tables.o)
                                 0xf94 (size before relaxing)
- .debug_str     0x000bf522       0x4d C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_cfft_radix8_f32.o)
+ .debug_str     0x000bf535       0x4d C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_cfft_radix8_f32.o)
                                 0x69f (size before relaxing)
 
 .comment        0x00000000       0xf5
@@ -3691,49 +3691,49 @@ OUTPUT(H7oscillo-v2.elf elf32-littlearm)
  .comment       0x000000f5       0x7a C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_common_tables.o)
  .comment       0x000000f5       0x7a C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_cfft_radix8_f32.o)
 
-.debug_frame    0x00000000     0x2b08
+.debug_frame    0x00000000     0x2b10
  .debug_frame   0x00000000       0xd8 Drivers\STM32F7xx_LL_Driver\stm32f7xx_ll_utils.o
  .debug_frame   0x000000d8       0xc0 Src\display.o
  .debug_frame   0x00000198       0x50 Src\i2c.o
  .debug_frame   0x000001e8      0x220 Src\inits.o
  .debug_frame   0x00000408       0x54 Src\main.o
- .debug_frame   0x0000045c      0x138 Src\measure.o
- .debug_frame   0x00000594      0x118 Src\stm32f7xx_it.o
- .debug_frame   0x000006ac       0x40 Src\system_stm32f7xx.o
- .debug_frame   0x000006ec       0x88 Src\touch.o
- .debug_frame   0x00000774     0x1490 Src\ugui.o
- .debug_frame   0x00001c04      0x168 Src\ui.o
- .debug_frame   0x00001d6c       0x30 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_max_f32.o)
- .debug_frame   0x00001d9c       0x38 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_cfft_init_f32.o)
- .debug_frame   0x00001dd4      0x100 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_rfft_fast_init_f32.o)
- .debug_frame   0x00001ed4       0x80 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_rfft_fast_f32.o)
- .debug_frame   0x00001f54       0xdc C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_cfft_f32.o)
- .debug_frame   0x00002030       0x88 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_bitreversal2.o)
- .debug_frame   0x000020b8       0x34 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_cmplx_mult_cmplx_f32.o)
- .debug_frame   0x000020ec       0x30 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_cmplx_mag_squared_f32.o)
- .debug_frame   0x0000211c       0x20 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_sin_f32.o)
- .debug_frame   0x0000213c       0x20 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_cos_f32.o)
- .debug_frame   0x0000215c       0x94 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_cfft_radix8_f32.o)
- .debug_frame   0x000021f0       0xcc c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu/fpv5-sp-d16\libc_nano.a(lib_a-efgcvt.o)
- .debug_frame   0x000022bc       0x2c c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu/fpv5-sp-d16\libc_nano.a(lib_a-init.o)
- .debug_frame   0x000022e8       0x38 c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu/fpv5-sp-d16\libc_nano.a(lib_a-itoa.o)
- .debug_frame   0x00002320       0x20 c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu/fpv5-sp-d16\libc_nano.a(lib_a-memset.o)
- .debug_frame   0x00002340       0x20 c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu/fpv5-sp-d16\libc_nano.a(lib_a-stpcpy.o)
- .debug_frame   0x00002360       0x48 c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu/fpv5-sp-d16\libc_nano.a(lib_a-utoa.o)
- .debug_frame   0x000023a8      0x104 c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu/fpv5-sp-d16\libc_nano.a(lib_a-ecvtbuf.o)
- .debug_frame   0x000024ac      0x240 c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu/fpv5-sp-d16\libc_nano.a(lib_a-mprec.o)
- .debug_frame   0x000026ec       0x2c c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu/fpv5-sp-d16\libc_nano.a(lib_a-nano-callocr.o)
- .debug_frame   0x00002718       0x2c c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu/fpv5-sp-d16\libc_nano.a(lib_a-nano-mallocr.o)
- .debug_frame   0x00002744       0x2c c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu/fpv5-sp-d16\libc_nano.a(lib_a-sbrkr.o)
- .debug_frame   0x00002770       0x20 c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu/fpv5-sp-d16\libc_nano.a(lib_a-strcpy.o)
- .debug_frame   0x00002790       0x6c c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu/fpv5-sp-d16\libc_nano.a(lib_a-dtoa.o)
- .debug_frame   0x000027fc       0x30 c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu/fpv5-sp-d16\libc_nano.a(lib_a-malloc.o)
- .debug_frame   0x0000282c       0x28 c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu/fpv5-sp-d16\libc_nano.a(lib_a-memcpy-stub.o)
- .debug_frame   0x00002854       0x30 c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu/fpv5-sp-d16\libc_nano.a(lib_a-mlock.o)
- .debug_frame   0x00002884       0x5c c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu/fpv5-sp-d16\libc_nano.a(lib_a-reent.o)
- .debug_frame   0x000028e0       0xac c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/armv7e-m/fpu/fpv5-sp-d16\libgcc.a(_arm_addsubdf3.o)
- .debug_frame   0x0000298c       0x50 c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/armv7e-m/fpu/fpv5-sp-d16\libgcc.a(_arm_muldivdf3.o)
- .debug_frame   0x000029dc       0xc4 c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/armv7e-m/fpu/fpv5-sp-d16\libgcc.a(_arm_cmpdf2.o)
- .debug_frame   0x00002aa0       0x24 c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/armv7e-m/fpu/fpv5-sp-d16\libgcc.a(_arm_fixdfsi.o)
- .debug_frame   0x00002ac4       0x24 c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/armv7e-m/fpu/fpv5-sp-d16\libgcc.a(_arm_truncdfsf2.o)
- .debug_frame   0x00002ae8       0x20 c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu/fpv5-sp-d16\libnosys.a(sbrk.o)
+ .debug_frame   0x0000045c      0x140 Src\measure.o
+ .debug_frame   0x0000059c      0x118 Src\stm32f7xx_it.o
+ .debug_frame   0x000006b4       0x40 Src\system_stm32f7xx.o
+ .debug_frame   0x000006f4       0x88 Src\touch.o
+ .debug_frame   0x0000077c     0x1490 Src\ugui.o
+ .debug_frame   0x00001c0c      0x168 Src\ui.o
+ .debug_frame   0x00001d74       0x30 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_max_f32.o)
+ .debug_frame   0x00001da4       0x38 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_cfft_init_f32.o)
+ .debug_frame   0x00001ddc      0x100 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_rfft_fast_init_f32.o)
+ .debug_frame   0x00001edc       0x80 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_rfft_fast_f32.o)
+ .debug_frame   0x00001f5c       0xdc C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_cfft_f32.o)
+ .debug_frame   0x00002038       0x88 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_bitreversal2.o)
+ .debug_frame   0x000020c0       0x34 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_cmplx_mult_cmplx_f32.o)
+ .debug_frame   0x000020f4       0x30 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_cmplx_mag_squared_f32.o)
+ .debug_frame   0x00002124       0x20 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_sin_f32.o)
+ .debug_frame   0x00002144       0x20 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_cos_f32.o)
+ .debug_frame   0x00002164       0x94 C:/Users/Anirudh/STM32Cube/Repository/CMSIS-PACK\ARM\CMSIS\5.7.0\CMSIS\DSP\Lib\GCC\libarm_cortexM7lfsp_math.a(arm_cfft_radix8_f32.o)
+ .debug_frame   0x000021f8       0xcc c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu/fpv5-sp-d16\libc_nano.a(lib_a-efgcvt.o)
+ .debug_frame   0x000022c4       0x2c c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu/fpv5-sp-d16\libc_nano.a(lib_a-init.o)
+ .debug_frame   0x000022f0       0x38 c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu/fpv5-sp-d16\libc_nano.a(lib_a-itoa.o)
+ .debug_frame   0x00002328       0x28 c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu/fpv5-sp-d16\libc_nano.a(lib_a-memcpy-stub.o)
+ .debug_frame   0x00002350       0x20 c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu/fpv5-sp-d16\libc_nano.a(lib_a-memset.o)
+ .debug_frame   0x00002370       0x20 c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu/fpv5-sp-d16\libc_nano.a(lib_a-stpcpy.o)
+ .debug_frame   0x00002390       0x48 c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu/fpv5-sp-d16\libc_nano.a(lib_a-utoa.o)
+ .debug_frame   0x000023d8      0x104 c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu/fpv5-sp-d16\libc_nano.a(lib_a-ecvtbuf.o)
+ .debug_frame   0x000024dc      0x240 c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu/fpv5-sp-d16\libc_nano.a(lib_a-mprec.o)
+ .debug_frame   0x0000271c       0x2c c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu/fpv5-sp-d16\libc_nano.a(lib_a-nano-callocr.o)
+ .debug_frame   0x00002748       0x2c c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu/fpv5-sp-d16\libc_nano.a(lib_a-nano-mallocr.o)
+ .debug_frame   0x00002774       0x2c c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu/fpv5-sp-d16\libc_nano.a(lib_a-sbrkr.o)
+ .debug_frame   0x000027a0       0x20 c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu/fpv5-sp-d16\libc_nano.a(lib_a-strcpy.o)
+ .debug_frame   0x000027c0       0x6c c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu/fpv5-sp-d16\libc_nano.a(lib_a-dtoa.o)
+ .debug_frame   0x0000282c       0x30 c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu/fpv5-sp-d16\libc_nano.a(lib_a-malloc.o)
+ .debug_frame   0x0000285c       0x30 c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu/fpv5-sp-d16\libc_nano.a(lib_a-mlock.o)
+ .debug_frame   0x0000288c       0x5c c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu/fpv5-sp-d16\libc_nano.a(lib_a-reent.o)
+ .debug_frame   0x000028e8       0xac c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/armv7e-m/fpu/fpv5-sp-d16\libgcc.a(_arm_addsubdf3.o)
+ .debug_frame   0x00002994       0x50 c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/armv7e-m/fpu/fpv5-sp-d16\libgcc.a(_arm_muldivdf3.o)
+ .debug_frame   0x000029e4       0xc4 c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/armv7e-m/fpu/fpv5-sp-d16\libgcc.a(_arm_cmpdf2.o)
+ .debug_frame   0x00002aa8       0x24 c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/armv7e-m/fpu/fpv5-sp-d16\libgcc.a(_arm_fixdfsi.o)
+ .debug_frame   0x00002acc       0x24 c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/armv7e-m/fpu/fpv5-sp-d16\libgcc.a(_arm_truncdfsf2.o)
+ .debug_frame   0x00002af0       0x20 c:/program files (x86)/atollic/truestudio for stm32 9.3.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu/fpv5-sp-d16\libnosys.a(sbrk.o)

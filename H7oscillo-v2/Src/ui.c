@@ -340,7 +340,7 @@ void voltsToStr(uint8_t val, char* buf)
   * @param  buf: output string of length 8
   * @retval None
   */
-void hertzToStr(uint32_t freq, char* buf)
+void hertzToStr(float32_t freq, char* buf)
 {
 	float32_t Khz;
 	char buf2[5];

@@ -104,7 +104,7 @@ int main(void)
 			if(measure1.param != MEAS_NONE){
 				if(measure1.param == MEAS_FREQ){
 					strcpy(buf1, "F:");
-					hertzToStr(calcMeasure(measure1.src, MEAS_FREQ) * 24000, buf1 + 2);
+					hertzToStr(calcMeasure(measure1.src, MEAS_FREQ) * 48000, buf1 + 2);
 				}
 				else{
 					strcpy(buf1, measParamTexts[measure1.param]);
