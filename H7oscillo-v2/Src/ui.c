@@ -64,7 +64,7 @@ uint8_t showWindow3 = 0;
 uint8_t showWindow4 = 0;
 uint8_t showWindow5 = 0;
 
-uint8_t wind5OpenedBy = MEASURE_NONE;
+static uint8_t wind5OpenedBy = MEASURE_NONE;
 
 /**
   * @brief  Create windows and other basic ui elements.

@@ -11,7 +11,7 @@
 
 
 uint16_t TS_X, TS_Y;			/* XY coordinates of touch point */
-uint8_t TS_read_pending = 0;	/* Pending touch screen read */
+__IO uint8_t TS_read_pending = 0;	/* Pending touch screen read */
 
 /**
   * @brief  Touch screen IC FT5336 initialization.

@@ -106,6 +106,12 @@ int main(void)
 					strcpy(buf1, "F:");
 					hertzToStr(calcMeasure(measure1.src, MEAS_FREQ) * 48000, buf1 + 2);
 				}
+				else if(measure1.param == MEAS_DUTY){
+					strcpy(buf1, measParamTexts[measure1.param]);
+					strcat(buf1, ":");
+					itoa(calcMeasure(measure1.src, measure1.param), buf1 + 5, 10);
+					strcat(buf1, "%");
+				}
 				else{
 					strcpy(buf1, measParamTexts[measure1.param]);
 					strcat(buf1, ":");
@@ -171,7 +177,7 @@ int main(void)
 		while(DMA2D->CR & 0x01);
 
 		/* Draw waveforms */
-		pFrame = (uint16_t (*)[LCD_WIDTH])LCD_DRAW_BUFFER_WAVE;
+		pFrame = (__IO uint16_t (*)[LCD_WIDTH])LCD_DRAW_BUFFER_WAVE;
 		for(j = 0; j < LCD_WIDTH; j++){
 			/* ADC CH1 */
 			i = (63 + 64/vscale) - (CH1_ADC_vals[j]/(2*vscale));

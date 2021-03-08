@@ -41,7 +41,7 @@
 #define GEST_ID_ZOOM_OUT     		FT5336_GEST_ID_ZOOM_OUT  	/*!< Gesture Zoom Out */
 
 extern uint16_t TS_X, TS_Y;
-extern uint8_t TS_read_pending;
+extern __IO uint8_t TS_read_pending;
 
 /* External function declarations */
 extern void TS_init(void);

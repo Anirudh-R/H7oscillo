@@ -34,16 +34,17 @@ typedef struct{
 	uint8_t param;
 } Measure_TypeDef;
 
-extern Measure_TypeDef measure1, measure2, measure3, measure4;
 extern const char measParamTexts[][5];
+extern Measure_TypeDef measure1, measure2, measure3, measure4;
 
 void measure_init(void);
 float32_t calcMeasure(uint8_t channel, uint8_t param);
-float32_t calcFreq(uint8_t* x);
-uint8_t calcVrms(uint8_t* x);
-uint8_t calcVmax(uint8_t* x);
-uint8_t calcVmin(uint8_t* x);
-uint8_t calcVpp(uint8_t* x);
-uint8_t calcVavg(uint8_t* x);
+float32_t calcFreq(__IO uint8_t x[]);
+uint8_t calcDuty(__IO uint8_t x[]);
+uint8_t calcVrms(__IO uint8_t x[]);
+uint8_t calcVmax(__IO uint8_t x[]);
+uint8_t calcVmin(__IO uint8_t x[]);
+uint8_t calcVpp(__IO uint8_t x[]);
+uint8_t calcVavg(__IO uint8_t x[]);
 
 #endif /* __MEASURE_H */

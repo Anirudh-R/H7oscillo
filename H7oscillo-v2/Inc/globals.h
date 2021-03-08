@@ -23,9 +23,9 @@ extern __IO uint8_t CH2_ADC_vals[ADC_BUF_SIZE];
 extern uint32_t tscale;
 extern uint32_t vscale;
 
-extern uint8_t CH1_acq_comp, CH2_acq_comp;
+extern __IO uint8_t CH1_acq_comp, CH2_acq_comp;
 
-extern uint8_t LTDC_error_flag;
-extern uint8_t DMA2D_error_flag;
+extern __IO uint8_t LTDC_error_flag;
+extern __IO uint8_t DMA2D_error_flag;
 
 #endif /* __GLOBALS_H */

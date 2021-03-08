@@ -94,8 +94,6 @@ extern uint8_t showWindow3;
 extern uint8_t showWindow4;
 extern uint8_t showWindow5;
 
-extern uint8_t wind5OpenedBy;
-
 char* gcvt(double value, int ndigit, char* buf);
 void initUI(void);
 void drawGrid(void);
