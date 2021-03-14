@@ -1,6 +1,6 @@
-display.c:20:6:pset	0	static
-display.c:32:6:clearScreen	8	static
-display.c:55:6:fillScreenWave	12	static
-display.c:82:11:fillFrameUGUI	20	static
-display.c:117:11:drawLineUGUI	24	static
-display.c:160:6:updateToScreen	16	static
+display.c:20:6:pset	24	static
+display.c:32:6:clearScreen	4	static
+display.c:55:6:fillScreenWave	16	static
+display.c:82:11:fillFrameUGUI	16	static
+display.c:117:11:drawLineUGUI	16	static
+display.c:160:6:updateToScreen	4	static

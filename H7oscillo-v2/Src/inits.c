@@ -64,7 +64,7 @@ void TimQE_init(void)
   * 				6. 1ms/div     - 0.048MHz - 0x823
   * @retval None
   */
-void TimADC_init(uint8_t tbase)
+void TimADC_init(int8_t tbase)
 {
 	uint32_t div;		/* timer divider value */
 
@@ -83,8 +83,8 @@ void TimADC_init(uint8_t tbase)
 	TIM_ADC_CLK_ENABLE();
 	TIM_ADC->CR1 &= ~(uint32_t)0x01;	/* disable timer */
 	TIM_ADC->CR2  = 0x00200000;			/* TRGO2 generated on updates */
-	TIM_ADC->PSC  = 0x00;				/* counter_clk = timer_inp_clk/1 = 100MHz/1 = 100MHz */
-	TIM_ADC->ARR  = div - 1;		    /* default sampling freq = counter_clk/(0x2D) = 2.222MHz */
+	TIM_ADC->PSC  = 0x00;				/* counter_clk = timer_inp_clk/1 = 100MHz */
+	TIM_ADC->ARR  = div - 1;		    /* default sampling freq = counter_clk/0x2D = 2.222MHz */
 	TIM_ADC->CR1 |= 0x01;				/* start timer */
 }
 

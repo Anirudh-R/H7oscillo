@@ -9,7 +9,6 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 
-char buf1[11], buf2[11], buf3[11], buf4[11];
 
 /**
   * @brief  Main program
@@ -19,9 +18,9 @@ char buf1[11], buf2[11], buf3[11], buf4[11];
 int main(void)
 {
 	uint32_t QE_Count = 0, QE_Count_prev = 1;
+	uint8_t QE_direc = 0;
 	__IO uint16_t (*pFrame)[LCD_WIDTH];
-	uint8_t currWind = WINDOW1;
-	uint32_t i, j;
+	int32_t i, j, temp;
 
 	/* Enable the CPU Cache */
 	CPU_CACHE_Enable();
@@ -61,6 +60,7 @@ int main(void)
 	/* Main loop */
 	while(1)
 	{
+		/* Read touch, display windows and measurements */
 		if(TS_read_pending){
 			/* Get touch inputs */
 			if(TS_DetectNumTouches() > 0){
@@ -73,106 +73,31 @@ int main(void)
 			}
 
 			/* uGUI can show only one window at a time. Switch between them to display multiple at the same time. */
-			if(currWind == WINDOW1){
-				UG_WindowShow(&window_2);	/* bottom menubar */
-				currWind = WINDOW2;
-			}
-			else if(currWind == WINDOW2){
-				if(showWindow3){
-					UG_WindowShow(&window_3);	/* menu page 1 */
-					currWind = WINDOW3;
-				}
-				else if(showWindow4){			/* menu page 2 */
-					UG_WindowShow(&window_4);
-					currWind = WINDOW4;
-				}
-				else{
-					UG_WindowShow(&window_1);
-					currWind = WINDOW1;
-				}
-			}
-			else if((currWind == WINDOW3) && showWindow5){
-				UG_WindowShow(&window_5);
-				currWind = WINDOW5;
-			}
-			else{
-				UG_WindowShow(&window_1);	/* top menubar */
-				currWind = WINDOW1;
-			}
+			switchNextWindow();
 
-			/* Display measurements */
-			if(measure1.param != MEAS_NONE){
-				if(measure1.param == MEAS_FREQ){
-					strcpy(buf1, "F:");
-					hertzToStr(calcMeasure(measure1.src, MEAS_FREQ) * 48000, buf1 + 2);
-				}
-				else if(measure1.param == MEAS_DUTY){
-					strcpy(buf1, measParamTexts[measure1.param]);
-					strcat(buf1, ":");
-					itoa(calcMeasure(measure1.src, measure1.param), buf1 + 5, 10);
-					strcat(buf1, "%");
-				}
-				else{
-					strcpy(buf1, measParamTexts[measure1.param]);
-					strcat(buf1, ":");
-					voltsToStr(calcMeasure(measure1.src, measure1.param), buf1 + 5);
-				}
-				UG_TextboxSetBackColor(&window_2, TXB_ID_3, (measure1.src == CHANNEL1) ? CH1_COLOR : CH2_COLOR);
-				UG_TextboxSetText(&window_2, TXB_ID_3, buf1);
-			}
-			else{
-				UG_TextboxSetBackColor(&window_2, TXB_ID_3, INACTIVE_ICON_COLOR);
-				UG_TextboxSetText(&window_2, TXB_ID_3, "--");
-			}
-
-			if(measure2.param != MEAS_NONE){
-				strcpy(buf2, measParamTexts[measure2.param]);
-				strcat(buf2, ":");
-				voltsToStr(calcMeasure(measure2.src, measure2.param), buf2 + 5);
-				UG_TextboxSetBackColor(&window_2, TXB_ID_4, (measure2.src == CHANNEL1) ? CH1_COLOR : CH2_COLOR);
-				UG_TextboxSetText(&window_2, TXB_ID_4, buf2);
-			}
-			else{
-				UG_TextboxSetBackColor(&window_2, TXB_ID_4, INACTIVE_ICON_COLOR);
-				UG_TextboxSetText(&window_2, TXB_ID_4, "--");
-			}
-
-			if(measure3.param != MEAS_NONE){
-				strcpy(buf3, measParamTexts[measure3.param]);
-				strcat(buf3, ":");
-				voltsToStr(calcMeasure(measure3.src, measure3.param), buf3 + 5);
-				UG_TextboxSetBackColor(&window_2, TXB_ID_5, (measure3.src == CHANNEL1) ? CH1_COLOR : CH2_COLOR);
-				UG_TextboxSetText(&window_2, TXB_ID_5, buf3);
-			}
-			else{
-				UG_TextboxSetBackColor(&window_2, TXB_ID_5, INACTIVE_ICON_COLOR);
-				UG_TextboxSetText(&window_2, TXB_ID_5, "--");
-			}
-
-			if(measure4.param != MEAS_NONE){
-				strcpy(buf4, measParamTexts[measure4.param]);
-				strcat(buf4, ":");
-				voltsToStr(calcMeasure(measure4.src, measure4.param), buf4 + 5);
-				UG_TextboxSetBackColor(&window_2, TXB_ID_6, (measure4.src == CHANNEL1) ? CH1_COLOR : CH2_COLOR);
-				UG_TextboxSetText(&window_2, TXB_ID_6, buf4);
-			}
-			else{
-				UG_TextboxSetBackColor(&window_2, TXB_ID_6, INACTIVE_ICON_COLOR);
-				UG_TextboxSetText(&window_2, TXB_ID_6, "--");
-			}
+			/* Display the chosen measurements */
+			DisplayMeasurements();
 
 			TS_read_pending = 0;
+		}
+
+		/* Interrupt from quadrature encoder push button switch */
+		if(QE_PB_interrupt){
+			switchNextField();				/* Switch to the next field in the menubars */
+			QE_PB_interrupt = 0;
 		}
 
 		/* Check quadrature encoder state */
 		QE_Count = (TIM_QE->CNT & 0xFFFFU) >> 1U;
 		if(QE_Count != QE_Count_prev){
-			tscale += (TIM_QE->CR1 & 0x10)?(tscale==0?0:-1):(tscale==6?0:1);	/* check rotation direction */
-			TimADC_init(tscale);
+			QE_direc = TIM_QE->CR1 & 0x10;		/* check rotation direction */
+
+			changeFieldValue(QE_direc);
+
 			QE_Count_prev = QE_Count;
 		}
 
-		/* clear the wave draw buffer */
+		/* Clear the wave draw buffer */
 		fillScreenWave(C_BLACK);
 		while(DMA2D->CR & 0x01);
 
@@ -180,10 +105,17 @@ int main(void)
 		pFrame = (__IO uint16_t (*)[LCD_WIDTH])LCD_DRAW_BUFFER_WAVE;
 		for(j = 0; j < LCD_WIDTH; j++){
 			/* ADC CH1 */
-			i = (63 + 64/vscale) - (CH1_ADC_vals[j]/(2*vscale));
+			temp = (float32_t)(voff1 + CH1_ADC_vals[j])/vscaleVals[vscale1];
+			if(temp > 119)	temp = 119;
+			else if(temp < 0)  temp = 0;
+			i = 134 - temp;
 			pFrame[i][j] = CH1_COLOR;
+
 			/* ADC CH2 */
-			i = (191 + 64/vscale) - (CH2_ADC_vals[j]/(2*vscale));
+			temp = (float32_t)(voff2 + CH2_ADC_vals[j])/vscaleVals[vscale2];
+			if(temp > 119)	temp = 119;
+			else if(temp < 0)  temp = 0;
+			i = 254 - temp;
 			pFrame[i][j] = CH2_COLOR;
 		}
 
@@ -205,7 +137,6 @@ __INLINE uint32_t Get_tick(void)
 {
 	return (uint32_t)Tick_1ms;
 }
-
 
 #ifdef  USE_FULL_ASSERT
 /**

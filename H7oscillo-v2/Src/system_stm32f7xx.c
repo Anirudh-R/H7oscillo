@@ -175,3 +175,15 @@ void SystemCoreClockUpdate(void)
   /* HCLK frequency */
   SystemCoreClock >>= tmp;
 }
+
+/* Directs stdio output towards ITM trace. */
+int32_t _write(int32_t file, uint8_t *ptr, int32_t len)
+{
+	/* Implement your write code here, this is used by puts and printf for example */
+	int32_t i;
+	for(i = 0; i < len; i++){
+		ITM_SendChar(*ptr++);
+	}
+
+	return len;
+}

@@ -1,23 +1,18 @@
 /**
   ******************************************************************************
-  * @file    i2c.h
+  * @file    process.h
   * @author  anirudhr
-  * @brief   Header file for i2c.c.
+  * @brief   Header file for process.c.
   ******************************************************************************
   */
 
 /* Define to prevent recursive inclusion -------------------------------------*/
-#ifndef __I2C_H
-#define __I2C_H
+#ifndef __PROCESS_H
+#define __PROCESS_H
 
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 
 
-#define I2C_TIMEOUT		10		/* 10ms */
 
-/* External function declarations */
-uint8_t I2C_WriteSingle(I2C_TypeDef* bus, uint8_t dev_addr, uint8_t reg, uint8_t val);
-uint8_t I2C_ReadSingle(I2C_TypeDef* bus, uint8_t dev_addr, uint8_t reg);
-
-#endif /* __I2C_H */
+#endif /* __PROCESS_H */

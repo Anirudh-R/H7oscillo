@@ -278,7 +278,7 @@ static void czt(uint8_t x[], float32_t oup[], float32_t f1, float32_t f2, uint32
 	float32_t c1, s1, c2, s2;
 
 	L = N + M - 1;
-	theta0 = 2.0f*M_PI*f1;
+	theta0 = 2.0f*PI*f1;
 
 	float32_t yY[2*L], vV[2*L];
 

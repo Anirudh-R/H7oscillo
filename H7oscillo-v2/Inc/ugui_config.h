@@ -19,7 +19,7 @@
 //#define  USE_FONT_5X12
 #define  USE_FONT_6X8
 //#define  USE_FONT_6X10
-//#define  USE_FONT_7X12
+#define  USE_FONT_7X12
 //#define  USE_FONT_8X8
 //#define  USE_FONT_8X12_CYRILLIC
 #define  USE_FONT_8X12

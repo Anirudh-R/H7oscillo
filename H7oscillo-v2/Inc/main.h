@@ -11,6 +11,10 @@
 #define __MAIN_H
 
 /* Includes ------------------------------------------------------------------*/
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <math.h>
 /* LL drivers */
 #include "stm32f7xx_ll_bus.h"
 #include "stm32f7xx_ll_rcc.h"
@@ -25,7 +29,6 @@
 #include "stm32f7xx_ll_tim.h"
 #include "stm32f7xx_ll_i2c.h"
 #include "arm_math.h"
-#include "math.h"
 
 #if defined(USE_FULL_ASSERT)
 #include "stm32_assert.h"

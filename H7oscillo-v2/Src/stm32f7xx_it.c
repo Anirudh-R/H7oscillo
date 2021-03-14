@@ -129,12 +129,11 @@ void QE_IRQHandler(void)
 	static uint32_t prev_time = 0;
 	uint32_t curr_time;
 
-	curr_time = Get_tick();
-
 	LL_EXTI_ClearFlag_0_31(QE_PB_EXTI_LINE);
 
+	curr_time = Get_tick();
 	if(curr_time - prev_time > QE_PB_DEBOUNCE_TIMEOUT) {
-		LL_GPIO_TogglePin(LED1_GPIO_PORT, LED1_PIN);
+		QE_PB_interrupt = 1;
 		prev_time = curr_time;
 	}
 }

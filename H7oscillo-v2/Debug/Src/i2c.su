@@ -1,2 +1,11 @@
-i2c.c:21:9:I2C_WriteSingle	24	static
-i2c.c:79:9:I2C_ReadSingle	24	static
+stm32f7xx_ll_i2c.h:1485:26:LL_I2C_IsActiveFlag_TXIS	16	static
+stm32f7xx_ll_i2c.h:1498:26:LL_I2C_IsActiveFlag_RXNE	16	static
+stm32f7xx_ll_i2c.h:1524:26:LL_I2C_IsActiveFlag_NACK	16	static
+stm32f7xx_ll_i2c.h:1537:26:LL_I2C_IsActiveFlag_STOP	16	static
+stm32f7xx_ll_i2c.h:1550:26:LL_I2C_IsActiveFlag_TC	16	static
+stm32f7xx_ll_i2c.h:1694:22:LL_I2C_ClearFlag_STOP	16	static
+stm32f7xx_ll_i2c.h:2051:22:LL_I2C_HandleTransfer	24	static
+stm32f7xx_ll_i2c.h:2133:25:LL_I2C_ReceiveData8	16	static
+stm32f7xx_ll_i2c.h:2145:22:LL_I2C_TransmitData8	16	static
+i2c.c:21:9:I2C_WriteSingle	32	static
+i2c.c:79:9:I2C_ReadSingle	32	static
