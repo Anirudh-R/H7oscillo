@@ -10,6 +10,8 @@ ui.c:547:6:window_4_callback	16	static
 ui.c:569:6:window_5_callback	24	static
 ui.c:633:6:switchNextWindow	8	static
 ui.c:672:6:DisplayMeasurements	16	static
-ui.c:784:6:switchNextField	8	static
-ui.c:801:13:selectField	24	static
-ui.c:869:6:changeFieldValue	32	static
+ui.c:784:6:goToField	16	static
+ui.c:800:9:getCurrField	4	static
+ui.c:810:6:switchNextField	8	static
+ui.c:827:13:selectField	24	static
+ui.c:895:6:changeFieldValue	32	static

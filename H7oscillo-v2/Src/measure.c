@@ -40,9 +40,9 @@ float32_t calcMeasure(uint8_t channel, uint8_t param)
 	__IO uint8_t* x;
 
 	if(channel == CHANNEL1)
-		x = (__IO uint8_t *)CH1_ADC_vals;
+		x = (__IO uint8_t *)CH1_ADC_vals + ADC_PRETRIGBUF_SIZE;
 	else
-		x = (__IO uint8_t *)CH2_ADC_vals;
+		x = (__IO uint8_t *)CH2_ADC_vals + ADC_PRETRIGBUF_SIZE;
 
 	if(param == MEAS_FREQ)
 		return calcFreq(x);
@@ -72,14 +72,14 @@ float32_t calcMeasure(uint8_t channel, uint8_t param)
 float32_t calcFreq(__IO uint8_t x[])
 {
 	float32_t inp[512], oup[545];
-	uint8_t xcpy[ADC_BUF_SIZE];
+	uint8_t xcpy[ADC_TRIGBUF_SIZE];
 	float32_t maxmag, f1, f2;
 	uint32_t maxidx, i;
 
 	/* create a zero-padded copy of x */
-	for(i = 0; i < ADC_BUF_SIZE; i++)
+	for(i = 0; i < ADC_TRIGBUF_SIZE; i++)
 		inp[i] = xcpy[i] = x[i];		/* backup x into xcpy, since x may get modified with new ADC values */
-	for(i = ADC_BUF_SIZE; i < 512; i++)
+	for(i = ADC_TRIGBUF_SIZE; i < 512; i++)
 		inp[i] = 0;
 
 	/* calculate FFT and its magnitude */
@@ -114,7 +114,7 @@ float32_t calcFreq(__IO uint8_t x[])
 			f2 = (float32_t)(maxidx + 1)/512.0;
 		}
 
-		czt(xcpy, oup, f1, f2, ADC_BUF_SIZE, 545);
+		czt(xcpy, oup, f1, f2, ADC_TRIGBUF_SIZE, 545);
 		arm_max_f32(oup, 545, &maxmag, &maxidx);
 
 		return f1 + maxidx*(f2 - f1)/545.0f;
@@ -136,10 +136,10 @@ uint8_t calcDuty(__IO uint8_t x[])
 	f = calcFreq(x);
 	temp = ceil(1/f);						/* number of sample points in one cycle of the waveform */
 
-	cnt = (float32_t)ADC_BUF_SIZE/temp;		/* number of integral cycles in the input frame */
+	cnt = (float32_t)ADC_TRIGBUF_SIZE/temp;		/* number of integral cycles in the input frame */
 	N = round(temp*cnt);					/* number of points for duty cycle calculation */
-	if(N > ADC_BUF_SIZE)
-		N = ADC_BUF_SIZE;
+	if(N > ADC_TRIGBUF_SIZE)
+		N = ADC_TRIGBUF_SIZE;
 
 	/* calculate average value of one cycle */
 	f = 0;
@@ -169,10 +169,10 @@ uint8_t calcVrms(__IO uint8_t x[])
 	float32_t temp, out;
 
 	temp = 0;
-	for(i = 0; i < ADC_BUF_SIZE; i++)
+	for(i = 0; i < ADC_TRIGBUF_SIZE; i++)
 		temp += (float32_t)x[i]*(float32_t)x[i];
 
-	temp /= (float32_t)ADC_BUF_SIZE;
+	temp /= (float32_t)ADC_TRIGBUF_SIZE;
 
 	arm_sqrt_f32(temp, &out);
 
@@ -190,7 +190,7 @@ uint8_t calcVmax(__IO uint8_t x[])
 	uint8_t vmax;
 
 	vmax = 0;
-	for(i = 0; i < ADC_BUF_SIZE; i++)
+	for(i = 0; i < ADC_TRIGBUF_SIZE; i++)
 		if(x[i] > vmax)
 			vmax = x[i];
 
@@ -208,7 +208,7 @@ uint8_t calcVmin(__IO uint8_t x[])
 	uint8_t vmin;
 
 	vmin = 255;
-	for(i = 0; i < ADC_BUF_SIZE; i++)
+	for(i = 0; i < ADC_TRIGBUF_SIZE; i++)
 		if(x[i] < vmin)
 			vmin = x[i];
 
@@ -240,10 +240,10 @@ uint8_t calcVavg(__IO uint8_t x[])
 	uint32_t i, vavg;
 
 	vavg = 0;
-	for(i = 0; i < ADC_BUF_SIZE; i++)
+	for(i = 0; i < ADC_TRIGBUF_SIZE; i++)
 		vavg += x[i];
 
-	vavg /= ADC_BUF_SIZE;
+	vavg /= ADC_TRIGBUF_SIZE;
 
 	return vavg;
 }

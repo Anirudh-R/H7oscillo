@@ -18,7 +18,7 @@ void Timers_init(void)
 {
 	TimQE_init();
 
-	TimADC_init(0);
+	TimADC_init(6);
 
 	TimTS_init();
 }
@@ -130,11 +130,12 @@ void ADC_Ch1_init(void)
 {
 	/* Configure DMA for servicing ADC */
 	CH1_ADC_DMA_CLK_ENABLE();
-	CH1_ADC_DMA_STREAM->CR  &= ~(uint32_t)0x01;				/* disable stream */
+	CH1_ADC_DMA_STREAM->CR  &= ~(uint32_t)0x01;				/* disable stream and confirm */
+	while(CH1_ADC_DMA_STREAM->CR & 0x01);
 	CH1_ADC_DMA->LIFCR      |= 0x0000003D;					/* clear stream0 flags/errors */
 
 	CH1_ADC_DMA_STREAM->CR = CH1_ADC_DMA_CHANNEL | 			/* ch0, byte-size transfer, high priority,... */
-								0x00020500;					/* mem inc, periph-to-mem, TCIE=1, 0x00020500(circular), 0x00020410(normal) */
+								0x00020510;					/* mem inc, periph-to-mem, TCIE=1, 0x00020500(circular), 0x00020410(normal) */
 	CH1_ADC_DMA_STREAM->NDTR = (uint32_t)ADC_BUF_SIZE;		/* transfer size */
 	CH1_ADC_DMA_STREAM->PAR  = (uint32_t)&(CH1_ADC->DR);	/* source addr */
 	CH1_ADC_DMA_STREAM->M0AR = (uint32_t)CH1_ADC_vals;		/* destination addr */
@@ -161,7 +162,25 @@ void ADC_Ch1_init(void)
 	ADC->CCR      = 0x00010000;			/* ADCCLK = APB2CLK/4 */
 
 	CH1_ADC->CR2 |= 0x01;				/* turn on ADC */
-	LL_mDelay(1);						/* wait for it to stabilize */
+}
+
+/**
+  * @brief  Reinitialize Ch1 ADC & DMA after disabling.
+  * @param  None
+  * @retval None
+  */
+void ADC_Ch1_reinit(void)
+{
+	CH1_ADC->CR2 &= ~0x01;				/* turn off ADC */
+
+	/* Reinitialize DMA for servicing ADC */
+	CH1_ADC_DMA_STREAM->CR = CH1_ADC_DMA_CHANNEL | 0x00020510;
+	CH1_ADC_DMA_STREAM->NDTR = (uint32_t)ADC_BUF_SIZE;		/* transfer size */
+	CH1_ADC_DMA_STREAM->CR |= 0x01;							/* enable stream */
+
+	/* Reinitialize ADC */
+	CH1_ADC->SR &= ~(1 << 5);			/* clear overflow bit */
+	CH1_ADC->CR2 |= 0x01;				/* turn on ADC */
 }
 
 /**
@@ -173,11 +192,12 @@ void ADC_Ch2_init(void)
 {
 	/* Configure DMA for servicing ADC */
 	CH2_ADC_DMA_CLK_ENABLE();
-	CH2_ADC_DMA_STREAM->CR  &= ~(uint32_t)0x01;				/* disable stream */
+	CH2_ADC_DMA_STREAM->CR  &= ~(uint32_t)0x01;				/* disable stream and confirm */
+	while(CH2_ADC_DMA_STREAM->CR & 0x01);
 	CH2_ADC_DMA->LIFCR      |= 0x00000F40;					/* clear stream1 flags/errors */
 
 	CH2_ADC_DMA_STREAM->CR = CH2_ADC_DMA_CHANNEL | 			/* ch2, byte-size transfer, high priority,... */
-								0x00020500;					/* mem inc, periph-to-mem, TCIE=1, 0x00020500(circular), 0x00020410(normal) */
+								0x00020510;					/* mem inc, periph-to-mem, TCIE=1, 0x00020500(circular), 0x00020410(normal) */
 	CH2_ADC_DMA_STREAM->NDTR = (uint32_t)ADC_BUF_SIZE;		/* transfer size */
 	CH2_ADC_DMA_STREAM->PAR  = (uint32_t)&(CH2_ADC->DR);	/* source addr */
 	CH2_ADC_DMA_STREAM->M0AR = (uint32_t)CH2_ADC_vals;		/* destination addr */
@@ -204,7 +224,25 @@ void ADC_Ch2_init(void)
 	ADC->CCR      = 0x00010000;			/* ADCCLK = APB2CLK/4 */
 
 	CH2_ADC->CR2 |= 0x01;				/* turn on ADC */
-	LL_mDelay(1);						/* wait for it to stabilize */
+}
+
+/**
+  * @brief  Reinitialize Ch2 ADC & DMA after disabling.
+  * @param  None
+  * @retval None
+  */
+void ADC_Ch2_reinit(void)
+{
+	CH2_ADC->CR2 &= ~0x01;				/* turn off ADC */
+
+	/* Reinitialize DMA for servicing ADC */
+	CH2_ADC_DMA_STREAM->CR = CH2_ADC_DMA_CHANNEL | 0x00020510;
+	CH2_ADC_DMA_STREAM->NDTR = (uint32_t)ADC_BUF_SIZE;		/* transfer size */
+	CH2_ADC_DMA_STREAM->CR |= 0x01;							/* enable stream */
+
+	/* Reinitialize ADC */
+	CH2_ADC->SR &= ~(1 << 5);			/* clear overflow bit */
+	CH2_ADC->CR2 |= 0x01;				/* turn on ADC */
 }
 
 /**

@@ -92,27 +92,27 @@ void initUI(void)
 	UG_TextboxCreate(&window_1, &txtb1_0, TXB_ID_0, WIND1_ICON_SPACING, 1, WIND1_ICON_SPACING + WIND1_ICON_WIDTH - 1, MENUBAR_HEIGHT - 2);	/* CH1 vertical scale */
 	UG_TextboxSetFont(&window_1, TXB_ID_0, &FONT_6X8);
 	UG_TextboxSetBackColor(&window_1, TXB_ID_0, CH1_COLOR);
-	UG_TextboxSetText(&window_1, TXB_ID_0, "10mV");
+	UG_TextboxSetText(&window_1, TXB_ID_0, "1V");
 
 	UG_TextboxCreate(&window_1, &txtb1_1, TXB_ID_1, 2*WIND1_ICON_SPACING + WIND1_ICON_WIDTH, 1, 2*WIND1_ICON_SPACING + 2*WIND1_ICON_WIDTH - 1, MENUBAR_HEIGHT - 2);	/* CH2 vertical scale */
 	UG_TextboxSetFont(&window_1, TXB_ID_1, &FONT_6X8);
 	UG_TextboxSetBackColor(&window_1, TXB_ID_1, CH2_COLOR);
-	UG_TextboxSetText(&window_1, TXB_ID_1, "10mV");
+	UG_TextboxSetText(&window_1, TXB_ID_1, "1V");
 
 	UG_TextboxCreate(&window_1, &txtb1_2, TXB_ID_2, 3*WIND1_ICON_SPACING + 2*WIND1_ICON_WIDTH, 1, 3*WIND1_ICON_SPACING + 3*WIND1_ICON_WIDTH - 1, MENUBAR_HEIGHT - 2);	/* Time scale */
 	UG_TextboxSetFont(&window_1, TXB_ID_2, &FONT_6X8);
 	UG_TextboxSetBackColor(&window_1, TXB_ID_2, TBASE_ICON_COLOR);
-	UG_TextboxSetText(&window_1, TXB_ID_2, "21.6us");
+	UG_TextboxSetText(&window_1, TXB_ID_2, "1ms");
 
 	UG_TextboxCreate(&window_1, &txtb1_3, TXB_ID_3, 4*WIND1_ICON_SPACING + 3*WIND1_ICON_WIDTH, 1, 4*WIND1_ICON_SPACING + 4*WIND1_ICON_WIDTH + WIND1_ICON_SPACING/2 - 1, MENUBAR_HEIGHT - 2);	/* Trigger type */
 	UG_TextboxSetFont(&window_1, TXB_ID_3, &FONT_6X8);
-	UG_TextboxSetBackColor(&window_1, TXB_ID_3, INACTIVE_ICON_COLOR);
-	UG_TextboxSetText(&window_1, TXB_ID_3, "Trg:--");
+	UG_TextboxSetBackColor(&window_1, TXB_ID_3, CH1_COLOR);
+	UG_TextboxSetText(&window_1, TXB_ID_3, "Trg:R");
 
 	UG_TextboxCreate(&window_1, &txtb1_4, TXB_ID_4, 5*WIND1_ICON_SPACING + 4*WIND1_ICON_WIDTH - WIND1_ICON_SPACING/2, 1, 5*WIND1_ICON_SPACING + 5*WIND1_ICON_WIDTH - 1, MENUBAR_HEIGHT - 2);	/* Trigger level */
 	UG_TextboxSetFont(&window_1, TXB_ID_4, &FONT_6X8);
-	UG_TextboxSetBackColor(&window_1, TXB_ID_4, INACTIVE_ICON_COLOR);
-	UG_TextboxSetText(&window_1, TXB_ID_4, "--X--");
+	UG_TextboxSetBackColor(&window_1, TXB_ID_4, CH1_COLOR);
+	UG_TextboxSetText(&window_1, TXB_ID_4, "1.63V");
 
 	UG_TextboxCreate(&window_1, &txtb1_5, TXB_ID_5, 6*WIND1_ICON_SPACING + 5*WIND1_ICON_WIDTH, 1, 6*WIND1_ICON_SPACING + 6*WIND1_ICON_WIDTH - 1, MENUBAR_HEIGHT - 2);	/* Trigger Mode */
 	UG_TextboxSetFont(&window_1, TXB_ID_5, &FONT_6X8);
@@ -398,17 +398,17 @@ void secToStr(float32_t t, char* buf)
 {
 	t = t * 1000000;	/* convert to usec */
 
-	if(t < 100){
-		gcvt((int32_t)(t*100)/100.0f, 3, buf);
+	if(abs(t) < 100){
+		gcvt((int32_t)(t*100)/100.0f, 3 + (t < -10), buf);
 		strcat(buf, "us");
 	}
-	else if(t < 1000){
+	else if(abs(t) < 1000){
 		itoa(t, buf, 10);
 		strcat(buf, "us");
 	}
 	else{
 		t = t/1000;		/* convert to msec */
-		gcvt((int32_t)(t*100)/100.0f, 3, buf);
+		gcvt((int32_t)(t*100)/100.0f, 3 + (t < -10), buf);
 		strcat(buf, "ms");
 	}
 }
@@ -777,6 +777,32 @@ void DisplayMeasurements(void)
 }
 
 /**
+  * @brief  Sets the given field as the active field.
+  * @param  field
+  * @retval None
+  */
+void goToField(uint8_t field)
+{
+	selectField(currField, 0);		/* de-select current field */
+
+	currField = field;
+
+	selectField(currField, 1);		/* select next field */
+
+	return;
+}
+
+/**
+  * @brief  Get the current active field.
+  * @param  None
+  * @retval Currently active field
+  */
+uint8_t getCurrField(void)
+{
+	return currField;
+}
+
+/**
   * @brief  Cycles through the fields in the top & bottom menubars.
   * @param  None
   * @retval None
@@ -894,46 +920,27 @@ void changeFieldValue(uint8_t dir)
 
 		case FLD_TRIGSRC:
 			trigsrc += dir?(trigsrc==0?0:-1):(trigsrc==TRIGSRC_MAXVALS-1?0:1);
+
 			UG_COLOR color;
-			if(trigsrcVals[trigsrc] == TRIGSRC_NONE)
-				color = INACTIVE_ICON_COLOR;
-			else if(trigsrcVals[trigsrc] == TRIGSRC_CH1)
+			if(trigsrcVals[trigsrc] == TRIGSRC_CH1)
 				color = CH1_COLOR;
 			else
 				color = CH2_COLOR;
 			UG_TextboxSetBackColor(&window_1, TXB_ID_3, color);
 			UG_TextboxSetBackColor(&window_1, TXB_ID_4, color);
-
-			if(trigsrcVals[trigsrc] == TRIGSRC_NONE){
-				strcpy(bufw1tb3 + 4, "--");
-				UG_TextboxSetText(&window_1, TXB_ID_3, bufw1tb3);
-				UG_TextboxSetText(&window_1, TXB_ID_4, "-X-");
-			}
-			else{
-				/* initialize trigger type and level */
-				trigtype = 0;
-				strcpy(bufw1tb3 + 4, trigtypeDispVals[trigtype]);
-				UG_TextboxSetText(&window_1, TXB_ID_3, bufw1tb3);
-				triglvl = 126;
-				UG_TextboxSetText(&window_1, TXB_ID_4, "1.63V");
-			}
 			break;
 
 		case FLD_TRIGTYPE:
-			if(trigsrcVals[trigsrc] != TRIGSRC_NONE){
-				trigtype += dir?(trigtype==0?0:-1):(trigtype==TRIGTYPE_MAXVALS-1?0:1);
-				strcpy(bufw1tb3 + 4, trigtypeDispVals[trigtype]);
-				UG_TextboxSetText(&window_1, TXB_ID_3, bufw1tb3);
-			}
+			trigtype += dir?(trigtype==0?0:-1):(trigtype==TRIGTYPE_MAXVALS-1?0:1);
+			strcpy(bufw1tb3 + 4, trigtypeDispVals[trigtype]);
+			UG_TextboxSetText(&window_1, TXB_ID_3, bufw1tb3);
 			break;
 
 		case FLD_TRIGLVL:
-			if(trigsrcVals[trigsrc] != TRIGSRC_NONE){
-				triglvl += dir?(triglvl==0?0:-3):(triglvl==255?0:3);
-				gcvt((int32_t)((3.3f*(float32_t)triglvl/(float32_t)255)*100)/100.0f, 3, bufw1tb4);
-				strcat(bufw1tb4, "V");
-				UG_TextboxSetText(&window_1, TXB_ID_4, bufw1tb4);
-			}
+			triglvl += dir?(triglvl==0?0:-3):(triglvl==255?0:3);
+			gcvt((int32_t)((3.3f*(float32_t)triglvl/(float32_t)255)*100)/100.0f, 3, bufw1tb4);
+			strcat(bufw1tb4, "V");
+			UG_TextboxSetText(&window_1, TXB_ID_4, bufw1tb4);
 			break;
 
 		case FLD_TRIGMODE:
@@ -945,9 +952,15 @@ void changeFieldValue(uint8_t dir)
 			runstop += dir?(runstop==0?0:-1):(runstop==RUNSTOP_MAXVALS-1?0:1);
 			UG_TextboxSetText(&window_1, TXB_ID_6, runstopDispVals[runstop]);
 			if(runstopVals[runstop] == RUNSTOP_RUN){
+				ADC_Ch1_reinit();
+				ADC_Ch2_reinit();
 				UG_TextboxSetBackColor(&window_1, TXB_ID_6, RUNSTOP_ICON_COLOR_RUN);
 			}
 			else{
+				CH1_ADC_DMA_STREAM->CR &= ~0x01;		/* disable ch1 stream and confirm */
+				while(CH1_ADC_DMA_STREAM->CR & 0x01);
+				CH2_ADC_DMA_STREAM->CR &= ~0x01;		/* disable ch2 stream and confirm */
+				while(CH2_ADC_DMA_STREAM->CR & 0x01);
 				UG_TextboxSetBackColor(&window_1, TXB_ID_6, RUNSTOP_ICON_COLOR_STP);
 			}
 			break;
@@ -967,8 +980,8 @@ void changeFieldValue(uint8_t dir)
 			break;
 
 		case FLD_TOFF:
-			toff += dir?(toff==0?0:-6):(toff==420?0:6);
-			secToStr((float32_t)toff/(float32_t)samprateVals[tscale], bufw2tb2);
+			toff += dir?(toff==TOFF_LIMIT?0:-6):(toff==ADC_TRIGBUF_SIZE-TOFF_LIMIT?0:6);
+			secToStr((float32_t)(toff-240)/(float32_t)samprateVals[tscale], bufw2tb2);
 			UG_TextboxSetText(&window_2, TXB_ID_2, bufw2tb2);
 			break;
 	}

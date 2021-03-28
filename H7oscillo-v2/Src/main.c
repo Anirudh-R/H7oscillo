@@ -10,6 +10,10 @@
 #include "main.h"
 
 
+#define max(a, b)	(a > b ? a : b)
+
+int32_t trigPt = -1, waveIdxStart;
+
 /**
   * @brief  Main program
   * @param  None
@@ -31,7 +35,6 @@ int main(void)
 	SDRAM_init();
 	LTDC_init();
 	DMA2D_init();
-	ADC_init();
 	Timers_init();
 	LEDs_Buttons_init();
 	I2C_TS_init();
@@ -57,9 +60,60 @@ int main(void)
 	/* Initialize measurement module */
 	measure_init();
 
+	/* Initialize and start data capture */
+	ADC_init();
+
 	/* Main loop */
 	while(1)
 	{
+		/* check for trigger and display waveform */
+		if(CH1_acq_comp && CH2_acq_comp){
+			CH1_acq_comp = CH2_acq_comp = 0;
+
+			trigPt = processTriggers();
+
+			/* Draw waveforms */
+			if((trigmodeVals[trigmode] == TRIGMODE_AUTO && runstopVals[runstop] != RUNSTOP_STOP) ||
+					(trigmodeVals[trigmode] == TRIGMODE_SNGL && trigPt != -1 && runstopVals[runstop] != RUNSTOP_STOP) ||
+					(trigmodeVals[trigmode] == TRIGMODE_NORM && trigPt != -1 && runstopVals[runstop] != RUNSTOP_STOP)){
+				/* Clear the wave draw buffer */
+				fillScreenWave(C_BLACK);
+				while(DMA2D->CR & 0x01);
+
+				waveIdxStart = (trigmodeVals[trigmode] == TRIGMODE_AUTO && trigPt == -1) ? ADC_PRETRIGBUF_SIZE : ADC_PRETRIGBUF_SIZE + trigPt - toff;
+
+				pFrame = (__IO uint16_t (*)[LCD_WIDTH])LCD_DRAW_BUFFER_WAVE;
+				for(j = 0; j < LCD_WIDTH; j++){
+					/* CH1 */
+					temp = (float32_t)(voff1 + CH1_ADC_vals[waveIdxStart+j])/vscaleVals[vscale1];
+					if(temp > 119)	temp = 119;
+					else if(temp < 0)  temp = 0;
+					i = 134 - temp;
+					pFrame[i][j] = CH1_COLOR;
+
+					/* CH2 */
+					temp = (float32_t)(voff2 + CH2_ADC_vals[waveIdxStart+j])/vscaleVals[vscale2];
+					if(temp > 119)	temp = 119;
+					else if(temp < 0)  temp = 0;
+					i = 254 - temp;
+					pFrame[i][j] = CH2_COLOR;
+				}
+
+				/* go to STOP mode after a single mode trigger event */
+				if(trigmodeVals[trigmode] == TRIGMODE_SNGL){
+					trigPt = -1;
+					goToField(FLD_RUNSTOP);
+					changeFieldValue(0);	/* STOP */
+				}
+			}
+
+			/* capture next waveform frame */
+			if((trigmodeVals[trigmode] != TRIGMODE_SNGL || trigPt == -1) && runstopVals[runstop] != RUNSTOP_STOP){
+				ADC_Ch1_reinit();
+				ADC_Ch2_reinit();
+			}
+		}
+
 		/* Read touch, display windows and measurements */
 		if(TS_read_pending){
 			/* Get touch inputs */
@@ -75,7 +129,7 @@ int main(void)
 			/* uGUI can show only one window at a time. Switch between them to display multiple at the same time. */
 			switchNextWindow();
 
-			/* Display the chosen measurements */
+			/* Calculate and display the selected measurements */
 			DisplayMeasurements();
 
 			TS_read_pending = 0;
@@ -95,28 +149,6 @@ int main(void)
 			changeFieldValue(QE_direc);
 
 			QE_Count_prev = QE_Count;
-		}
-
-		/* Clear the wave draw buffer */
-		fillScreenWave(C_BLACK);
-		while(DMA2D->CR & 0x01);
-
-		/* Draw waveforms */
-		pFrame = (__IO uint16_t (*)[LCD_WIDTH])LCD_DRAW_BUFFER_WAVE;
-		for(j = 0; j < LCD_WIDTH; j++){
-			/* ADC CH1 */
-			temp = (float32_t)(voff1 + CH1_ADC_vals[j])/vscaleVals[vscale1];
-			if(temp > 119)	temp = 119;
-			else if(temp < 0)  temp = 0;
-			i = 134 - temp;
-			pFrame[i][j] = CH1_COLOR;
-
-			/* ADC CH2 */
-			temp = (float32_t)(voff2 + CH2_ADC_vals[j])/vscaleVals[vscale2];
-			if(temp > 119)	temp = 119;
-			else if(temp < 0)  temp = 0;
-			i = 254 - temp;
-			pFrame[i][j] = CH2_COLOR;
 		}
 
 		UG_Update();

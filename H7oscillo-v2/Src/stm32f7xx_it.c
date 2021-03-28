@@ -156,8 +156,11 @@ void User_Button_IRQHandler(void)
   */
 void CH1_ADC_DMA_IRQHandler(void)
 {
+	CH1_ADC_DMA_STREAM->CR &= ~0x01;		/* disable stream and confirm */
+	while(CH1_ADC_DMA_STREAM->CR & 0x01);
+
+	CH1_acq_comp = (CH1_ADC_DMA->LISR & (1 << 5)) != 0;
 	CH1_ADC_DMA->LIFCR      |= 0x0000003D;	/* clear flags/errors */
-	CH1_acq_comp = 1;
 }
 
 /**
@@ -167,8 +170,11 @@ void CH1_ADC_DMA_IRQHandler(void)
   */
 void CH2_ADC_DMA_IRQHandler(void)
 {
+	CH2_ADC_DMA_STREAM->CR &= ~0x01;		/* disable stream and confirm */
+	while(CH2_ADC_DMA_STREAM->CR & 0x01);
+
+	CH2_acq_comp = (CH2_ADC_DMA->LISR & (1 << 11)) != 0;
 	CH2_ADC_DMA->LIFCR      |= 0x00000F40;	/* clear flags/errors */
-	CH2_acq_comp = 1;
 }
 
 /**

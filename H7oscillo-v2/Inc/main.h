@@ -43,6 +43,7 @@
 #include "display.h"
 #include "ui.h"
 #include "measure.h"
+#include "triggers.h"
 
 
 /* LED1 */

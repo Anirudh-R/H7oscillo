@@ -34,10 +34,9 @@
 #define TSCALE_MAXVALS		7
 
 /* possible trigger source values */
-#define TRIGSRC_NONE		0
-#define TRIGSRC_CH1			1
-#define TRIGSRC_CH2			2
-#define TRIGSRC_MAXVALS		3
+#define TRIGSRC_CH1			0
+#define TRIGSRC_CH2			1
+#define TRIGSRC_MAXVALS		2
 
 /* possible trigger type values */
 #define TRIGTYPE_RIS		0
@@ -48,7 +47,8 @@
 /* possible trigger mode values */
 #define TRIGMODE_AUTO		0
 #define TRIGMODE_SNGL		1
-#define TRIGMODE_MAXVALS	2
+#define TRIGMODE_NORM		2
+#define TRIGMODE_MAXVALS	3
 
 /* possible Run/Stop values */
 #define RUNSTOP_RUN			0

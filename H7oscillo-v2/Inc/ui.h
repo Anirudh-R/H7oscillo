@@ -119,6 +119,8 @@ void window_4_callback(UG_MESSAGE* msg);
 void window_5_callback(UG_MESSAGE* msg);
 void switchNextWindow(void);
 void DisplayMeasurements(void);
+void goToField(uint8_t field);
+uint8_t getCurrField(void);
 void switchNextField(void);
 void changeFieldValue(uint8_t dir);
 
