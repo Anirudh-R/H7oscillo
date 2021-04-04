@@ -16,6 +16,7 @@ extern void Timers_init(void);
 extern void TimQE_init(void);
 extern void TimADC_init(int8_t tbase);
 extern void TimTS_init(void);
+void TimMeas_init(void);
 extern void ADC_init(void);
 extern void ADC_Ch1_init(void);
 void ADC_Ch1_reinit(void);

@@ -9,10 +9,8 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 
+#define max(a, b)	((a) > (b) ? a : b)
 
-#define max(a, b)	(a > b ? a : b)
-
-int32_t trigPt = -1, waveIdxStart;
 
 /**
   * @brief  Main program
@@ -24,7 +22,7 @@ int main(void)
 	uint32_t QE_Count = 0, QE_Count_prev = 1;
 	uint8_t QE_direc = 0;
 	__IO uint16_t (*pFrame)[LCD_WIDTH];
-	int32_t i, j, temp;
+	int32_t trigPt = -1, waveIdxStart, dispIdxStart, i, j, temp;
 
 	/* Enable the CPU Cache */
 	CPU_CACHE_Enable();
@@ -57,6 +55,8 @@ int main(void)
 	/* Create windows and other GUI elements */
 	initUI();
 
+	initFields();
+
 	/* Initialize measurement module */
 	measure_init();
 
@@ -72,6 +72,10 @@ int main(void)
 
 			trigPt = processTriggers();
 
+			if(trigPt == -1){
+				UG_TextboxSetBackColor(&window_1, TXB_ID_6, RUNSTOP_ICON_COLOR_TRGWT);
+			}
+
 			/* Draw waveforms */
 			if((trigmodeVals[trigmode] == TRIGMODE_AUTO && runstopVals[runstop] != RUNSTOP_STOP) ||
 					(trigmodeVals[trigmode] == TRIGMODE_SNGL && trigPt != -1 && runstopVals[runstop] != RUNSTOP_STOP) ||
@@ -80,7 +84,18 @@ int main(void)
 				fillScreenWave(C_BLACK);
 				while(DMA2D->CR & 0x01);
 
-				waveIdxStart = (trigmodeVals[trigmode] == TRIGMODE_AUTO && trigPt == -1) ? ADC_PRETRIGBUF_SIZE : ADC_PRETRIGBUF_SIZE + trigPt - toff;
+				if(trigPt < ADC_PRETRIGBUF_SIZE){
+					waveIdxStart = (trigmodeVals[trigmode] == TRIGMODE_AUTO && trigPt == -1) ? 0 : max(0, trigPt - toff);	/* display waveform sample index start */
+					dispIdxStart = (trigmodeVals[trigmode] == TRIGMODE_AUTO && trigPt == -1) ? 0 : max(0, toff - trigPt);	/* display offset to start drawing the waveform */
+				}
+				else if(trigPt >= ADC_PRETRIGBUF_SIZE && trigPt < ADC_PRETRIGBUF_SIZE + ADC_TRIGBUF_SIZE){
+					waveIdxStart = (trigmodeVals[trigmode] == TRIGMODE_AUTO && trigPt == -1) ? ADC_PRETRIGBUF_SIZE : trigPt - toff;
+					dispIdxStart = 0;
+				}
+				else{
+					waveIdxStart = (trigmodeVals[trigmode] == TRIGMODE_AUTO && trigPt == -1) ? ADC_PRETRIGBUF_SIZE + ADC_TRIGBUF_SIZE - TOFF_LIMIT : trigPt - toff;
+					dispIdxStart = 0;
+				}
 
 				pFrame = (__IO uint16_t (*)[LCD_WIDTH])LCD_DRAW_BUFFER_WAVE;
 				for(j = 0; j < LCD_WIDTH; j++){
@@ -89,14 +104,16 @@ int main(void)
 					if(temp > 119)	temp = 119;
 					else if(temp < 0)  temp = 0;
 					i = 134 - temp;
-					pFrame[i][j] = CH1_COLOR;
+					if(dispIdxStart+j < LCD_WIDTH)
+						pFrame[i][dispIdxStart+j] = CH1_COLOR;
 
 					/* CH2 */
 					temp = (float32_t)(voff2 + CH2_ADC_vals[waveIdxStart+j])/vscaleVals[vscale2];
 					if(temp > 119)	temp = 119;
 					else if(temp < 0)  temp = 0;
 					i = 254 - temp;
-					pFrame[i][j] = CH2_COLOR;
+					if(dispIdxStart+j < LCD_WIDTH)
+						pFrame[i][dispIdxStart+j] = CH2_COLOR;
 				}
 
 				/* go to STOP mode after a single mode trigger event */
@@ -104,6 +121,9 @@ int main(void)
 					trigPt = -1;
 					goToField(FLD_RUNSTOP);
 					changeFieldValue(0);	/* STOP */
+				}
+				else if(trigPt != -1){
+					UG_TextboxSetBackColor(&window_1, TXB_ID_6, RUNSTOP_ICON_COLOR_RUN);
 				}
 			}
 
@@ -114,7 +134,7 @@ int main(void)
 			}
 		}
 
-		/* Read touch, display windows and measurements */
+		/* Read touch and display windows */
 		if(TS_read_pending){
 			/* Get touch inputs */
 			if(TS_DetectNumTouches() > 0){
@@ -129,10 +149,13 @@ int main(void)
 			/* uGUI can show only one window at a time. Switch between them to display multiple at the same time. */
 			switchNextWindow();
 
-			/* Calculate and display the selected measurements */
-			DisplayMeasurements();
-
 			TS_read_pending = 0;
+		}
+
+		/* Calculate and display the selected measurements */
+		if(Meas_pending){
+			DisplayMeasurements();
+			Meas_pending = 0;
 		}
 
 		/* Interrupt from quadrature encoder push button switch */

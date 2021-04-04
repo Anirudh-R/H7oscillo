@@ -10,7 +10,7 @@
 #include "touch.h"
 
 
-uint16_t TS_X, TS_Y;			/* XY coordinates of touch point */
+uint16_t TS_X, TS_Y;				/* XY coordinates of touch point */
 __IO uint8_t TS_read_pending = 0;	/* Pending touch screen read */
 
 /**

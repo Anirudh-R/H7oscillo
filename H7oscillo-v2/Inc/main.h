@@ -164,6 +164,10 @@
 #define TIM_TS	                         		TIM4
 #define TIM_TS_CLK_ENABLE()	            		LL_APB1_GRP1_EnableClock(LL_APB1_GRP1_PERIPH_TIM4)
 
+/* Timer for Measurements */
+#define TIM_MEAS	                         	TIM3
+#define TIM_MEAS_CLK_ENABLE()	            	LL_APB1_GRP1_EnableClock(LL_APB1_GRP1_PERIPH_TIM3)
+
 /* Global function prototypes */
 extern uint32_t Get_tick(void);
 

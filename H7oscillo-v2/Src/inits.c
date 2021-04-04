@@ -18,9 +18,11 @@ void Timers_init(void)
 {
 	TimQE_init();
 
-	TimADC_init(6);
+	TimADC_init(tscale);
 
 	TimTS_init();
+
+	TimMeas_init();
 }
 
 /**
@@ -105,6 +107,25 @@ void TimTS_init(void)
 
 	NVIC_SetPriority(TIM4_IRQn, 4);
 	NVIC_EnableIRQ(TIM4_IRQn);
+}
+
+/**
+  * @brief  Configures timer for calculating measurements.
+  * @param  None
+  * @retval None
+  */
+void TimMeas_init(void)
+{
+	/* Configure TIM_MEAS for 20Hz frequency */
+	TIM_MEAS_CLK_ENABLE();
+	TIM_MEAS->CR1 &= ~(uint32_t)0x01;	/* disable timer */
+	TIM_MEAS->PSC  = 10000 - 1;			/* counter_clk = timer_inp_clk/10000 = 100MHz/10000 = 10KHz */
+	TIM_MEAS->ARR  = 500 - 1;		    /* Touch screen polling frequency = counter_clk/2500 = 4Hz */
+	TIM_MEAS->DIER |= 0x01;				/* Enable interrupt on counter overflow */
+	TIM_MEAS->CR1 |= 0x01;				/* start timer */
+
+	NVIC_SetPriority(TIM3_IRQn, 4);
+	NVIC_EnableIRQ(TIM3_IRQn);
 }
 
 /**

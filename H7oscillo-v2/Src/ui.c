@@ -10,6 +10,8 @@
 #include "ui.h"
 
 
+static void drawGridHoriz(void);
+static void drawGridVerti(void);
 static void selectField(uint8_t field, uint8_t sel);
 
 /* uGUI related globals */
@@ -68,6 +70,56 @@ static uint8_t showWindow5 = 0;
 
 static uint8_t wind5OpenedBy = MEASURE_NONE;
 static uint8_t currField = FLD_NONE;					/* currently selected field in the top and bottom menubar */
+
+static char bufw1tb3[8] = "Trg:", bufw1tb4[6], bufw2tb0[6], bufw2tb1[6], bufw2tb2[6];
+
+static uint8_t trigCursorImg[CURSOR_WIDTH][CURSOR_LENGTH] = {
+	   {1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0},
+	   {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0},
+	   {1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0},
+	   {1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0},
+	   {1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1},
+	   {1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1},
+	   {1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 0},
+	   {1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 0, 0},
+	   {1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 0, 0, 0},
+	   {1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0}};
+
+static uint8_t ch1RefCursorImg[CURSOR_WIDTH][CURSOR_LENGTH] = {
+	   {1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0},
+	   {1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0},
+	   {1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0},
+	   {1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 0},
+	   {1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1},
+	   {1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1},
+	   {1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 0},
+	   {1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 0, 0},
+	   {1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0},
+	   {1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0}};
+
+static uint8_t ch2RefCursorImg[CURSOR_WIDTH][CURSOR_LENGTH] = {
+	   {1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0},
+	   {1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0},
+	   {1, 1, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0},
+	   {1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 0},
+	   {1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1},
+	   {1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1},
+	   {1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 0},
+	   {1, 1, 1, 0, 0, 1, 1, 0, 1, 1, 1, 0, 0},
+	   {1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0},
+	   {1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0}};
+
+static uint8_t toffCursorImg[CURSOR_LENGTH][CURSOR_WIDTH] = {
+	   {1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
+	   {1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
+	   {1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
+	   {1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
+	   {1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
+	   {1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
+	   {0, 1, 1, 1, 1, 1, 1, 1, 1, 0},
+	   {0, 0, 1, 1, 1, 1, 1, 1, 0, 0},
+	   {0, 0, 0, 1, 1, 1, 1, 0, 0, 0},
+	   {0, 0, 0, 0, 1, 1, 0, 0, 0, 0}};
 
 /**
   * @brief  Create windows and other basic ui elements.
@@ -275,17 +327,22 @@ void initUI(void)
   */
 void drawGrid(void)
 {
+	drawGridHoriz();
+
+	drawGridVerti();
+}
+
+/**
+  * @brief  Draw horizontal grid lines and channel separator.
+  * @param  None
+  * @retval None
+  */
+static void drawGridHoriz(void)
+{
 	__IO uint16_t (*pFrame)[LCD_WIDTH];
 	int i, j;
 
 	pFrame = (uint16_t (*)[LCD_WIDTH])LCD_DRAW_BUFFER_UGUI;
-
-	/* Draw vertical grid lines */
-	for(j = LCD_WIDTH/GRID_HORZ_DIVS - 1; j < LCD_WIDTH - 1; j += LCD_WIDTH/GRID_HORZ_DIVS){
-		for(i = MENUBAR_HEIGHT; i < LCD_HEIGHT - MENUBAR_HEIGHT; i += GRID_DOT_SPACING){
-			pFrame[i][j] = GRID_COLOR;
-		}
-	}
 
 	/* Draw horizontal grid lines */
 	for(i = MENUBAR_HEIGHT; i < LCD_HEIGHT - MENUBAR_HEIGHT; i += (LCD_HEIGHT - 2*MENUBAR_HEIGHT)/GRID_VERT_DIVS){
@@ -298,6 +355,26 @@ void drawGrid(void)
 	i = 135;
 	for(j = 0; j < LCD_WIDTH; j += 1){
 			pFrame[i][j] = CH_SEPARATOR_COLOR;
+	}
+}
+
+/**
+  * @brief  Draw vertical grid lines.
+  * @param  None
+  * @retval None
+  */
+static void drawGridVerti(void)
+{
+	__IO uint16_t (*pFrame)[LCD_WIDTH];
+	int i, j;
+
+	pFrame = (uint16_t (*)[LCD_WIDTH])LCD_DRAW_BUFFER_UGUI;
+
+	/* Draw vertical grid lines */
+	for(j = LCD_WIDTH/GRID_HORZ_DIVS - 1; j < LCD_WIDTH - 1; j += LCD_WIDTH/GRID_HORZ_DIVS){
+		for(i = MENUBAR_HEIGHT; i < LCD_HEIGHT - MENUBAR_HEIGHT; i += GRID_DOT_SPACING){
+			pFrame[i][j] = GRID_COLOR;
+		}
 	}
 }
 
@@ -793,16 +870,6 @@ void goToField(uint8_t field)
 }
 
 /**
-  * @brief  Get the current active field.
-  * @param  None
-  * @retval Currently active field
-  */
-uint8_t getCurrField(void)
-{
-	return currField;
-}
-
-/**
   * @brief  Cycles through the fields in the top & bottom menubars.
   * @param  None
   * @retval None
@@ -894,7 +961,9 @@ static void selectField(uint8_t field, uint8_t sel)
   */
 void changeFieldValue(uint8_t dir)
 {
-	static char bufw1tb3[8] = "Trg:", bufw1tb4[6], bufw2tb0[6], bufw2tb1[6], bufw2tb2[6];
+	static int32_t trigCurPosPrev = 52, ch1offCurPosPrev = 130, ch2offCurPosPrev = 250, toffCurPosPrev = 56;
+	int32_t temp, trigCurPos, ch1offCurPos, ch2offCurPos, toffCurPos, i, j;
+	__IO uint16_t (*pFrame)[LCD_WIDTH] = (__IO uint16_t (*)[LCD_WIDTH])LCD_DRAW_BUFFER_UGUI;
 
 	/* increment/decrement value of the current field */
 	switch(currField)
@@ -983,8 +1052,211 @@ void changeFieldValue(uint8_t dir)
 			toff += dir?(toff==TOFF_LIMIT?0:-6):(toff==ADC_TRIGBUF_SIZE-TOFF_LIMIT?0:6);
 			secToStr((float32_t)(toff-240)/(float32_t)samprateVals[tscale], bufw2tb2);
 			UG_TextboxSetText(&window_2, TXB_ID_2, bufw2tb2);
+
+			/* clear previous toff cursor and redraw */
+			for(i = MENUBAR_HEIGHT; i < MENUBAR_HEIGHT + TOFF_CURSOR_LENGTH; i++)
+				for(j = toffCurPosPrev; j < toffCurPosPrev + TOFF_CURSOR_WIDTH; j++)
+					pFrame[i][j] = C_BLACK;
+
+			toffCurPos = toff - TOFF_CURSOR_WIDTH/2 + 1;
+			for(i = MENUBAR_HEIGHT; i < MENUBAR_HEIGHT + TOFF_CURSOR_LENGTH; i++)
+				for(j = toffCurPos; j < toffCurPos + TOFF_CURSOR_WIDTH; j++)
+					pFrame[i][j] = toffCursorImg[i-MENUBAR_HEIGHT][j-toffCurPos] ? TOFF_CURSOR_COLOR : C_BLACK;
+
+			toffCurPosPrev = toffCurPos;
+
+			drawGridVerti();
+
 			break;
 	}
+
+	/* if trig source changed, clear off the existing trigger cursor */
+	if(currField == FLD_TRIGSRC){
+		for(i = trigCurPosPrev; i < trigCurPosPrev + CURSOR_WIDTH; i++)
+			for(j = 0; j < CURSOR_LENGTH; j++)
+				pFrame[i][j] = trigCursorImg[i-trigCurPosPrev][j] ? CH1_COLOR : C_BLACK;
+	}
+
+	/* Update the positions of ch1 cursors, if required */
+	if(currField == FLD_CH1_VSCALE || currField == FLD_TRIGSRC ||
+			(currField == FLD_TRIGLVL && trigsrcVals[trigsrc] == TRIGSRC_CH1) || currField == FLD_CH1_VOFF){
+
+		if(trigsrcVals[trigsrc] == TRIGSRC_CH1){
+			/* clear previous trigger cursor and redraw */
+			for(i = trigCurPosPrev; i < trigCurPosPrev + CURSOR_WIDTH; i++)
+				for(j = 0; j < CURSOR_LENGTH; j++)
+					pFrame[i][j] = C_BLACK;
+
+			temp = (float32_t)(voff1 + triglvl)/vscaleVals[vscale1];
+			if(temp > 119)	temp = 119;
+			else if(temp < 0)  temp = 0;
+			trigCurPos = 134 - temp - CURSOR_WIDTH/2 + 1;
+			for(i = trigCurPos; i < trigCurPos + CURSOR_WIDTH; i++)
+				for(j = 0; j < CURSOR_LENGTH; j++)
+					pFrame[i][j] = trigCursorImg[i-trigCurPos][j] ? CH1_COLOR : C_BLACK;
+
+			trigCurPosPrev = trigCurPos;
+		}
+
+		/* clear previous offset cursor and redraw */
+		for(i = ch1offCurPosPrev; i < ch1offCurPosPrev + CURSOR_WIDTH; i++)
+			for(j = 0; j < CURSOR_LENGTH; j++)
+				pFrame[i][j] = C_BLACK;
+
+		temp = (float32_t)(voff1)/vscaleVals[vscale1];
+		if(temp > 119)	temp = 119;
+		else if(temp < 0)  temp = 0;
+		ch1offCurPos = 134 - temp - CURSOR_WIDTH/2 + 1;
+		for(i = ch1offCurPos; i < ch1offCurPos + CURSOR_WIDTH; i++)
+			for(j = 0; j < CURSOR_LENGTH; j++)
+				pFrame[i][j] = ch1RefCursorImg[i-ch1offCurPos][j] ? CH1_COLOR : C_BLACK;
+
+		ch1offCurPosPrev = ch1offCurPos;
+
+		drawGridHoriz();
+	}
+
+	/* Update the positions of ch2 cursors, if required */
+	if(currField == FLD_CH2_VSCALE || currField == FLD_TRIGSRC ||
+			(currField == FLD_TRIGLVL && trigsrcVals[trigsrc] == TRIGSRC_CH2) || currField == FLD_CH2_VOFF){
+
+		if(trigsrcVals[trigsrc] == TRIGSRC_CH2){
+			/* clear previous trigger cursor and redraw */
+			for(i = trigCurPosPrev; i < trigCurPosPrev + CURSOR_WIDTH; i++)
+				for(j = 0; j < CURSOR_LENGTH; j++)
+					pFrame[i][j] = C_BLACK;
+
+			temp = (float32_t)(voff2 + triglvl)/vscaleVals[vscale2];
+			if(temp > 119)	temp = 119;
+			else if(temp < 0)  temp = 0;
+			trigCurPos = 254 - temp - CURSOR_WIDTH/2 + 1;
+			for(i = trigCurPos; i < trigCurPos + CURSOR_WIDTH; i++)
+				for(j = 0; j < CURSOR_LENGTH; j++)
+					pFrame[i][j] = trigCursorImg[i-trigCurPos][j] ? CH2_COLOR : C_BLACK;
+
+			trigCurPosPrev = trigCurPos;
+		}
+
+		/* clear previous offset cursor and redraw */
+		for(i = ch2offCurPosPrev; i < ch2offCurPosPrev + CURSOR_WIDTH; i++)
+			for(j = 0; j < CURSOR_LENGTH; j++)
+				pFrame[i][j] = C_BLACK;
+
+		temp = (float32_t)(voff2)/vscaleVals[vscale2];
+		if(temp > 119)	temp = 119;
+		else if(temp < 0)  temp = 0;
+		ch2offCurPos = 254 - temp - CURSOR_WIDTH/2 + 1;
+		for(i = ch2offCurPos; i < ch2offCurPos + CURSOR_WIDTH; i++)
+			for(j = 0; j < CURSOR_LENGTH; j++)
+				pFrame[i][j] = ch2RefCursorImg[i-ch2offCurPos][j] ? CH2_COLOR : C_BLACK;
+
+		ch2offCurPosPrev = ch2offCurPos;
+
+		drawGridHoriz();
+	}
+
+	/* update horizontal offset if there is a change in time scale */
+	if(currField == FLD_TSCALE){
+		secToStr((float32_t)(toff-240)/(float32_t)samprateVals[tscale], bufw2tb2);
+		UG_TextboxSetText(&window_2, TXB_ID_2, bufw2tb2);
+	}
+
+	return;
+}
+
+/**
+  * @brief  Initialize field values.
+  * @param  None
+  * @retval None
+  */
+void initFields(void)
+{
+	int32_t temp, curPos, i, j;
+	__IO uint16_t (*pFrame)[LCD_WIDTH] = (__IO uint16_t (*)[LCD_WIDTH])LCD_DRAW_BUFFER_UGUI;
+
+	/* ch1 vertical scale */
+	UG_TextboxSetText(&window_1, TXB_ID_0, vscaleDispVals[vscale1]);
+
+	/* ch2 vertical scale */
+	UG_TextboxSetText(&window_1, TXB_ID_1, vscaleDispVals[vscale2]);
+
+	/* time scale */
+	UG_TextboxSetText(&window_1, TXB_ID_2, tscaleDispVals[tscale]);
+
+	/* trigger source */
+	UG_COLOR color;
+	if(trigsrcVals[trigsrc] == TRIGSRC_CH1)
+		color = CH1_COLOR;
+	else
+		color = CH2_COLOR;
+	UG_TextboxSetBackColor(&window_1, TXB_ID_3, color);
+	UG_TextboxSetBackColor(&window_1, TXB_ID_4, color);
+
+	/* trigger type */
+	strcpy(bufw1tb3 + 4, trigtypeDispVals[trigtype]);
+	UG_TextboxSetText(&window_1, TXB_ID_3, bufw1tb3);
+
+	/* trigger level */
+	gcvt((int32_t)((3.3f*(float32_t)triglvl/(float32_t)255)*100)/100.0f, 3, bufw1tb4);
+	strcat(bufw1tb4, "V");
+	UG_TextboxSetText(&window_1, TXB_ID_4, bufw1tb4);
+	if(trigsrcVals[trigsrc] == TRIGSRC_CH1){
+		temp = (float32_t)(voff1 + triglvl)/vscaleVals[vscale1];
+		if(temp > 119)	temp = 119;
+		else if(temp < 0)  temp = 0;
+		curPos = 134 - temp - CURSOR_WIDTH/2 + 1;
+		for(i = curPos; i < curPos + CURSOR_WIDTH; i++)
+			for(j = 0; j < CURSOR_LENGTH; j++)
+				pFrame[i][j] = trigCursorImg[i-curPos][j] ? CH1_COLOR : C_BLACK;
+	}
+	else{
+		temp = (float32_t)(voff2 + triglvl)/vscaleVals[vscale2];
+		if(temp > 119)	temp = 119;
+		else if(temp < 0)  temp = 0;
+		curPos = 254 - temp - CURSOR_WIDTH/2 + 1;
+		for(i = curPos; i < curPos + CURSOR_WIDTH; i++)
+			for(j = 0; j < CURSOR_LENGTH; j++)
+				pFrame[i][j] = trigCursorImg[i-curPos][j] ? CH2_COLOR : C_BLACK;
+	}
+
+	/* trigger mode */
+	UG_TextboxSetText(&window_1, TXB_ID_5, trigmodeDispVals[trigmode]);
+
+	/* Run/Stop */
+	UG_TextboxSetText(&window_1, TXB_ID_6, runstopDispVals[runstop]);
+	UG_TextboxSetBackColor(&window_1, TXB_ID_6, RUNSTOP_ICON_COLOR_RUN);
+
+	/* ch1 vertical offset */
+	gcvt((int32_t)((3.3f*(float32_t)voff1/(float32_t)255)*100)/100.0f, 3 + (voff1 < -1), bufw2tb0);
+	strcat(bufw2tb0, "V");
+	UG_TextboxSetText(&window_2, TXB_ID_0, bufw2tb0);
+	temp = (float32_t)(voff1)/vscaleVals[vscale1];
+	if(temp > 119)	temp = 119;
+	else if(temp < 0)  temp = 0;
+	curPos = 134 - temp - CURSOR_WIDTH/2 + 1;
+	for(i = curPos; i < curPos + CURSOR_WIDTH; i++)
+		for(j = 0; j < CURSOR_LENGTH; j++)
+			pFrame[i][j] = ch1RefCursorImg[i-curPos][j] ? CH1_COLOR : C_BLACK;
+
+	/* ch2 vertical offset */
+	gcvt((int32_t)((3.3f*(float32_t)voff2/(float32_t)255)*100)/100.0f, 3 + (voff2 < -1), bufw2tb1);
+	strcat(bufw2tb1, "V");
+	UG_TextboxSetText(&window_2, TXB_ID_1, bufw2tb1);
+	temp = (float32_t)(voff2)/vscaleVals[vscale1];
+	if(temp > 119)	temp = 119;
+	else if(temp < 0)  temp = 0;
+	curPos = 254 - temp - CURSOR_WIDTH/2 + 1;
+	for(i = curPos; i < curPos + CURSOR_WIDTH; i++)
+		for(j = 0; j < CURSOR_LENGTH; j++)
+			pFrame[i][j] = ch2RefCursorImg[i-curPos][j] ? CH2_COLOR : C_BLACK;
+
+	/* time offset */
+	secToStr((float32_t)(toff-240)/(float32_t)samprateVals[tscale], bufw2tb2);
+	UG_TextboxSetText(&window_2, TXB_ID_2, bufw2tb2);
+	curPos = toff - TOFF_CURSOR_WIDTH/2 + 1;
+	for(i = MENUBAR_HEIGHT; i < MENUBAR_HEIGHT + TOFF_CURSOR_LENGTH; i++)
+		for(j = curPos; j < curPos + TOFF_CURSOR_WIDTH; j++)
+			pFrame[i][j] = toffCursorImg[i-MENUBAR_HEIGHT][j-curPos] ? TOFF_CURSOR_COLOR : C_BLACK;
 
 	return;
 }

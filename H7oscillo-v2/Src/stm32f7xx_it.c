@@ -213,3 +213,14 @@ void TIM4_IRQHandler(void)
 	TS_read_pending = 1;
 	TIM_TS->SR &= ~0x01;
 }
+
+/**
+  * @brief  This function handles TIM3 interrupts.
+  * @param  None
+  * @retval None
+  */
+void TIM3_IRQHandler(void)
+{
+	Meas_pending = 1;
+	TIM_MEAS->SR &= ~0x01;
+}

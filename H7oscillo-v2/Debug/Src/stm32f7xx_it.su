@@ -16,3 +16,4 @@ stm32f7xx_it.c:171:6:DMA2_Stream1_IRQHandler	4	static
 stm32f7xx_it.c:185:6:LTDC_ER_IRQHandler	4	static
 stm32f7xx_it.c:198:6:DMA2D_IRQHandler	4	static
 stm32f7xx_it.c:211:6:TIM4_IRQHandler	4	static
+stm32f7xx_it.c:222:6:TIM3_IRQHandler	4	static

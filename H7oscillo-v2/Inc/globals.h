@@ -88,6 +88,7 @@ extern const char runstopDispVals[][5];
 extern const uint32_t samprateVals[];
 
 extern __IO uint8_t QE_PB_interrupt;
+extern __IO uint8_t Meas_pending;
 
 extern __IO uint8_t CH1_acq_comp, CH2_acq_comp;
 
