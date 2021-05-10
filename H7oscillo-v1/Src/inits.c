@@ -120,7 +120,7 @@ void TimMeas_init(void)
 	TIM_MEAS_CLK_ENABLE();
 	TIM_MEAS->CR1 &= ~(uint32_t)0x01;	/* disable timer */
 	TIM_MEAS->PSC  = 10000 - 1;			/* counter_clk = timer_inp_clk/10000 = 100MHz/10000 = 10KHz */
-	TIM_MEAS->ARR  = 500 - 1;		    /* Touch screen polling frequency = counter_clk/2500 = 4Hz */
+	TIM_MEAS->ARR  = 2500 - 1;		    /* Touch screen polling frequency = counter_clk/2500 = 4Hz */
 	TIM_MEAS->DIER |= 0x01;				/* Enable interrupt on counter overflow */
 	TIM_MEAS->CR1 |= 0x01;				/* start timer */
 

@@ -71,7 +71,7 @@ static uint8_t showWindow5 = 0;
 static uint8_t wind5OpenedBy = MEASURE_NONE;
 static uint8_t currField = FLD_NONE;					/* currently selected field in the top and bottom menubar */
 
-static char bufw1tb3[8] = "Trg:", bufw1tb4[6], bufw2tb0[6], bufw2tb1[6], bufw2tb2[6];
+static char bufw1tb3[8] = "Trg:", bufw1tb4[6], bufw2tb0[6], bufw2tb1[6], bufw2tb2[7];
 
 static uint8_t trigCursorImg[CURSOR_WIDTH][CURSOR_LENGTH] = {
 	   {1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0},
@@ -515,7 +515,7 @@ void window_1_callback(UG_MESSAGE* msg)
 						showWindow5 = 0;
 						wind5OpenedBy = MEASURE_NONE;
 						menu_button_state = 0;
-						fillFrameUGUI(0, MENUBAR_HEIGHT, LCD_WIDTH - 1, LCD_HEIGHT - MENUBAR_HEIGHT - 1, C_BLACK);
+						fillFrameUGUI(LCD_WIDTH - WIND3_WIDTH, MENUBAR_HEIGHT + 10, LCD_WIDTH - 1, LCD_HEIGHT - MENUBAR_HEIGHT - 11, C_BLACK);
 						drawGrid();
 					}
 					break;
@@ -613,6 +613,7 @@ void window_3_callback(UG_MESSAGE* msg)
 					wind5OpenedBy = MEASURE_NONE;
 					showWindow4 = 1;
 					fillFrameUGUI(WIND5_X_START, WIND5_Y_START, WIND5_X_START + WIND5_WIDTH - 1, WIND5_Y_START + WIND5_HEIGHT - 1, C_BLACK);
+					drawGrid();
 					break;
 			 }
 		  }
