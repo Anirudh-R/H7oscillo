@@ -1261,3 +1261,35 @@ void initFields(void)
 
 	return;
 }
+
+/**
+  * @brief  Draws a red border around the waveform area.
+  * @param  None
+  * @retval None
+  */
+void drawRedBorder(void)
+{
+	UG_DrawLine(0, MENUBAR_HEIGHT, LCD_WIDTH - 1, MENUBAR_HEIGHT, C_RED);
+	UG_DrawLine(0, LCD_HEIGHT - MENUBAR_HEIGHT - 1, LCD_WIDTH - 1, LCD_HEIGHT - MENUBAR_HEIGHT - 1, C_RED);
+	UG_DrawLine(0, MENUBAR_HEIGHT, 0, LCD_HEIGHT - MENUBAR_HEIGHT - 1, C_RED);
+	UG_DrawLine(LCD_WIDTH - 1, MENUBAR_HEIGHT, LCD_WIDTH - 1, LCD_HEIGHT - MENUBAR_HEIGHT - 1, C_RED);
+
+	return;
+}
+
+/**
+  * @brief  Clears the red border around the waveform area.
+  * @param  None
+  * @retval None
+  */
+void clearRedBorder(void)
+{
+	UG_DrawLine(0, MENUBAR_HEIGHT, LCD_WIDTH - 1, MENUBAR_HEIGHT, C_BLACK);
+	UG_DrawLine(0, LCD_HEIGHT - MENUBAR_HEIGHT - 1, LCD_WIDTH - 1, LCD_HEIGHT - MENUBAR_HEIGHT - 1, C_BLACK);
+	UG_DrawLine(0, MENUBAR_HEIGHT, 0, LCD_HEIGHT - MENUBAR_HEIGHT - 1, C_BLACK);
+	UG_DrawLine(LCD_WIDTH - 1, MENUBAR_HEIGHT, LCD_WIDTH - 1, LCD_HEIGHT - MENUBAR_HEIGHT - 1, C_BLACK);
+
+	drawGrid();
+
+	return;
+}

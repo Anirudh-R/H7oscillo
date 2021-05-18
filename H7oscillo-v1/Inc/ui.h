@@ -129,5 +129,7 @@ void goToField(uint8_t field);
 void switchNextField(void);
 void changeFieldValue(uint8_t dir);
 void initFields(void);
+void drawRedBorder(void);
+void clearRedBorder(void);
 
 #endif /* __UI_H */

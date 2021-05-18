@@ -95,4 +95,6 @@ extern __IO uint8_t CH1_acq_comp, CH2_acq_comp;
 extern __IO uint8_t LTDC_error_flag;
 extern __IO uint8_t DMA2D_error_flag;
 
+extern uint8_t staticMode;
+
 #endif /* __GLOBALS_H */

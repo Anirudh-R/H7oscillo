@@ -27,7 +27,7 @@ uint8_t trigmode = 0;				/* Trigger mode */
 uint8_t runstop = 0;				/* Run/Stop */
 int16_t voff1 = 0;					/* Vertical offset of channel 1 */
 int16_t voff2 = 0;					/* Vertical offset of channel 2 */
-uint16_t toff = 60;					/* Horizontal offset */
+uint16_t toff = 240;					/* Horizontal offset */
 
 /* Possible values & display values for each field */
 const float32_t vscaleVals[] = {VSCALE_10mV, VSCALE_50mV, VSCALE_100mV, VSCALE_200mV, VSCALE_500mV, VSCALE_1V, VSCALE_2V, VSCALE_4V};
@@ -53,6 +53,8 @@ __IO uint8_t CH2_acq_comp = 0;
 /* Error flags */
 __IO uint8_t LTDC_error_flag = 0;
 __IO uint8_t DMA2D_error_flag = 0;
+
+uint8_t staticMode = 0;
 
 
 
