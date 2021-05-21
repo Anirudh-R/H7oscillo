@@ -351,39 +351,49 @@ int32_t resampleChannels(uint32_t offset, uint32_t lenx, uint8_t origSR, uint8_t
 		/* Filter 1 */
 		if(filt1.type == FILTERTYPE_INT){
 			uint32_t filtdelay = getFiltDelay(filt1.factor);
-			uint32_t leninpbuf = lenx + floor((float32_t)(filtdelay + filt1.factor - 1)/filt1.factor);
+			uint32_t nextra = floor((float32_t)(filtdelay + filt1.factor - 1)/filt1.factor);	/* no. of extra samples appended on each side */
+			uint32_t leninpbuf = lenx + 2*nextra;
 			float32_t inpbuf[leninpbuf];
 			float32_t statebuf[leninpbuf + filt1.ntaps/filt1.factor - 1];
+			uint8_t endpt1 = x[0], endpt2 = x[lenx - 1];
 
 			/* copy x into a float array for filtering */
+			for(i = 0; i < nextra; i++)
+				inpbuf[i] = (float32_t)endpt1 * filt1.factor;			/* extend signal with end-point values to minimize transient effects */
 			for(i = 0; i < lenx; i++)
-				inpbuf[i] = (float32_t)x[i] * filt1.factor;		/* compensate for the interpolation loss */
-			for(i = lenx; i < leninpbuf; i++)
-				inpbuf[i] = 0;		/* append zeros to signal to obtain the complete signal output from the filter */
+				inpbuf[nextra + i] = (float32_t)x[i] * filt1.factor;	/* compensate for the interpolation loss */
+			for(i = 0; i < nextra; i++)
+				inpbuf[nextra + lenx + i] = (float32_t)endpt2 * filt1.factor;	/* extend signal to obtain the complete signal output from the filter */
 
 			arm_fir_interpolate_init_f32(&hInterpolator, filt1.factor, filt1.ntaps, filt1.coeffs, statebuf, leninpbuf);
-			arm_fir_interpolate_f32(&hInterpolator, inpbuf, tempbuf1, leninpbuf);
+			/* leave MAX_PREPEND_LEN2 sized room in output array for the next stage to prepend samples */
+			arm_fir_interpolate_f32(&hInterpolator, inpbuf, (float32_t *)tempbuf1 + MAX_PREPEND_LEN2, leninpbuf);
 
-			prevStageOupOffset = filtdelay;			/* ignore first filtdelay elements of the output */
+			prevStageOupOffset = filtdelay + nextra*filt1.factor + MAX_PREPEND_LEN2;		/* ignore initial transient elements of the output */
 			prevStageOupLen = lenx * filt1.factor;
 		}
 		else{
 			uint32_t filtdelay = getFiltDelay(filt1.factor);
-			uint32_t leninpbuf = findNextMultiple(lenx + filtdelay, filt1.factor);
+			uint32_t leninpbuf = findNextMultiple(lenx + 2*filtdelay, filt1.factor);
 			float32_t inpbuf[leninpbuf];
 			float32_t statebuf[filt1.ntaps + leninpbuf - 1];
+			uint8_t endpt1 = x[0], endpt2 = x[lenx - 1];
 
-			/* append zeros to obtain the complete signal output and also to make input length a multiple of dec factor */
+			/* append samples to obtain the complete signal output and also to make input length a multiple of dec factor */
+			for(i = 0; i < filtdelay; i++)
+				inpbuf[i] = endpt1;
 			for(i = 0; i < lenx; i++)
-				inpbuf[i] = x[i];
-			for(i = lenx; i < leninpbuf; i++)
-				inpbuf[i] = 0;
+				inpbuf[filtdelay + i] = x[i];
+			for(i = filtdelay + lenx; i < leninpbuf; i++)
+				inpbuf[i] = endpt2;
 
 			arm_fir_decimate_init_f32(&hDecimator, filt1.ntaps, filt1.factor, filt1.coeffs, statebuf, leninpbuf);
-			arm_fir_decimate_f32(&hDecimator, inpbuf, tempbuf1, leninpbuf);
+			/* leave MAX_PREPEND_LEN2 sized room in output array for the next stage to prepend samples */
+			arm_fir_decimate_f32(&hDecimator, inpbuf, (float32_t *)tempbuf1 + MAX_PREPEND_LEN2, leninpbuf);
 
-			prevStageOupOffset = floor((float32_t)(filtdelay + filt1.factor - 1)/filt1.factor);
+			prevStageOupOffset = 2*floor((float32_t)(filtdelay + filt1.factor - 1)/filt1.factor);
 			prevStageOupLen = leninpbuf/filt1.factor - prevStageOupOffset;
+			prevStageOupOffset += MAX_PREPEND_LEN2;
 		}
 
 		/* processing over, put results in output array */
@@ -397,33 +407,41 @@ int32_t resampleChannels(uint32_t offset, uint32_t lenx, uint8_t origSR, uint8_t
 			/* Filter 2 */
 			if(filt2.type == FILTERTYPE_INT){
 				uint32_t filtdelay = getFiltDelay(filt2.factor);
-				uint32_t leninpbuf = prevStageOupLen + floor((float32_t)(filtdelay + filt2.factor - 1)/filt2.factor);
+				uint32_t nextra = floor((float32_t)(filtdelay + filt2.factor - 1)/filt2.factor);
+				uint32_t leninpbuf = prevStageOupLen + 2*nextra;
 				float32_t statebuf[leninpbuf + filt2.ntaps/filt2.factor - 1];
+				float32_t endpt1 = tempbuf1[prevStageOupOffset], endpt2 = tempbuf1[prevStageOupOffset + prevStageOupLen - 1];
 
+				for(i = 0; i < nextra; i++)
+					tempbuf1[prevStageOupOffset - 1 - i] = endpt1 * filt2.factor;
 				for(i = 0; i < prevStageOupLen; i++)
 					tempbuf1[prevStageOupOffset + i] = tempbuf1[prevStageOupOffset + i] * filt2.factor;
-				for(i = prevStageOupLen; i < leninpbuf; i++)
-					tempbuf1[prevStageOupOffset + i] = 0;
+				for(i = 0; i < nextra; i++)
+					tempbuf1[prevStageOupOffset + prevStageOupLen + i] = endpt2 * filt2.factor;
 
 				arm_fir_interpolate_init_f32(&hInterpolator, filt2.factor, filt2.ntaps, filt2.coeffs, statebuf, leninpbuf);
-				arm_fir_interpolate_f32(&hInterpolator, (float32_t *)tempbuf1 + prevStageOupOffset, tempbuf2, leninpbuf);
+				arm_fir_interpolate_f32(&hInterpolator, (float32_t *)tempbuf1 + prevStageOupOffset - nextra, (float32_t *)tempbuf2 + MAX_PREPEND_LEN3, leninpbuf);
 
-				prevStageOupOffset = filtdelay;
+				prevStageOupOffset = filtdelay + nextra*filt2.factor + MAX_PREPEND_LEN3;
 				prevStageOupLen = prevStageOupLen * filt2.factor;
 			}
 			else{
 				uint32_t filtdelay = getFiltDelay(filt2.factor);
-				uint32_t leninpbuf = findNextMultiple(prevStageOupLen + filtdelay, filt2.factor);
+				uint32_t leninpbuf = findNextMultiple(prevStageOupLen + 2*filtdelay, filt2.factor);
 				float32_t statebuf[filt2.ntaps + leninpbuf - 1];
+				float32_t endpt1 = tempbuf1[prevStageOupOffset], endpt2 = tempbuf1[prevStageOupOffset + prevStageOupLen - 1];
 
+				for(i = 0; i < filtdelay; i++)
+					tempbuf1[prevStageOupOffset - 1 - i] = endpt1;
 				for(i = prevStageOupLen; i < leninpbuf; i++)
-					tempbuf1[prevStageOupOffset + i] = 0;
+					tempbuf1[prevStageOupOffset + i] = endpt2;
 
 				arm_fir_decimate_init_f32(&hDecimator, filt2.ntaps, filt2.factor, filt2.coeffs, statebuf, leninpbuf);
-				arm_fir_decimate_f32(&hDecimator, (float32_t *)tempbuf1 + prevStageOupOffset, tempbuf2, leninpbuf);
+				arm_fir_decimate_f32(&hDecimator, (float32_t *)tempbuf1 + prevStageOupOffset - filtdelay, (float32_t *)tempbuf2 + MAX_PREPEND_LEN3, leninpbuf);
 
-				prevStageOupOffset = floor((float32_t)(filtdelay + filt2.factor - 1)/filt2.factor);
+				prevStageOupOffset = 2*floor((float32_t)(filtdelay + filt2.factor - 1)/filt2.factor);
 				prevStageOupLen = leninpbuf/filt2.factor - prevStageOupOffset;
+				prevStageOupLen += MAX_PREPEND_LEN3;
 			}
 
 			/* processing over, put results in output array */
@@ -435,32 +453,39 @@ int32_t resampleChannels(uint32_t offset, uint32_t lenx, uint8_t origSR, uint8_t
 				/* Filter 3 */
 				if(filt3.type == FILTERTYPE_INT){
 					uint32_t filtdelay = getFiltDelay(filt3.factor);
-					uint32_t leninpbuf = prevStageOupLen + floor((float32_t)(filtdelay + filt3.factor - 1)/filt3.factor);
+					uint32_t nextra = floor((float32_t)(filtdelay + filt3.factor - 1)/filt3.factor);
+					uint32_t leninpbuf = prevStageOupLen + 2*nextra;
 					float32_t statebuf[leninpbuf + filt3.ntaps/filt3.factor - 1];
+					float32_t endpt1 = tempbuf2[prevStageOupOffset], endpt2 = tempbuf2[prevStageOupOffset + prevStageOupLen - 1];
 
+					for(i = 0; i < nextra; i++)
+						tempbuf2[prevStageOupOffset - 1 - i] = endpt1 * filt3.factor;
 					for(i = 0; i < prevStageOupLen; i++)
 						tempbuf2[prevStageOupOffset + i] = tempbuf2[prevStageOupOffset + i] * filt3.factor;
-					for(i = prevStageOupLen; i < leninpbuf; i++)
-						tempbuf2[prevStageOupOffset + i] = 0;
+					for(i = 0; i < nextra; i++)
+						tempbuf2[prevStageOupOffset + prevStageOupLen + i] = endpt2 * filt3.factor;
 
 					arm_fir_interpolate_init_f32(&hInterpolator, filt3.factor, filt3.ntaps, filt3.coeffs, statebuf, leninpbuf);
-					arm_fir_interpolate_f32(&hInterpolator, (float32_t *)tempbuf2 + prevStageOupOffset, tempbuf1, leninpbuf);
+					arm_fir_interpolate_f32(&hInterpolator, (float32_t *)tempbuf2 + prevStageOupOffset - nextra, tempbuf1, leninpbuf);
 
-					prevStageOupOffset = filtdelay;
+					prevStageOupOffset = filtdelay + nextra*filt3.factor;
 					prevStageOupLen = prevStageOupLen * filt3.factor;
 				}
 				else{
 					uint32_t filtdelay = getFiltDelay(filt3.factor);
-					uint32_t leninpbuf = findNextMultiple(prevStageOupLen + filtdelay, filt3.factor);
+					uint32_t leninpbuf = findNextMultiple(prevStageOupLen + 2*filtdelay, filt3.factor);
 					float32_t statebuf[filt3.ntaps + leninpbuf - 1];
+					float32_t endpt1 = tempbuf2[prevStageOupOffset], endpt2 = tempbuf2[prevStageOupOffset + prevStageOupLen - 1];
 
+					for(i = 0; i < filtdelay; i++)
+						tempbuf2[prevStageOupOffset - 1 - i] = endpt1;
 					for(i = prevStageOupLen; i < leninpbuf; i++)
-						tempbuf2[prevStageOupOffset + i] = 0;
+						tempbuf2[prevStageOupOffset + i] = endpt2;
 
 					arm_fir_decimate_init_f32(&hDecimator, filt3.ntaps, filt3.factor, filt3.coeffs, statebuf, leninpbuf);
-					arm_fir_decimate_f32(&hDecimator, (float32_t *)tempbuf2 + prevStageOupOffset, tempbuf1, leninpbuf);
+					arm_fir_decimate_f32(&hDecimator, (float32_t *)tempbuf2 + prevStageOupOffset - filtdelay, tempbuf1, leninpbuf);
 
-					prevStageOupOffset = floor((float32_t)(filtdelay + filt3.factor - 1)/filt3.factor);
+					prevStageOupOffset = 2*floor((float32_t)(filtdelay + filt3.factor - 1)/filt3.factor);
 					prevStageOupLen = leninpbuf/filt3.factor - prevStageOupOffset;
 				}
 
@@ -788,7 +813,7 @@ static int32_t calcFilters(uint8_t origSR, uint8_t newSR, Filter* filt1ptr, Filt
 }
 
 /**
-  * @brief  Find the next multiple of q greater than or equal to n.
+  * @brief  Find the next multiple of q greater than or equal to n (input n should be >= input q).
   * @param  n: the multiple should be atleast n
   * @param  q: quotient
   * @retval Next mutiple of q >= n

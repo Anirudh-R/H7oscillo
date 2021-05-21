@@ -19,8 +19,10 @@
 
 #define MAX_FACTOR					10						/* Max interpolation/decimation factor supported */
 #define MAX_RESAMPLEDSIG_LEN		(480 * MAX_FACTOR)		/* Max length of the resampled signal */
-#define MAX_RESAMPLEDSIG_LEN1		4850					/* Max length of the resampled signal output of filter 1 */
-#define MAX_RESAMPLEDSIG_LEN2		2346					/* Max length of the resampled signal output of filter 2 */
+#define MAX_RESAMPLEDSIG_LEN1		4950					/* Max length of the resampled signal output of filter 1, including room for next stage */
+#define MAX_RESAMPLEDSIG_LEN2		2494					/* Max length of the resampled signal output of filter 2, including room for next stage */
+#define MAX_PREPEND_LEN2			50						/* Max length of prepended samples in filter 2 */
+#define MAX_PREPEND_LEN3			10						/* Max length of prepended samples in filter 3 */
 
 typedef struct {
 	uint8_t type;

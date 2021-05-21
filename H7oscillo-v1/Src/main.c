@@ -21,7 +21,7 @@ int main(void)
 {
 	uint32_t QE_Count = 0, QE_Count_prev = 1;
 	uint8_t QE_direc = 0;
-	__IO uint16_t (*pFrame)[LCD_WIDTH];
+	__IO uint16_t (*pFrame)[LCD_WIDTH] = (__IO uint16_t (*)[LCD_WIDTH])LCD_DRAW_BUFFER_WAVE;
 	int32_t trigPt = -1, waveIdxStart = 0, dispIdxStart = 0;
 	uint8_t origtscale = 0, oldtscale = 0;
 	int32_t	i, j, temp;
@@ -103,7 +103,6 @@ int main(void)
 					dispIdxStart = 0;
 				}
 
-				pFrame = (__IO uint16_t (*)[LCD_WIDTH])LCD_DRAW_BUFFER_WAVE;
 				for(j = 0; j < LCD_WIDTH - waveIdxStart; j++){
 					/* CH1 */
 					temp = (float32_t)(voff1 + CH1_ADC_vals[waveIdxStart+j])/vscaleVals[vscale1];
@@ -174,7 +173,6 @@ int main(void)
 					while(DMA2D->CR & 0x01);
 
 					/* Draw the resampled signal */
-					pFrame = (__IO uint16_t (*)[LCD_WIDTH])LCD_DRAW_BUFFER_WAVE;
 					for(j = 0; j < LCD_WIDTH && waveIdxStartStm+j < lenResampledSig; j++){
 						/* CH1 */
 						temp = (float32_t)(voff1 + CH1_ResampledVals[waveIdxStartStm+j])/vscaleVals[vscale1];
@@ -203,7 +201,6 @@ int main(void)
 					if(100 < TS_X && TS_X < 380 && 50 < TS_Y && TS_Y < 220){
 						staticMode = 0;
 						clearRedBorder();
-
 						goToField(FLD_RUNSTOP);
 						changeFieldValue(1);	/* RUN */
 					}
