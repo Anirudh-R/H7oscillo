@@ -96,5 +96,7 @@ extern __IO uint8_t LTDC_error_flag;
 extern __IO uint8_t DMA2D_error_flag;
 
 extern uint8_t staticMode;
+extern int32_t toffStm;
+extern uint8_t vscale1Changed, vscale2Changed, voff1Changed, voff2Changed, toffChanged;
 
 #endif /* __GLOBALS_H */

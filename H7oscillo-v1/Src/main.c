@@ -9,7 +9,8 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 
-#define max(a, b)	((a) > (b) ? a : b)
+#define max(a, b)	((a) > (b) ? (a) : (b))
+#define min(a, b)	((a) < (b) ? (a) : (b))
 
 
 /**
@@ -22,7 +23,7 @@ int main(void)
 	uint32_t QE_Count = 0, QE_Count_prev = 1;
 	uint8_t QE_direc = 0;
 	__IO uint16_t (*pFrame)[LCD_WIDTH] = (__IO uint16_t (*)[LCD_WIDTH])LCD_DRAW_BUFFER_WAVE;
-	int32_t trigPt = -1, waveIdxStart = 0, dispIdxStart = 0;
+	int32_t trigPt = -1, waveIdxStart = 0, dispIdxStart = 0, lenResampledSig = -1;
 	uint8_t origtscale = 0, oldtscale = 0;
 	int32_t	i, j, temp;
 
@@ -141,32 +142,78 @@ int main(void)
 
 		/* zoom-in/out the captured waveform (termed static mode) */
 		if(runstopVals[runstop] == RUNSTOP_STOP){
+			int32_t redrawWf = 0;
+
 			/* not in static mode */
-			if(staticMode == 0){
+			if(!staticMode){
 				/* a touch to the center of the screen starts static mode */
 				if(TS_DetectNumTouches() > 0){
 					TS_GetXY(&TS_Y, &TS_X);
 					if(100 < TS_X && TS_X < 380 && 50 < TS_Y && TS_Y < 220){
 						staticMode = 1;
 						oldtscale = origtscale;
+						toffStm = toff;
 						drawRedBorder();					/* to indicate static mode */
+						lenResampledSig = resampleChannels(waveIdxStart, LCD_WIDTH - abs(dispIdxStart - waveIdxStart), origtscale, origtscale);
 						while(TS_DetectNumTouches() > 0);	/* wait for touch to be removed */
 					}
 				}
 			}
-			/* sample frequency changed; resample the captured waveform */
-			else if(tscale != oldtscale){
-				int32_t lenResampledSig;
+			else{
+				/* a second touch to the center of the screen exits static mode */
+				if(TS_DetectNumTouches() > 0){
+					TS_GetXY(&TS_Y, &TS_X);
+					if(100 < TS_X && TS_X < 380 && 50 < TS_Y && TS_Y < 220){
+						staticMode = 0;
+						clearRedBorder();
+						drawGrid();
+						dispToff();		/* re-display toff in case it was changed out of limits in static mode */
+						goToField(FLD_RUNSTOP);
+						changeFieldValue(1);	/* RUN */
+						while(TS_DetectNumTouches() > 0);
+					}
+				}
+			}
 
-				lenResampledSig = resampleChannels(waveIdxStart, LCD_WIDTH - abs(dispIdxStart - waveIdxStart), origtscale, tscale);
+			if(staticMode){
+				/* sample frequency changed, resample the captured waveform */
+				if(tscale != oldtscale){
+					lenResampledSig = resampleChannels(waveIdxStart, LCD_WIDTH - abs(dispIdxStart - waveIdxStart), origtscale, tscale);
 
-				if(lenResampledSig != -1){
+					/* given samplerate conversion not possible, revert tscale */
+					if(lenResampledSig == -1){
+						goToField(FLD_TSCALE);
+
+						if(tscale > oldtscale)
+							changeFieldValue(1);
+						else
+							changeFieldValue(0);
+					}
+					else{
+						oldtscale = tscale;
+						toffStm = toff;
+						redrawWf = 1;		/* redraw the waveforms */
+					}
+				}
+				else if(vscale1Changed || vscale2Changed || voff1Changed
+						|| voff2Changed || toffChanged){
+					drawRedBorder();	/* since it would have got erased due to moving cursors */
+					redrawWf = 1;
+				}
+
+				if(redrawWf){
 					int32_t trigPtStm, waveIdxStartStm, dispIdxStartStm;
 
 					trigPtStm = chkTrigResampSig(lenResampledSig);
 
-					waveIdxStartStm = max(0, trigPtStm - toff);
-					dispIdxStartStm = max(0, toff - trigPtStm);
+					waveIdxStartStm = max(0, min(trigPtStm - toffStm, lenResampledSig - 1));
+					dispIdxStartStm = max(0, min(toffStm - trigPtStm, LCD_WIDTH - 1));
+
+					/* limit toffStm value so that waveform doesn't go out of screen */
+					if(trigPtStm - toffStm > lenResampledSig - 1)
+						toffStm = trigPtStm - lenResampledSig + 1;
+					else if(toffStm - trigPtStm > LCD_WIDTH - 1)
+						toffStm = trigPtStm + LCD_WIDTH - 1;
 
 					/* clear the wave draw buffer */
 					fillScreenWave(C_BLACK);
@@ -191,19 +238,8 @@ int main(void)
 							pFrame[i][dispIdxStartStm+j] = CH2_COLOR;
 					}
 
-					oldtscale = tscale;
-				}
-			}
-			else{
-				/* a second touch to the center of the screen exits static mode */
-				if(TS_DetectNumTouches() > 0){
-					TS_GetXY(&TS_Y, &TS_X);
-					if(100 < TS_X && TS_X < 380 && 50 < TS_Y && TS_Y < 220){
-						staticMode = 0;
-						clearRedBorder();
-						goToField(FLD_RUNSTOP);
-						changeFieldValue(1);	/* RUN */
-					}
+					vscale1Changed = vscale2Changed = voff1Changed = voff2Changed = toffChanged = 0;
+					redrawWf = 0;
 				}
 			}
 		}

@@ -71,7 +71,7 @@ static uint8_t showWindow5 = 0;
 static uint8_t wind5OpenedBy = MEASURE_NONE;
 static uint8_t currField = FLD_NONE;					/* currently selected field in the top and bottom menubar */
 
-static char bufw1tb3[8] = "Trg:", bufw1tb4[6], bufw2tb0[6], bufw2tb1[6], bufw2tb2[7];
+static char bufw1tb3[8] = "Trg:", bufw1tb4[6], bufw2tb0[6], bufw2tb1[6], bufw2tb2[8];
 
 static uint8_t trigCursorImg[CURSOR_WIDTH][CURSOR_LENGTH] = {
 	   {1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0},
@@ -120,6 +120,30 @@ static uint8_t toffCursorImg[CURSOR_LENGTH][CURSOR_WIDTH] = {
 	   {0, 0, 1, 1, 1, 1, 1, 1, 0, 0},
 	   {0, 0, 0, 1, 1, 1, 1, 0, 0, 0},
 	   {0, 0, 0, 0, 1, 1, 0, 0, 0, 0}};
+
+static uint8_t toffLeftCursorImg[CURSOR_LENGTH][CURSOR_WIDTH] = {
+	   {0, 0, 0, 0, 1, 1, 1, 0, 0, 0},
+	   {0, 0, 0, 1, 1, 1, 1, 0, 0, 0},
+	   {0, 0, 1, 1, 1, 1, 1, 0, 0, 0},
+	   {0, 1, 1, 1, 1, 1, 1, 0, 0, 0},
+	   {1, 1, 1, 1, 1, 1, 1, 0, 0, 0},
+	   {1, 1, 1, 1, 1, 1, 1, 0, 0, 0},
+	   {0, 1, 1, 1, 1, 1, 1, 0, 0, 0},
+	   {0, 0, 1, 1, 1, 1, 1, 0, 0, 0},
+	   {0, 0, 0, 1, 1, 1, 1, 0, 0, 0},
+	   {0, 0, 0, 0, 1, 1, 1, 0, 0, 0}};
+
+static uint8_t toffRightCursorImg[CURSOR_LENGTH][CURSOR_WIDTH] = {
+	   {0, 0, 0, 1, 1, 1, 0, 0, 0, 0},
+	   {0, 0, 0, 1, 1, 1, 1, 0, 0, 0},
+	   {0, 0, 0, 1, 1, 1, 1, 1, 0, 0},
+	   {0, 0, 0, 1, 1, 1, 1, 1, 1, 0},
+	   {0, 0, 0, 1, 1, 1, 1, 1, 1, 1},
+	   {0, 0, 0, 1, 1, 1, 1, 1, 1, 1},
+	   {0, 0, 0, 1, 1, 1, 1, 1, 1, 0},
+	   {0, 0, 0, 1, 1, 1, 1, 1, 0, 0},
+	   {0, 0, 0, 1, 1, 1, 1, 0, 0, 0},
+	   {0, 0, 0, 1, 1, 1, 0, 0, 0, 0}};
 
 /**
   * @brief  Create windows and other basic ui elements.
@@ -468,7 +492,7 @@ void hertzToStr(float32_t freq, char* buf)
 /**
   * @brief  Convert a time value to us/ms string.
   * @param  t: time to display (in seconds)
-  * @param  buf: output string of length 6
+  * @param  buf: output string of length 7
   * @retval None
   */
 void secToStr(float32_t t, char* buf)
@@ -855,6 +879,16 @@ void DisplayMeasurements(void)
 }
 
 /**
+  * @brief  Get currently active field.
+  * @param  None
+  * @retval Currently active field
+  */
+uint8_t getCurrField(void)
+{
+	return currField;
+}
+
+/**
   * @brief  Sets the given field as the active field.
   * @param  field
   * @retval None
@@ -975,11 +1009,13 @@ void changeFieldValue(uint8_t dir)
 		case FLD_CH1_VSCALE:
 			vscale1 += dir?(vscale1==0?0:-1):(vscale1==VSCALE_MAXVALS-1?0:1);
 			UG_TextboxSetText(&window_1, TXB_ID_0, vscaleDispVals[vscale1]);
+			vscale1Changed = 1;
 			break;
 
 		case FLD_CH2_VSCALE:
 			vscale2 += dir?(vscale2==0?0:-1):(vscale2==VSCALE_MAXVALS-1?0:1);
 			UG_TextboxSetText(&window_1, TXB_ID_1, vscaleDispVals[vscale2]);
+			vscale2Changed = 1;
 			break;
 
 		case FLD_TSCALE:
@@ -1040,6 +1076,7 @@ void changeFieldValue(uint8_t dir)
 			gcvt((int32_t)((3.3f*(float32_t)voff1/(float32_t)255)*100)/100.0f, 3 + (voff1 < -1), bufw2tb0);
 			strcat(bufw2tb0, "V");
 			UG_TextboxSetText(&window_2, TXB_ID_0, bufw2tb0);
+			voff1Changed = 1;
 			break;
 
 		case FLD_CH2_VOFF:
@@ -1047,6 +1084,7 @@ void changeFieldValue(uint8_t dir)
 			gcvt((int32_t)((3.3f*(float32_t)voff2/(float32_t)255)*100)/100.0f, 3 + (voff2 < -1), bufw2tb1);
 			strcat(bufw2tb1, "V");
 			UG_TextboxSetText(&window_2, TXB_ID_1, bufw2tb1);
+			voff2Changed = 1;
 			break;
 
 		case FLD_TOFF:
@@ -1066,8 +1104,41 @@ void changeFieldValue(uint8_t dir)
 
 			toffCurPosPrev = toffCurPos;
 
+			if(staticMode){
+				toffStm += dir ? -6: 6;
+
+				toff = (toffStm < TOFF_LIMIT) ? TOFF_LIMIT : (toffStm > ADC_TRIGBUF_SIZE - TOFF_LIMIT ? ADC_TRIGBUF_SIZE - TOFF_LIMIT : toff);
+
+				if(toffStm < TOFF_LIMIT || toffStm > ADC_TRIGBUF_SIZE - TOFF_LIMIT){
+					/* clear previous toff cursor and redraw */
+					for(i = MENUBAR_HEIGHT; i < MENUBAR_HEIGHT + TOFF_CURSOR_LENGTH; i++)
+						for(j = toffCurPos; j < toffCurPos + TOFF_CURSOR_WIDTH; j++)
+							pFrame[i][j] = C_BLACK;
+				}
+
+				toffCurPosPrev = toffCurPos = toff - TOFF_CURSOR_WIDTH/2 + 1;
+
+				if(toffStm < TOFF_LIMIT){
+					for(i = MENUBAR_HEIGHT; i < MENUBAR_HEIGHT + TOFF_CURSOR_LENGTH; i++)
+						for(j = toffCurPos; j < toffCurPos + TOFF_CURSOR_WIDTH; j++)
+							pFrame[i][j] = toffLeftCursorImg[i-MENUBAR_HEIGHT][j-toffCurPos] ? TOFF_CURSOR_COLOR : C_BLACK;
+				}
+				else if(toffStm > ADC_TRIGBUF_SIZE - TOFF_LIMIT){
+					for(i = MENUBAR_HEIGHT; i < MENUBAR_HEIGHT + TOFF_CURSOR_LENGTH; i++)
+						for(j = toffCurPos; j < toffCurPos + TOFF_CURSOR_WIDTH; j++)
+							pFrame[i][j] = toffRightCursorImg[i-MENUBAR_HEIGHT][j-toffCurPos] ? TOFF_CURSOR_COLOR : C_BLACK;
+				}
+
+				secToStr((float32_t)(toffStm-240)/(float32_t)samprateVals[tscale], bufw2tb2);
+				UG_TextboxSetText(&window_2, TXB_ID_2, bufw2tb2);
+			}
+
 			drawGridVerti();
 
+			toffChanged = 1;
+			break;
+
+		default:
 			break;
 	}
 
@@ -1163,6 +1234,31 @@ void changeFieldValue(uint8_t dir)
 	}
 
 	return;
+}
+
+/**
+  * @brief  Display Toff field value and redraw the cursor.
+  * @param  None
+  * @retval None
+  */
+void dispToff(void)
+{
+	int32_t toffCurPos, i, j;
+	__IO uint16_t (*pFrame)[LCD_WIDTH] = (__IO uint16_t (*)[LCD_WIDTH])LCD_DRAW_BUFFER_UGUI;
+
+	secToStr((float32_t)(toff-240)/(float32_t)samprateVals[tscale], bufw2tb2);
+	UG_TextboxSetText(&window_2, TXB_ID_2, bufw2tb2);
+
+	toffCurPos = toff - TOFF_CURSOR_WIDTH/2 + 1;
+
+	/* clear toff cursor and redraw */
+	for(i = MENUBAR_HEIGHT; i < MENUBAR_HEIGHT + TOFF_CURSOR_LENGTH; i++)
+		for(j = toffCurPos; j < toffCurPos + TOFF_CURSOR_WIDTH; j++)
+			pFrame[i][j] = C_BLACK;
+
+	for(i = MENUBAR_HEIGHT; i < MENUBAR_HEIGHT + TOFF_CURSOR_LENGTH; i++)
+		for(j = toffCurPos; j < toffCurPos + TOFF_CURSOR_WIDTH; j++)
+			pFrame[i][j] = toffCursorImg[i-MENUBAR_HEIGHT][j-toffCurPos] ? TOFF_CURSOR_COLOR : C_BLACK;
 }
 
 /**
@@ -1269,10 +1365,18 @@ void initFields(void)
   */
 void drawRedBorder(void)
 {
+	/* Top */
 	UG_DrawLine(0, MENUBAR_HEIGHT, LCD_WIDTH - 1, MENUBAR_HEIGHT, C_RED);
+	UG_DrawLine(0, MENUBAR_HEIGHT + 1, LCD_WIDTH - 1, MENUBAR_HEIGHT + 1, C_RED);
+	/* Bottom */
 	UG_DrawLine(0, LCD_HEIGHT - MENUBAR_HEIGHT - 1, LCD_WIDTH - 1, LCD_HEIGHT - MENUBAR_HEIGHT - 1, C_RED);
+	UG_DrawLine(0, LCD_HEIGHT - MENUBAR_HEIGHT - 2, LCD_WIDTH - 1, LCD_HEIGHT - MENUBAR_HEIGHT - 2, C_RED);
+	/* Left */
 	UG_DrawLine(0, MENUBAR_HEIGHT, 0, LCD_HEIGHT - MENUBAR_HEIGHT - 1, C_RED);
+	UG_DrawLine(1, MENUBAR_HEIGHT, 1, LCD_HEIGHT - MENUBAR_HEIGHT - 1, C_RED);
+	/* Right */
 	UG_DrawLine(LCD_WIDTH - 1, MENUBAR_HEIGHT, LCD_WIDTH - 1, LCD_HEIGHT - MENUBAR_HEIGHT - 1, C_RED);
+	UG_DrawLine(LCD_WIDTH - 2, MENUBAR_HEIGHT, LCD_WIDTH - 2, LCD_HEIGHT - MENUBAR_HEIGHT - 1, C_RED);
 
 	return;
 }
@@ -1284,10 +1388,18 @@ void drawRedBorder(void)
   */
 void clearRedBorder(void)
 {
+	/* Top */
 	UG_DrawLine(0, MENUBAR_HEIGHT, LCD_WIDTH - 1, MENUBAR_HEIGHT, C_BLACK);
+	UG_DrawLine(0, MENUBAR_HEIGHT + 1, LCD_WIDTH - 1, MENUBAR_HEIGHT + 1, C_BLACK);
+	/* Bottom */
 	UG_DrawLine(0, LCD_HEIGHT - MENUBAR_HEIGHT - 1, LCD_WIDTH - 1, LCD_HEIGHT - MENUBAR_HEIGHT - 1, C_BLACK);
+	UG_DrawLine(0, LCD_HEIGHT - MENUBAR_HEIGHT - 2, LCD_WIDTH - 1, LCD_HEIGHT - MENUBAR_HEIGHT - 2, C_BLACK);
+	/* Left */
 	UG_DrawLine(0, MENUBAR_HEIGHT, 0, LCD_HEIGHT - MENUBAR_HEIGHT - 1, C_BLACK);
+	UG_DrawLine(1, MENUBAR_HEIGHT, 1, LCD_HEIGHT - MENUBAR_HEIGHT - 1, C_BLACK);
+	/* Right */
 	UG_DrawLine(LCD_WIDTH - 1, MENUBAR_HEIGHT, LCD_WIDTH - 1, LCD_HEIGHT - MENUBAR_HEIGHT - 1, C_BLACK);
+	UG_DrawLine(LCD_WIDTH - 2, MENUBAR_HEIGHT, LCD_WIDTH - 2, LCD_HEIGHT - MENUBAR_HEIGHT - 1, C_BLACK);
 
 	drawGrid();
 
