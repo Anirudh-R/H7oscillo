@@ -6088,7 +6088,7 @@ UG_RESULT UG_WindowSetTitleText( UG_WINDOW* wnd, const char* str )
 {
    if ( (wnd != NULL) && (wnd->state & WND_STATE_VALID) )
    {
-      wnd->title.str = str;
+      wnd->title.str = (char *)str;
       wnd->state |= WND_STATE_UPDATE | WND_STATE_REDRAW_TITLE;
       return UG_RESULT_OK;
    }
@@ -6761,7 +6761,7 @@ UG_RESULT UG_ButtonSetText( UG_WINDOW* wnd, UG_U8 id, const char* str )
    if ( obj == NULL ) return UG_RESULT_FAIL;
 
    btn = (UG_BUTTON*)(obj->data);
-   btn->str = str;
+   btn->str = (char *)str;
    obj->state |= OBJ_STATE_UPDATE | OBJ_STATE_REDRAW;
 
    return UG_RESULT_OK;
@@ -7316,7 +7316,7 @@ UG_RESULT UG_CheckboxSetText( UG_WINDOW* wnd, UG_U8 id, const char* str )
    if ( obj == NULL ) return UG_RESULT_FAIL;
 
    btn = (UG_CHECKBOX*)(obj->data);
-   btn->str = str;
+   btn->str = (char *)str;
    obj->state |= OBJ_STATE_UPDATE | OBJ_STATE_REDRAW;
 
    return UG_RESULT_OK;
@@ -7863,7 +7863,7 @@ UG_RESULT UG_TextboxSetText( UG_WINDOW* wnd, UG_U8 id, const char* str )
    if ( obj == NULL ) return UG_RESULT_FAIL;
 
    txb = (UG_TEXTBOX*)(obj->data);
-   txb->str = str;
+   txb->str = (char *)str;
    obj->state |= OBJ_STATE_UPDATE | OBJ_STATE_REDRAW;
 
    return UG_RESULT_OK;

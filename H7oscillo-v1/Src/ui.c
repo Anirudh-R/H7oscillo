@@ -13,10 +13,16 @@
 static void drawGridHoriz(void);
 static void drawGridVerti(void);
 static void selectField(uint8_t field, uint8_t sel);
+static void window_1_callback(UG_MESSAGE* msg);
+static void window_2_callback(UG_MESSAGE* msg);
+static void window_3_callback(UG_MESSAGE* msg);
+static void window_4_callback(UG_MESSAGE* msg);
+static void window_5_callback(UG_MESSAGE* msg);
+static void window_6_callback(UG_MESSAGE* msg);
 
 /* uGUI related globals */
 UG_GUI gui;
-/* window 1 */
+/* window 1 - Top menubar */
 UG_WINDOW window_1;
 UG_OBJECT obj_buff_wnd_1[UGUI_MAX_OBJECTS];
 UG_BUTTON button1_0;
@@ -27,7 +33,7 @@ UG_TEXTBOX txtb1_3;
 UG_TEXTBOX txtb1_4;
 UG_TEXTBOX txtb1_5;
 UG_TEXTBOX txtb1_6;
-/* window 2 */
+/* window 2 - Bottom menubar */
 UG_WINDOW window_2;
 UG_OBJECT obj_buff_wnd_2[UGUI_MAX_OBJECTS];
 UG_TEXTBOX txtb2_0;
@@ -37,7 +43,7 @@ UG_TEXTBOX txtb2_3;
 UG_TEXTBOX txtb2_4;
 UG_TEXTBOX txtb2_5;
 UG_TEXTBOX txtb2_6;
-/* window 3 */
+/* window 3 - Menu page 1 */
 UG_WINDOW window_3;
 UG_OBJECT obj_buff_wnd_3[UGUI_MAX_OBJECTS];
 UG_TEXTBOX txtb3_0;
@@ -46,7 +52,7 @@ UG_BUTTON button3_1;
 UG_BUTTON button3_2;
 UG_BUTTON button3_3;
 UG_BUTTON button3_4;
-/* window 4 */
+/* window 4 - Menu page 2 */
 UG_WINDOW window_4;
 UG_OBJECT obj_buff_wnd_4[UGUI_MAX_OBJECTS];
 UG_TEXTBOX txtb4_0;
@@ -55,18 +61,24 @@ UG_BUTTON button4_1;
 UG_BUTTON button4_2;
 UG_BUTTON button4_3;
 UG_BUTTON button4_4;
-/* window 5 */
+/* window 5 - Menu page 1 submenu */
 UG_WINDOW window_5;
-UG_OBJECT obj_buff_wnd_5[UGUI_MAX_OBJECTS];
+UG_OBJECT obj_buff_wnd_5[4];
 UG_TEXTBOX txtb5_0;
 UG_TEXTBOX txtb5_1;
 UG_BUTTON button5_0;
 UG_BUTTON button5_1;
+/* window 6 - Display mode submenu */
+UG_WINDOW window_6;
+UG_OBJECT obj_buff_wnd_6[2];
+UG_TEXTBOX txtb6_0;
+UG_BUTTON button6_0;
 
 /* Menu page display selector flags */
 static uint8_t showWindow3 = 0;
 static uint8_t showWindow4 = 0;
 static uint8_t showWindow5 = 0;
+static uint8_t showWindow6 = 0;
 
 static uint8_t wind5OpenedBy = MEASURE_NONE;
 static uint8_t currField = FLD_NONE;					/* currently selected field in the top and bottom menubar */
@@ -281,7 +293,7 @@ void initUI(void)
 	UG_ButtonSetBackColor(&window_3, BTN_ID_4, C_MEDIUM_VIOLET_RED);
 	UG_ButtonSetText(&window_3, BTN_ID_4, ">");
 
-	/*** Create Window 4 (Cursors / Math / Memory depth / Sample rate) ***/
+	/*** Create Window 4 (Display mode / FFT / Cursors / Math) ***/
 	UG_WindowCreate(&window_4, obj_buff_wnd_4, UGUI_MAX_OBJECTS, window_4_callback);
 	UG_WindowSetStyle(&window_4, WND_STYLE_3D | WND_STYLE_HIDE_TITLE);
 	UG_WindowResize(&window_4, LCD_WIDTH - WIND3_WIDTH, MENUBAR_HEIGHT + 10, LCD_WIDTH - 1, LCD_HEIGHT - MENUBAR_HEIGHT - 11);
@@ -295,22 +307,22 @@ void initUI(void)
 	UG_ButtonCreate(&window_4, &button4_0, BTN_ID_0, 6, MENUBAR_HEIGHT + WIND3_BTN_SPACING + 1, WIND3_WIDTH - 13, MENUBAR_HEIGHT + WIND3_BTN_SPACING + WIND3_BTN_HEIGHT);	/* Cursors */
 	UG_ButtonSetFont(&window_4, BTN_ID_0, &FONT_6X8);
 	UG_ButtonSetBackColor(&window_4, BTN_ID_0, C_ORANGE);
-	UG_ButtonSetText(&window_4, BTN_ID_0, "Cursors");
+	UG_ButtonSetText(&window_4, BTN_ID_0, "DispMd");
 
 	UG_ButtonCreate(&window_4, &button4_1, BTN_ID_1, 6, MENUBAR_HEIGHT + 2*WIND3_BTN_SPACING + WIND3_BTN_HEIGHT + 1, WIND3_WIDTH - 13, MENUBAR_HEIGHT + 2*WIND3_BTN_SPACING + 2*WIND3_BTN_HEIGHT);	/* Math */
 	UG_ButtonSetFont(&window_4, BTN_ID_1, &FONT_6X8);
 	UG_ButtonSetBackColor(&window_4, BTN_ID_1, C_ORANGE);
-	UG_ButtonSetText(&window_4, BTN_ID_1, "Math");
+	UG_ButtonSetText(&window_4, BTN_ID_1, "FFT");
 
 	UG_ButtonCreate(&window_4, &button4_2, BTN_ID_2, 6, MENUBAR_HEIGHT + 3*WIND3_BTN_SPACING + 2*WIND3_BTN_HEIGHT + 1, WIND3_WIDTH - 13, MENUBAR_HEIGHT + 3*WIND3_BTN_SPACING + 3*WIND3_BTN_HEIGHT);	/* Memory depth */
 	UG_ButtonSetFont(&window_4, BTN_ID_2, &FONT_6X8);
 	UG_ButtonSetBackColor(&window_4, BTN_ID_2, C_ORANGE);
-	UG_ButtonSetText(&window_4, BTN_ID_2, "Memory");
+	UG_ButtonSetText(&window_4, BTN_ID_2, "Cursors");
 
 	UG_ButtonCreate(&window_4, &button4_3, BTN_ID_3, 6, MENUBAR_HEIGHT + 4*WIND3_BTN_SPACING + 3*WIND3_BTN_HEIGHT + 1, WIND3_WIDTH - 13, MENUBAR_HEIGHT + 4*WIND3_BTN_SPACING + 4*WIND3_BTN_HEIGHT);	/* Sample rate */
 	UG_ButtonSetFont(&window_4, BTN_ID_3, &FONT_6X8);
 	UG_ButtonSetBackColor(&window_4, BTN_ID_3, C_ORANGE);
-	UG_ButtonSetText(&window_4, BTN_ID_3, "Sample");
+	UG_ButtonSetText(&window_4, BTN_ID_3, "Math");
 
 	UG_ButtonCreate(&window_4, &button4_4, BTN_ID_4, 6, MENUBAR_HEIGHT + 5*WIND3_BTN_SPACING + 4*WIND3_BTN_HEIGHT + 1, 35, MENUBAR_HEIGHT + 5*WIND3_BTN_SPACING + 4*WIND3_BTN_HEIGHT + 25);		/* Prev menu */
 	UG_ButtonSetFont(&window_4, BTN_ID_4, &FONT_6X8);
@@ -318,30 +330,46 @@ void initUI(void)
 	UG_ButtonSetText(&window_4, BTN_ID_4, "<");
 
 	/*** Create Window 5 (Measurement sub-menu) ***/
-	UG_WindowCreate(&window_5, obj_buff_wnd_5, UGUI_MAX_OBJECTS, window_5_callback);
+	UG_WindowCreate(&window_5, obj_buff_wnd_5, 4, window_5_callback);
 	UG_WindowSetStyle(&window_5, WND_STYLE_3D | WND_STYLE_HIDE_TITLE);
 	UG_WindowResize(&window_5, WIND5_X_START, WIND5_Y_START, WIND5_X_START + WIND5_WIDTH - 1, WIND5_Y_START + WIND5_HEIGHT - 1);
 	UG_WindowSetBackColor(&window_5, C_WHITE);
 
-	UG_TextboxCreate(&window_5, &txtb5_0, TXB_ID_0, 1, 1, 60, WIND5_BTN_HEIGHT);		/* label */
+	UG_TextboxCreate(&window_5, &txtb5_0, TXB_ID_0, 1, 1, WIND5_BTN_WIDTH, WIND5_BTN_HEIGHT);		/* label */
 	UG_TextboxSetFont(&window_5, TXB_ID_0, &FONT_6X8);
 	UG_TextboxSetAlignment(&window_5, TXB_ID_0, ALIGN_CENTER_RIGHT);
 	UG_TextboxSetText(&window_5, TXB_ID_0, "source:");
 
-	UG_TextboxCreate(&window_5, &txtb5_1, TXB_ID_1, 1, WIND5_BTN_HEIGHT + WIND5_BTN_SPACING + 1, 60, 2*WIND5_BTN_HEIGHT + WIND5_BTN_SPACING);		/* label */
+	UG_TextboxCreate(&window_5, &txtb5_1, TXB_ID_1, 1, WIND5_BTN_HEIGHT + WIND5_BTN_SPACING + 1, WIND5_BTN_WIDTH, 2*WIND5_BTN_HEIGHT + WIND5_BTN_SPACING);		/* label */
 	UG_TextboxSetFont(&window_5, TXB_ID_1, &FONT_6X8);
 	UG_TextboxSetAlignment(&window_5, TXB_ID_1, ALIGN_CENTER_RIGHT);
 	UG_TextboxSetText(&window_5, TXB_ID_1, "param:");
 
-	UG_ButtonCreate(&window_5, &button5_0, BTN_ID_0, 71, 1, 130, WIND5_BTN_HEIGHT);		/* source select */
+	UG_ButtonCreate(&window_5, &button5_0, BTN_ID_0, 71, 1, 71 + WIND5_BTN_WIDTH - 1, WIND5_BTN_HEIGHT);		/* source select */
 	UG_ButtonSetFont(&window_5, BTN_ID_0, &FONT_6X8);
 	UG_ButtonSetBackColor(&window_5, BTN_ID_0, C_OLIVE);
 	UG_ButtonSetText(&window_5, BTN_ID_0, "CH1");
 
-	UG_ButtonCreate(&window_5, &button5_1, BTN_ID_1, 71, WIND5_BTN_HEIGHT + WIND5_BTN_SPACING + 1, 130, 2*WIND5_BTN_HEIGHT + WIND5_BTN_SPACING);	/* measure parameter select */
+	UG_ButtonCreate(&window_5, &button5_1, BTN_ID_1, 71, WIND5_BTN_HEIGHT + WIND5_BTN_SPACING + 1, 71 + WIND5_BTN_WIDTH - 1, 2*WIND5_BTN_HEIGHT + WIND5_BTN_SPACING);	/* measure parameter select */
 	UG_ButtonSetFont(&window_5, BTN_ID_1, &FONT_6X8);
 	UG_ButtonSetBackColor(&window_5, BTN_ID_1, C_OLIVE);
 	UG_ButtonSetText(&window_5, BTN_ID_1, "Freq");
+
+	/*** Create Window 6 (Display mode sub-menu) ***/
+	UG_WindowCreate(&window_6, obj_buff_wnd_6, 2, window_6_callback);
+	UG_WindowSetStyle(&window_6, WND_STYLE_3D | WND_STYLE_HIDE_TITLE);
+	UG_WindowResize(&window_6, WIND6_X_START, WIND6_Y_START, WIND6_X_START + WIND6_WIDTH - 1, WIND6_Y_START + WIND6_HEIGHT - 1);
+	UG_WindowSetBackColor(&window_6, C_WHITE);
+
+	UG_TextboxCreate(&window_6, &txtb6_0, TXB_ID_0, 1, 1, WIND6_BTN_WIDTH, WIND6_BTN_HEIGHT);		/* label */
+	UG_TextboxSetFont(&window_6, TXB_ID_0, &FONT_6X8);
+	UG_TextboxSetAlignment(&window_6, TXB_ID_0, ALIGN_CENTER_RIGHT);
+	UG_TextboxSetText(&window_6, TXB_ID_0, "Mode:");
+
+	UG_ButtonCreate(&window_6, &button6_0, BTN_ID_0, 71, 1, 71 + WIND6_BTN_WIDTH - 1, WIND6_BTN_HEIGHT);		/* mode select */
+	UG_ButtonSetFont(&window_6, BTN_ID_0, &FONT_6X8);
+	UG_ButtonSetBackColor(&window_6, BTN_ID_0, C_OLIVE);
+	UG_ButtonSetText(&window_6, BTN_ID_0, "Split");
 }
 
 /**
@@ -364,7 +392,7 @@ void drawGrid(void)
 static void drawGridHoriz(void)
 {
 	__IO uint16_t (*pFrame)[LCD_WIDTH];
-	int i, j;
+	int32_t i, j;
 
 	pFrame = (uint16_t (*)[LCD_WIDTH])LCD_DRAW_BUFFER_UGUI;
 
@@ -375,10 +403,12 @@ static void drawGridHoriz(void)
 			}
 	}
 
-	/* Draw separator between the two channels */
-	i = 135;
-	for(j = 0; j < LCD_WIDTH; j += 1){
+	if(chDispMode == CHDISPMODE_SPLIT){
+		/* Draw separator between the two channels */
+		i = 135;
+		for(j = 0; j < LCD_WIDTH; j += 1){
 			pFrame[i][j] = CH_SEPARATOR_COLOR;
+		}
 	}
 }
 
@@ -390,7 +420,7 @@ static void drawGridHoriz(void)
 static void drawGridVerti(void)
 {
 	__IO uint16_t (*pFrame)[LCD_WIDTH];
-	int i, j;
+	int32_t i, j;
 
 	pFrame = (uint16_t (*)[LCD_WIDTH])LCD_DRAW_BUFFER_UGUI;
 
@@ -515,7 +545,7 @@ void secToStr(float32_t t, char* buf)
 }
 
 /* Callback function for window 1 (top menubar) */
-void window_1_callback(UG_MESSAGE* msg)
+static void window_1_callback(UG_MESSAGE* msg)
 {
 	static uint8_t menu_button_state = 0;
 
@@ -534,12 +564,14 @@ void window_1_callback(UG_MESSAGE* msg)
 						menu_button_state = 1;
 					}
 					else{
-						showWindow3 = 0;			/* close menus */
+						showWindow3 = 0;			/* close menus and sub-menus */
 						showWindow4 = 0;
 						showWindow5 = 0;
+						showWindow6 = 0;
 						wind5OpenedBy = MEASURE_NONE;
 						menu_button_state = 0;
-						fillFrameUGUI(LCD_WIDTH - WIND3_WIDTH, MENUBAR_HEIGHT + 10, LCD_WIDTH - 1, LCD_HEIGHT - MENUBAR_HEIGHT - 11, C_BLACK);
+						fillFrameUGUI(LCD_WIDTH - WIND3_WIDTH, MENUBAR_HEIGHT + 10, LCD_WIDTH - 1, LCD_HEIGHT - MENUBAR_HEIGHT - 11, C_BLACK);	/* clear menu area */
+						fillFrameUGUI(WIND5_X_START, WIND5_Y_START, WIND5_X_START + WIND5_WIDTH, WIND5_Y_START + WIND5_HEIGHT, C_BLACK);	/* clear window 5 area */
 						drawGrid();
 					}
 					break;
@@ -549,14 +581,14 @@ void window_1_callback(UG_MESSAGE* msg)
 	}
 }
 
-/* Callback function for window 2 (button menubar) */
-void window_2_callback(UG_MESSAGE* msg)
+/* Callback function for window 2 (bottom menubar) */
+static void window_2_callback(UG_MESSAGE* msg)
 {
 	/* Nothing to do */
 }
 
 /* Callback function for window 3 (Measurement menu) */
-void window_3_callback(UG_MESSAGE* msg)
+static void window_3_callback(UG_MESSAGE* msg)
 {
 	if (msg->type == MSG_TYPE_OBJECT)
 	{
@@ -632,11 +664,11 @@ void window_3_callback(UG_MESSAGE* msg)
 
 			 	 /* Next button */
 			 	 case BTN_ID_4:
-					showWindow3 = 0;			/* Go to Page 2 */
+					showWindow3 = 0;
 					showWindow5 = 0;			/* close any window 3 sub-menus */
-					wind5OpenedBy = MEASURE_NONE;
-					showWindow4 = 1;
 					fillFrameUGUI(WIND5_X_START, WIND5_Y_START, WIND5_X_START + WIND5_WIDTH - 1, WIND5_Y_START + WIND5_HEIGHT - 1, C_BLACK);
+					wind5OpenedBy = MEASURE_NONE;
+					showWindow4 = 1;			/* Go to Page 2 */
 					drawGrid();
 					break;
 			 }
@@ -645,30 +677,8 @@ void window_3_callback(UG_MESSAGE* msg)
 	}
 }
 
-/* Callback function for window 4 (Menu page 2) */
-void window_4_callback(UG_MESSAGE* msg)
-{
-	if (msg->type == MSG_TYPE_OBJECT)
-	{
-	  if (msg->id == OBJ_TYPE_BUTTON)
-	  {
-		  if(msg->event == OBJ_EVENT_PRESSED)
-		  {
-			 switch(msg->sub_id)
-			 {
-			 	 /* Previous button */
-			 	 case BTN_ID_4:
-					showWindow3 = 1;			/* Go to Page 1 (Measurements) */
-					showWindow4 = 0;
-					break;
-			 }
-		  }
-	  }
-	}
-}
-
 /* Callback function for window 5 (Measurement sub-menu) */
-void window_5_callback(UG_MESSAGE* msg)
+static void window_5_callback(UG_MESSAGE* msg)
 {
 	Measure_TypeDef* measPtr;
 	uint8_t wind3BtnID;
@@ -727,6 +737,88 @@ void window_5_callback(UG_MESSAGE* msg)
 	}
 }
 
+/* Callback function for window 4 (Menu page 2) */
+static void window_4_callback(UG_MESSAGE* msg)
+{
+	if (msg->type == MSG_TYPE_OBJECT)
+	{
+	  if (msg->id == OBJ_TYPE_BUTTON)
+	  {
+		  if(msg->event == OBJ_EVENT_PRESSED)
+		  {
+			 switch(msg->sub_id)
+			 {
+			 	 /* Display mode */
+			 	 case BTN_ID_0:
+					if(showWindow6 == 0){
+						showWindow6 = 1;			/* show submenu */
+					}
+					else{
+						showWindow6 = 0;			/* close submenu */
+						fillFrameUGUI(WIND6_X_START, WIND6_Y_START, WIND6_X_START + WIND6_WIDTH - 1, WIND6_Y_START + WIND6_HEIGHT - 1, C_BLACK);
+						drawGrid();
+					}
+			 		break;
+
+			 	 /* Previous button */
+			 	 case BTN_ID_4:
+			 		showWindow4 = 0;
+					showWindow6 = 0;			/* close any window 4 sub-menus */
+					fillFrameUGUI(WIND5_X_START, WIND5_Y_START, WIND5_X_START + WIND5_WIDTH - 1, WIND5_Y_START + WIND5_HEIGHT - 1, C_BLACK);
+					showWindow3 = 1;			/* Go to Page 1 (Measurements) */
+					drawGrid();
+					break;
+			 }
+		  }
+	  }
+	}
+}
+
+/* Callback function for window 6 (Display mode sub-menu) */
+static void window_6_callback(UG_MESSAGE* msg)
+{
+	__IO uint16_t (*pFrame)[LCD_WIDTH] = (uint16_t (*)[LCD_WIDTH])LCD_DRAW_BUFFER_UGUI;
+	int32_t i, j;
+
+	if (msg->type == MSG_TYPE_OBJECT)
+	{
+	  if (msg->id == OBJ_TYPE_BUTTON)
+	  {
+		  if(msg->event == OBJ_EVENT_PRESSED)
+		  {
+			 switch(msg->sub_id)
+			 {
+			 	 /* change display mode */
+			 	 case BTN_ID_0:
+			 		chDispMode = (chDispMode + 1) % 3;
+					UG_ButtonSetText(&window_6, BTN_ID_0, (chDispMode == CHDISPMODE_SPLIT) ? "Split" : (chDispMode == CHDISPMODE_MERGE ? "Merge" : "Single"));
+
+					if(chDispMode != CHDISPMODE_SPLIT){
+						/* Erase separator between the two channels */
+						i = 135;
+						for(j = 0; j < LCD_WIDTH; j += 1){
+							pFrame[i][j] = C_BLACK;
+						}
+
+						drawGrid();
+					}
+
+					/* force trigsrc to be ch1 in single display mode */
+					if(chDispMode == CHDISPMODE_SNGL && trigsrcVals[trigsrc] == TRIGSRC_CH2){
+						goToField(FLD_TRIGSRC);
+						changeFieldValue(1);
+					}
+
+					/* force the cursors to be redrawn */
+					changeFieldValue(2);
+
+			 		break;
+			 }
+		  }
+	  }
+	}
+}
+
 /**
   * @brief  Cycles through all the visible windows, displaying them one at a time.
   * @param  None
@@ -757,6 +849,10 @@ void switchNextWindow(void)
 	else if((currWind == WINDOW3) && showWindow5){
 		UG_WindowShow(&window_5);
 		currWind = WINDOW5;
+	}
+	else if((currWind == WINDOW4) && showWindow6){
+		UG_WindowShow(&window_6);
+		currWind = WINDOW6;
 	}
 	else{
 		UG_WindowShow(&window_1);	/* top menubar */
@@ -991,12 +1087,13 @@ static void selectField(uint8_t field, uint8_t sel)
 
 /**
   * @brief  Change value of a field in the top/bottom menubar.
-  * @param  dir: 0=increment, 1=decrement
+  * @param  dir: 0=increment, 1=decrement, 2=redraw cursors
   * @retval None
   */
 void changeFieldValue(uint8_t dir)
 {
-	static int32_t trigCurPosPrev = 52, ch1offCurPosPrev = 130, ch2offCurPosPrev = 250, toffCurPosPrev = 56;
+	static int32_t trigCurPosPrev = 52, ch1offCurPosPrev = 130, ch2offCurPosPrev = 250,
+			toffCurPosPrev = TOFF_INITVAL - TOFF_CURSOR_WIDTH/2 + 1;
 	int32_t temp, trigCurPos, ch1offCurPos, ch2offCurPos, toffCurPos, i, j;
 	__IO uint16_t (*pFrame)[LCD_WIDTH] = (__IO uint16_t (*)[LCD_WIDTH])LCD_DRAW_BUFFER_UGUI;
 
@@ -1026,6 +1123,10 @@ void changeFieldValue(uint8_t dir)
 
 		case FLD_TRIGSRC:
 			trigsrc += dir?(trigsrc==0?0:-1):(trigsrc==TRIGSRC_MAXVALS-1?0:1);
+
+			/* force trigsrc to be ch1 in single display mode */
+			if(chDispMode == CHDISPMODE_SNGL)
+				trigsrc = 0;
 
 			UG_COLOR color;
 			if(trigsrcVals[trigsrc] == TRIGSRC_CH1)
@@ -1149,9 +1250,30 @@ void changeFieldValue(uint8_t dir)
 				pFrame[i][j] = trigCursorImg[i-trigCurPosPrev][j] ? CH1_COLOR : C_BLACK;
 	}
 
+	/* redraw cursors, first clear existing ones */
+	if(dir == 2){
+		/* clear trigger cursor */
+		for(i = trigCurPosPrev; i < trigCurPosPrev + CURSOR_WIDTH; i++)
+			for(j = 0; j < CURSOR_LENGTH; j++)
+				pFrame[i][j] = C_BLACK;
+
+		/* clear ch1 offset cursor */
+		for(i = ch1offCurPosPrev; i < ch1offCurPosPrev + CURSOR_WIDTH; i++)
+			for(j = 0; j < CURSOR_LENGTH; j++)
+				pFrame[i][j] = C_BLACK;
+
+		/* clear ch2 offset cursor */
+		for(i = ch2offCurPosPrev; i < ch2offCurPosPrev + CURSOR_WIDTH; i++)
+			for(j = 0; j < CURSOR_LENGTH; j++)
+				pFrame[i][j] = C_BLACK;
+	}
+
 	/* Update the positions of ch1 cursors, if required */
 	if(currField == FLD_CH1_VSCALE || currField == FLD_TRIGSRC ||
-			(currField == FLD_TRIGLVL && trigsrcVals[trigsrc] == TRIGSRC_CH1) || currField == FLD_CH1_VOFF){
+			(currField == FLD_TRIGLVL && trigsrcVals[trigsrc] == TRIGSRC_CH1) || currField == FLD_CH1_VOFF ||
+			(chDispMode == CHDISPMODE_MERGE && (currField == FLD_CH2_VSCALE ||
+			(currField == FLD_TRIGLVL && trigsrcVals[trigsrc] == TRIGSRC_CH2) || currField == FLD_CH2_VOFF)) ||
+			dir == 2){
 
 		if(trigsrcVals[trigsrc] == TRIGSRC_CH1){
 			/* clear previous trigger cursor and redraw */
@@ -1160,9 +1282,17 @@ void changeFieldValue(uint8_t dir)
 					pFrame[i][j] = C_BLACK;
 
 			temp = (float32_t)(voff1 + triglvl)/vscaleVals[vscale1];
-			if(temp > 119)	temp = 119;
-			else if(temp < 0)  temp = 0;
-			trigCurPos = 134 - temp - CURSOR_WIDTH/2 + 1;
+			if(chDispMode == CHDISPMODE_SPLIT){
+				if(temp > CHDISPMODE_SPLIT_SIGMAX)	temp = CHDISPMODE_SPLIT_SIGMAX;
+			}
+			else{
+				if(temp > CHDISPMODE_MERGE_SIGMAX)	temp = CHDISPMODE_MERGE_SIGMAX;
+			}
+			if(temp < 0)  temp = 0;
+			if(chDispMode == CHDISPMODE_SPLIT)
+				trigCurPos = CHDISPMODE_SPLIT_CH1BOT - temp - CURSOR_WIDTH/2 + 1;
+			else
+				trigCurPos = CHDISPMODE_MERGE_CHBOT - temp - CURSOR_WIDTH/2 + 1;
 			for(i = trigCurPos; i < trigCurPos + CURSOR_WIDTH; i++)
 				for(j = 0; j < CURSOR_LENGTH; j++)
 					pFrame[i][j] = trigCursorImg[i-trigCurPos][j] ? CH1_COLOR : C_BLACK;
@@ -1176,9 +1306,17 @@ void changeFieldValue(uint8_t dir)
 				pFrame[i][j] = C_BLACK;
 
 		temp = (float32_t)(voff1)/vscaleVals[vscale1];
-		if(temp > 119)	temp = 119;
-		else if(temp < 0)  temp = 0;
-		ch1offCurPos = 134 - temp - CURSOR_WIDTH/2 + 1;
+		if(chDispMode == CHDISPMODE_SPLIT){
+			if(temp > CHDISPMODE_SPLIT_SIGMAX)	temp = CHDISPMODE_SPLIT_SIGMAX;
+		}
+		else{
+			if(temp > CHDISPMODE_MERGE_SIGMAX)	temp = CHDISPMODE_MERGE_SIGMAX;
+		}
+		if(temp < 0)  temp = 0;
+		if(chDispMode == CHDISPMODE_SPLIT)
+			ch1offCurPos = CHDISPMODE_SPLIT_CH1BOT - temp - CURSOR_WIDTH/2 + 1;
+		else
+			ch1offCurPos = CHDISPMODE_MERGE_CHBOT - temp - CURSOR_WIDTH/2 + 1;
 		for(i = ch1offCurPos; i < ch1offCurPos + CURSOR_WIDTH; i++)
 			for(j = 0; j < CURSOR_LENGTH; j++)
 				pFrame[i][j] = ch1RefCursorImg[i-ch1offCurPos][j] ? CH1_COLOR : C_BLACK;
@@ -1189,8 +1327,11 @@ void changeFieldValue(uint8_t dir)
 	}
 
 	/* Update the positions of ch2 cursors, if required */
-	if(currField == FLD_CH2_VSCALE || currField == FLD_TRIGSRC ||
-			(currField == FLD_TRIGLVL && trigsrcVals[trigsrc] == TRIGSRC_CH2) || currField == FLD_CH2_VOFF){
+	if((currField == FLD_CH2_VSCALE || currField == FLD_TRIGSRC ||
+			(currField == FLD_TRIGLVL && trigsrcVals[trigsrc] == TRIGSRC_CH2) || currField == FLD_CH2_VOFF ||
+			(chDispMode == CHDISPMODE_MERGE && (currField == FLD_CH1_VSCALE ||
+			(currField == FLD_TRIGLVL && trigsrcVals[trigsrc] == TRIGSRC_CH1) || currField == FLD_CH1_VOFF)) ||
+			dir == 2) && chDispMode != CHDISPMODE_SNGL){
 
 		if(trigsrcVals[trigsrc] == TRIGSRC_CH2){
 			/* clear previous trigger cursor and redraw */
@@ -1199,9 +1340,17 @@ void changeFieldValue(uint8_t dir)
 					pFrame[i][j] = C_BLACK;
 
 			temp = (float32_t)(voff2 + triglvl)/vscaleVals[vscale2];
-			if(temp > 119)	temp = 119;
-			else if(temp < 0)  temp = 0;
-			trigCurPos = 254 - temp - CURSOR_WIDTH/2 + 1;
+			if(chDispMode == CHDISPMODE_SPLIT){
+				if(temp > CHDISPMODE_SPLIT_SIGMAX)	temp = CHDISPMODE_SPLIT_SIGMAX;
+			}
+			else{
+				if(temp > CHDISPMODE_MERGE_SIGMAX)	temp = CHDISPMODE_MERGE_SIGMAX;
+			}
+			if(temp < 0)  temp = 0;
+			if(chDispMode == CHDISPMODE_SPLIT)
+				trigCurPos = CHDISPMODE_SPLIT_CH2BOT - temp - CURSOR_WIDTH/2 + 1;
+			else
+				trigCurPos = CHDISPMODE_MERGE_CHBOT - temp - CURSOR_WIDTH/2 + 1;
 			for(i = trigCurPos; i < trigCurPos + CURSOR_WIDTH; i++)
 				for(j = 0; j < CURSOR_LENGTH; j++)
 					pFrame[i][j] = trigCursorImg[i-trigCurPos][j] ? CH2_COLOR : C_BLACK;
@@ -1215,9 +1364,18 @@ void changeFieldValue(uint8_t dir)
 				pFrame[i][j] = C_BLACK;
 
 		temp = (float32_t)(voff2)/vscaleVals[vscale2];
-		if(temp > 119)	temp = 119;
-		else if(temp < 0)  temp = 0;
-		ch2offCurPos = 254 - temp - CURSOR_WIDTH/2 + 1;
+		if(chDispMode == CHDISPMODE_SPLIT){
+			if(temp > CHDISPMODE_SPLIT_SIGMAX)	temp = CHDISPMODE_SPLIT_SIGMAX;
+		}
+		else{
+			if(temp > CHDISPMODE_MERGE_SIGMAX)	temp = CHDISPMODE_MERGE_SIGMAX;
+		}
+		if(temp < 0)  temp = 0;
+		if(chDispMode == CHDISPMODE_SPLIT)
+			ch2offCurPos = CHDISPMODE_SPLIT_CH2BOT - temp - CURSOR_WIDTH/2 + 1;
+		else
+			ch2offCurPos = CHDISPMODE_MERGE_CHBOT - temp - CURSOR_WIDTH/2 + 1;
+
 		for(i = ch2offCurPos; i < ch2offCurPos + CURSOR_WIDTH; i++)
 			for(j = 0; j < CURSOR_LENGTH; j++)
 				pFrame[i][j] = ch2RefCursorImg[i-ch2offCurPos][j] ? CH2_COLOR : C_BLACK;
@@ -1299,21 +1457,39 @@ void initFields(void)
 	UG_TextboxSetText(&window_1, TXB_ID_4, bufw1tb4);
 	if(trigsrcVals[trigsrc] == TRIGSRC_CH1){
 		temp = (float32_t)(voff1 + triglvl)/vscaleVals[vscale1];
-		if(temp > 119)	temp = 119;
-		else if(temp < 0)  temp = 0;
-		curPos = 134 - temp - CURSOR_WIDTH/2 + 1;
+		if(chDispMode == CHDISPMODE_SPLIT){
+			if(temp > CHDISPMODE_SPLIT_SIGMAX)	temp = CHDISPMODE_SPLIT_SIGMAX;
+		}
+		else{
+			if(temp > CHDISPMODE_MERGE_SIGMAX)	temp = CHDISPMODE_MERGE_SIGMAX;
+		}
+		if(temp < 0)  temp = 0;
+		if(chDispMode == CHDISPMODE_SPLIT)
+			curPos = CHDISPMODE_SPLIT_CH1BOT - temp - CURSOR_WIDTH/2 + 1;
+		else
+			curPos = CHDISPMODE_MERGE_CHBOT - temp - CURSOR_WIDTH/2 + 1;
 		for(i = curPos; i < curPos + CURSOR_WIDTH; i++)
 			for(j = 0; j < CURSOR_LENGTH; j++)
 				pFrame[i][j] = trigCursorImg[i-curPos][j] ? CH1_COLOR : C_BLACK;
 	}
 	else{
-		temp = (float32_t)(voff2 + triglvl)/vscaleVals[vscale2];
-		if(temp > 119)	temp = 119;
-		else if(temp < 0)  temp = 0;
-		curPos = 254 - temp - CURSOR_WIDTH/2 + 1;
-		for(i = curPos; i < curPos + CURSOR_WIDTH; i++)
-			for(j = 0; j < CURSOR_LENGTH; j++)
-				pFrame[i][j] = trigCursorImg[i-curPos][j] ? CH2_COLOR : C_BLACK;
+		if(chDispMode != CHDISPMODE_SNGL){
+			temp = (float32_t)(voff2 + triglvl)/vscaleVals[vscale2];
+			if(chDispMode == CHDISPMODE_SPLIT){
+				if(temp > CHDISPMODE_SPLIT_SIGMAX)	temp = CHDISPMODE_SPLIT_SIGMAX;
+			}
+			else{
+				if(temp > CHDISPMODE_MERGE_SIGMAX)	temp = CHDISPMODE_MERGE_SIGMAX;
+			}
+			if(temp < 0)  temp = 0;
+			if(chDispMode == CHDISPMODE_SPLIT)
+				curPos = CHDISPMODE_SPLIT_CH2BOT - temp - CURSOR_WIDTH/2 + 1;
+			else
+				curPos = CHDISPMODE_MERGE_CHBOT - temp - CURSOR_WIDTH/2 + 1;
+			for(i = curPos; i < curPos + CURSOR_WIDTH; i++)
+				for(j = 0; j < CURSOR_LENGTH; j++)
+					pFrame[i][j] = trigCursorImg[i-curPos][j] ? CH2_COLOR : C_BLACK;
+		}
 	}
 
 	/* trigger mode */
@@ -1328,24 +1504,42 @@ void initFields(void)
 	strcat(bufw2tb0, "V");
 	UG_TextboxSetText(&window_2, TXB_ID_0, bufw2tb0);
 	temp = (float32_t)(voff1)/vscaleVals[vscale1];
-	if(temp > 119)	temp = 119;
-	else if(temp < 0)  temp = 0;
-	curPos = 134 - temp - CURSOR_WIDTH/2 + 1;
+	if(chDispMode == CHDISPMODE_SPLIT){
+		if(temp > CHDISPMODE_SPLIT_SIGMAX)	temp = CHDISPMODE_SPLIT_SIGMAX;
+	}
+	else{
+		if(temp > CHDISPMODE_MERGE_SIGMAX)	temp = CHDISPMODE_MERGE_SIGMAX;
+	}
+	if(temp < 0)  temp = 0;
+	if(chDispMode == CHDISPMODE_SPLIT)
+		curPos = CHDISPMODE_SPLIT_CH1BOT - temp - CURSOR_WIDTH/2 + 1;
+	else
+		curPos = CHDISPMODE_MERGE_CHBOT - temp - CURSOR_WIDTH/2 + 1;
 	for(i = curPos; i < curPos + CURSOR_WIDTH; i++)
 		for(j = 0; j < CURSOR_LENGTH; j++)
 			pFrame[i][j] = ch1RefCursorImg[i-curPos][j] ? CH1_COLOR : C_BLACK;
 
 	/* ch2 vertical offset */
-	gcvt((int32_t)((3.3f*(float32_t)voff2/(float32_t)255)*100)/100.0f, 3 + (voff2 < -1), bufw2tb1);
-	strcat(bufw2tb1, "V");
-	UG_TextboxSetText(&window_2, TXB_ID_1, bufw2tb1);
-	temp = (float32_t)(voff2)/vscaleVals[vscale1];
-	if(temp > 119)	temp = 119;
-	else if(temp < 0)  temp = 0;
-	curPos = 254 - temp - CURSOR_WIDTH/2 + 1;
-	for(i = curPos; i < curPos + CURSOR_WIDTH; i++)
-		for(j = 0; j < CURSOR_LENGTH; j++)
-			pFrame[i][j] = ch2RefCursorImg[i-curPos][j] ? CH2_COLOR : C_BLACK;
+	if(chDispMode != CHDISPMODE_SNGL){
+		gcvt((int32_t)((3.3f*(float32_t)voff2/(float32_t)255)*100)/100.0f, 3 + (voff2 < -1), bufw2tb1);
+		strcat(bufw2tb1, "V");
+		UG_TextboxSetText(&window_2, TXB_ID_1, bufw2tb1);
+		temp = (float32_t)(voff2)/vscaleVals[vscale1];
+		if(chDispMode == CHDISPMODE_SPLIT){
+			if(temp > CHDISPMODE_SPLIT_SIGMAX)	temp = CHDISPMODE_SPLIT_SIGMAX;
+		}
+		else{
+			if(temp > CHDISPMODE_MERGE_SIGMAX)	temp = CHDISPMODE_MERGE_SIGMAX;
+		}
+		if(temp < 0)  temp = 0;
+		if(chDispMode == CHDISPMODE_SPLIT)
+			curPos = CHDISPMODE_SPLIT_CH2BOT - temp - CURSOR_WIDTH/2 + 1;
+		else
+			curPos = CHDISPMODE_MERGE_CHBOT - temp - CURSOR_WIDTH/2 + 1;
+		for(i = curPos; i < curPos + CURSOR_WIDTH; i++)
+			for(j = 0; j < CURSOR_LENGTH; j++)
+				pFrame[i][j] = ch2RefCursorImg[i-curPos][j] ? CH2_COLOR : C_BLACK;
+	}
 
 	/* time offset */
 	secToStr((float32_t)(toff-240)/(float32_t)samprateVals[tscale], bufw2tb2);

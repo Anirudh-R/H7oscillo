@@ -58,6 +58,7 @@ int main(void)
 	/* Create windows and other GUI elements */
 	initUI();
 
+	/* Display initial field values */
 	initFields();
 
 	/* Initialize measurement module */
@@ -107,19 +108,37 @@ int main(void)
 				for(j = 0; j < LCD_WIDTH - waveIdxStart; j++){
 					/* CH1 */
 					temp = (float32_t)(voff1 + CH1_ADC_vals[waveIdxStart+j])/vscaleVals[vscale1];
-					if(temp > 119)	temp = 119;
-					else if(temp < 0)  temp = 0;
-					i = 134 - temp;
+					if(chDispMode == CHDISPMODE_SPLIT){
+						if(temp > CHDISPMODE_SPLIT_SIGMAX)	temp = CHDISPMODE_SPLIT_SIGMAX;
+					}
+					else{
+						if(temp > CHDISPMODE_MERGE_SIGMAX)	temp = CHDISPMODE_MERGE_SIGMAX;
+					}
+					if(temp < 0)  temp = 0;
+					if(chDispMode == CHDISPMODE_SPLIT)
+						i = CHDISPMODE_SPLIT_CH1BOT - temp;
+					else
+						i = CHDISPMODE_MERGE_CHBOT - temp;
 					if(dispIdxStart+j < LCD_WIDTH)
 						pFrame[i][dispIdxStart+j] = CH1_COLOR;
 
 					/* CH2 */
-					temp = (float32_t)(voff2 + CH2_ADC_vals[waveIdxStart+j])/vscaleVals[vscale2];
-					if(temp > 119)	temp = 119;
-					else if(temp < 0)  temp = 0;
-					i = 254 - temp;
-					if(dispIdxStart+j < LCD_WIDTH)
-						pFrame[i][dispIdxStart+j] = CH2_COLOR;
+					if(chDispMode != CHDISPMODE_SNGL){
+						temp = (float32_t)(voff2 + CH2_ADC_vals[waveIdxStart+j])/vscaleVals[vscale2];
+						if(chDispMode == CHDISPMODE_SPLIT){
+							if(temp > CHDISPMODE_SPLIT_SIGMAX)	temp = CHDISPMODE_SPLIT_SIGMAX;
+						}
+						else{
+							if(temp > CHDISPMODE_MERGE_SIGMAX)	temp = CHDISPMODE_MERGE_SIGMAX;
+						}
+						if(temp < 0)  temp = 0;
+						if(chDispMode == CHDISPMODE_SPLIT)
+							i = CHDISPMODE_SPLIT_CH2BOT - temp;
+						else
+							i = CHDISPMODE_MERGE_CHBOT - temp;
+						if(dispIdxStart+j < LCD_WIDTH)
+							pFrame[i][dispIdxStart+j] = CH2_COLOR;
+					}
 				}
 
 				/* go to STOP mode after a single mode trigger event */
@@ -223,19 +242,37 @@ int main(void)
 					for(j = 0; j < LCD_WIDTH && waveIdxStartStm+j < lenResampledSig; j++){
 						/* CH1 */
 						temp = (float32_t)(voff1 + CH1_ResampledVals[waveIdxStartStm+j])/vscaleVals[vscale1];
-						if(temp > 119)	temp = 119;
-						else if(temp < 0)  temp = 0;
-						i = 134 - temp;
+						if(chDispMode == CHDISPMODE_SPLIT){
+							if(temp > CHDISPMODE_SPLIT_SIGMAX)	temp = CHDISPMODE_SPLIT_SIGMAX;
+						}
+						else{
+							if(temp > CHDISPMODE_MERGE_SIGMAX)	temp = CHDISPMODE_MERGE_SIGMAX;
+						}
+						if(temp < 0)  temp = 0;
+						if(chDispMode == CHDISPMODE_SPLIT)
+							i = CHDISPMODE_SPLIT_CH1BOT - temp;
+						else
+							i = CHDISPMODE_MERGE_CHBOT - temp;
 						if(dispIdxStartStm+j < LCD_WIDTH)
 							pFrame[i][dispIdxStartStm+j] = CH1_COLOR;
 
 						/* CH2 */
-						temp = (float32_t)(voff2 + CH2_ResampledVals[waveIdxStartStm+j])/vscaleVals[vscale2];
-						if(temp > 119)	temp = 119;
-						else if(temp < 0)  temp = 0;
-						i = 254 - temp;
-						if(dispIdxStartStm+j < LCD_WIDTH)
-							pFrame[i][dispIdxStartStm+j] = CH2_COLOR;
+						if(chDispMode != CHDISPMODE_SNGL){
+							temp = (float32_t)(voff2 + CH2_ResampledVals[waveIdxStartStm+j])/vscaleVals[vscale2];
+							if(chDispMode == CHDISPMODE_SPLIT){
+								if(temp > CHDISPMODE_SPLIT_SIGMAX)	temp = CHDISPMODE_SPLIT_SIGMAX;
+							}
+							else{
+								if(temp > CHDISPMODE_MERGE_SIGMAX)	temp = CHDISPMODE_MERGE_SIGMAX;
+							}
+							if(temp < 0)  temp = 0;
+							if(chDispMode == CHDISPMODE_SPLIT)
+								i = CHDISPMODE_SPLIT_CH2BOT - temp;
+							else
+								i = CHDISPMODE_MERGE_CHBOT - temp;
+							if(dispIdxStartStm+j < LCD_WIDTH)
+								pFrame[i][dispIdxStartStm+j] = CH2_COLOR;
+						}
 					}
 
 					vscale1Changed = vscale2Changed = voff1Changed = voff2Changed = toffChanged = 0;
@@ -263,9 +300,9 @@ int main(void)
 		}
 
 		/* Calculate and display the selected measurements */
-		if(Meas_pending){
+		if(measPending){
 			DisplayMeasurements();
-			Meas_pending = 0;
+			measPending = 0;
 		}
 
 		/* Interrupt from quadrature encoder push button switch */
@@ -277,7 +314,7 @@ int main(void)
 		/* Check quadrature encoder state */
 		QE_Count = (TIM_QE->CNT & 0xFFFFU) >> 1U;
 		if(QE_Count != QE_Count_prev){
-			QE_direc = TIM_QE->CR1 & 0x10;		/* check rotation direction */
+			QE_direc = (TIM_QE->CR1 & 0x10) >> 4;	/* check rotation direction */
 
 			changeFieldValue(QE_direc);
 

@@ -19,6 +19,7 @@
 #define WINDOW3				 3
 #define WINDOW4				 4
 #define WINDOW5				 5
+#define WINDOW6				 6
 
 /* Colors and dimensions of GUI elements */
 #define CH1_COLOR			 	 	C_GREEN				/* colors of CH1 waveform and related parameter displays */
@@ -45,9 +46,16 @@
 #define WIND5_WIDTH	 		 	 	140					/* window 5 width */
 #define WIND5_HEIGHT	 	 	 	60					/* window 5 height */
 #define WIND5_BTN_SPACING	 	 	5					/* window 5 vertical spacing between buttons */
+#define WIND5_BTN_WIDTH	 	 		60					/* window 5 button widths */
 #define WIND5_BTN_HEIGHT	 	 	20					/* window 5 button heights */
 #define WIND5_X_START	 	 	 	250					/* window 5 X start position */
 #define WIND5_Y_START	 	 	 	90					/* window 5 Y start position */
+#define WIND6_WIDTH	 		 	 	140					/* window 6 width */
+#define WIND6_HEIGHT	 	 	 	30					/* window 6 height */
+#define WIND6_BTN_WIDTH	 	 		60					/* window 6 button widths */
+#define WIND6_BTN_HEIGHT	 	 	20					/* window 6 button heights */
+#define WIND6_X_START	 	 	 	250					/* window 6 X start position */
+#define WIND6_Y_START	 	 	 	90					/* window 6 Y start position */
 #define CURSOR_LENGTH	 	 	 	13					/* length of trigger and vertical offset cursors */
 #define CURSOR_WIDTH	 	 	 	10					/* width of trigger and vertical offset cursors */
 #define TOFF_CURSOR_LENGTH	 	 	10					/* length of horizontal offset cursors */
@@ -106,11 +114,15 @@ extern UG_BUTTON button4_2;
 extern UG_BUTTON button4_3;
 extern UG_BUTTON button4_4;
 extern UG_WINDOW window_5;
-extern UG_OBJECT obj_buff_wnd_5[UGUI_MAX_OBJECTS];
+extern UG_OBJECT obj_buff_wnd_5[4];
 extern UG_TEXTBOX txtb5_0;
 extern UG_TEXTBOX txtb5_1;
 extern UG_BUTTON button5_0;
 extern UG_BUTTON button5_1;
+extern UG_WINDOW window_6;
+extern UG_OBJECT obj_buff_wnd_6[2];
+extern UG_TEXTBOX txtb6_0;
+extern UG_BUTTON button6_0;
 
 char* gcvt(double value, int ndigit, char* buf);
 void initUI(void);
@@ -118,11 +130,6 @@ void drawGrid(void);
 void voltsToStr(uint8_t val, char* buf);
 void hertzToStr(float32_t freq, char* buf);
 void secToStr(float32_t t, char* buf);
-void window_1_callback(UG_MESSAGE* msg);
-void window_2_callback(UG_MESSAGE* msg);
-void window_3_callback(UG_MESSAGE* msg);
-void window_4_callback(UG_MESSAGE* msg);
-void window_5_callback(UG_MESSAGE* msg);
 void switchNextWindow(void);
 void DisplayMeasurements(void);
 uint8_t getCurrField(void);

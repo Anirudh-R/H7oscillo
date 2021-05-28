@@ -55,6 +55,32 @@
 #define RUNSTOP_STOP		1
 #define RUNSTOP_MAXVALS		2
 
+/* Initial field values */
+#define VSCALE1_INITVAL		5
+#define VSCALE2_INITVAL		5
+#define TSCALE_INITVAL		4
+#define TRIGSRC_INITVAL		0
+#define TRIGTYPE_INITVAL	0
+#define TRIGLVL_INITVAL		127
+#define TRIGMODE_INITVAL	0
+#define RUNSTOP_INITVAL		0
+#define VOFF1_INITVAL		0
+#define VOFF2_INITVAL		0
+#define TOFF_INITVAL		60
+
+/* Channel display modes */
+#define CHDISPMODE_SPLIT	0
+#define CHDISPMODE_MERGE	1
+#define CHDISPMODE_SNGL		2		/* ch1 only */
+
+#define CHDISPMODE_SPLIT_SIGMAX		119
+#define CHDISPMODE_SPLIT_CH1BOT		134
+#define CHDISPMODE_SPLIT_CH2BOT		254
+
+#define CHDISPMODE_MERGE_SIGMAX		239
+#define CHDISPMODE_MERGE_CHBOT		254
+
+
 extern __IO uint32_t Tick_1ms;
 extern uint32_t SystemCoreClock;
 
@@ -88,7 +114,7 @@ extern const char runstopDispVals[][5];
 extern const uint32_t samprateVals[];
 
 extern __IO uint8_t QE_PB_interrupt;
-extern __IO uint8_t Meas_pending;
+extern __IO uint8_t measPending;
 
 extern __IO uint8_t CH1_acq_comp, CH2_acq_comp;
 
@@ -98,5 +124,7 @@ extern __IO uint8_t DMA2D_error_flag;
 extern uint8_t staticMode;
 extern int32_t toffStm;
 extern uint8_t vscale1Changed, vscale2Changed, voff1Changed, voff2Changed, toffChanged;
+
+extern uint8_t chDispMode;
 
 #endif /* __GLOBALS_H */

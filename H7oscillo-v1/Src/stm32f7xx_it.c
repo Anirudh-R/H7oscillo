@@ -221,6 +221,6 @@ void TIM4_IRQHandler(void)
   */
 void TIM3_IRQHandler(void)
 {
-	Meas_pending = 1;
+	measPending = 1;
 	TIM_MEAS->SR &= ~0x01;
 }
