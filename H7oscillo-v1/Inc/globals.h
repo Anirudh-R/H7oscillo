@@ -58,7 +58,7 @@
 /* Initial field values */
 #define VSCALE1_INITVAL		5
 #define VSCALE2_INITVAL		5
-#define TSCALE_INITVAL		4
+#define TSCALE_INITVAL		6
 #define TRIGSRC_INITVAL		0
 #define TRIGTYPE_INITVAL	0
 #define TRIGLVL_INITVAL		127
@@ -72,6 +72,7 @@
 #define CHDISPMODE_SPLIT	0
 #define CHDISPMODE_MERGE	1
 #define CHDISPMODE_SNGL		2		/* ch1 only */
+#define CHDISPMODE_FFT		3
 
 #define CHDISPMODE_SPLIT_SIGMAX		119
 #define CHDISPMODE_SPLIT_CH1BOT		134
@@ -126,5 +127,7 @@ extern int32_t toffStm;
 extern uint8_t vscale1Changed, vscale2Changed, voff1Changed, voff2Changed, toffChanged;
 
 extern uint8_t chDispMode;
+
+extern uint8_t fftSrcChannel;
 
 #endif /* __GLOBALS_H */

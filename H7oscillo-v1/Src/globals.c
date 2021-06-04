@@ -60,5 +60,7 @@ uint8_t vscale1Changed = 0, vscale2Changed = 0, voff1Changed = 0, voff2Changed =
 
 uint8_t chDispMode = CHDISPMODE_SPLIT;
 
+uint8_t fftSrcChannel = CHANNELNONE;
+
 
 

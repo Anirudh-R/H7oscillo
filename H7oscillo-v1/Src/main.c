@@ -9,9 +9,6 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 
-#define max(a, b)	((a) > (b) ? (a) : (b))
-#define min(a, b)	((a) < (b) ? (a) : (b))
-
 
 /**
   * @brief  Main program
@@ -81,50 +78,34 @@ int main(void)
 				UG_TextboxSetBackColor(&window_1, TXB_ID_6, RUNSTOP_ICON_COLOR_TRGWT);
 			}
 
-			/* Draw waveforms */
+			/* Draw waveforms/spectrum */
 			if((trigmodeVals[trigmode] == TRIGMODE_AUTO && runstopVals[runstop] != RUNSTOP_STOP) ||
 					(trigmodeVals[trigmode] == TRIGMODE_SNGL && trigPt != -1 && runstopVals[runstop] != RUNSTOP_STOP) ||
 					(trigmodeVals[trigmode] == TRIGMODE_NORM && trigPt != -1 && runstopVals[runstop] != RUNSTOP_STOP))
 			{
-				origtscale = tscale;		/* store the original time scale of waveform */
+				if(chDispMode != CHDISPMODE_FFT){
+					/* clear the wave draw buffer */
+					fillScreenWave(C_BLACK);
+					while(DMA2D->CR & 0x01);
 
-				/* clear the wave draw buffer */
-				fillScreenWave(C_BLACK);
-				while(DMA2D->CR & 0x01);
+					origtscale = tscale;		/* store the original time scale of waveform */
 
-				if(trigPt < ADC_PRETRIGBUF_SIZE){
-					waveIdxStart = (trigmodeVals[trigmode] == TRIGMODE_AUTO && trigPt == -1) ? 0 : max(0, trigPt - toff);	/* display-waveform sample index start */
-					dispIdxStart = (trigmodeVals[trigmode] == TRIGMODE_AUTO && trigPt == -1) ? 0 : max(0, toff - trigPt);	/* display offset to start drawing the waveform */
-				}
-				else if(trigPt >= ADC_PRETRIGBUF_SIZE && trigPt < ADC_PRETRIGBUF_SIZE + ADC_TRIGBUF_SIZE){
-					waveIdxStart = (trigmodeVals[trigmode] == TRIGMODE_AUTO && trigPt == -1) ? ADC_PRETRIGBUF_SIZE : trigPt - toff;
-					dispIdxStart = 0;
-				}
-				else{
-					waveIdxStart = (trigmodeVals[trigmode] == TRIGMODE_AUTO && trigPt == -1) ? ADC_PRETRIGBUF_SIZE + ADC_TRIGBUF_SIZE - TOFF_LIMIT : trigPt - toff;
-					dispIdxStart = 0;
-				}
-
-				for(j = 0; j < LCD_WIDTH - waveIdxStart; j++){
-					/* CH1 */
-					temp = (float32_t)(voff1 + CH1_ADC_vals[waveIdxStart+j])/vscaleVals[vscale1];
-					if(chDispMode == CHDISPMODE_SPLIT){
-						if(temp > CHDISPMODE_SPLIT_SIGMAX)	temp = CHDISPMODE_SPLIT_SIGMAX;
+					if(trigPt < ADC_PRETRIGBUF_SIZE){
+						waveIdxStart = (trigmodeVals[trigmode] == TRIGMODE_AUTO && trigPt == -1) ? 0 : max(0, trigPt - toff);	/* display-waveform sample index start */
+						dispIdxStart = (trigmodeVals[trigmode] == TRIGMODE_AUTO && trigPt == -1) ? 0 : max(0, toff - trigPt);	/* display offset to start drawing the waveform */
+					}
+					else if(trigPt >= ADC_PRETRIGBUF_SIZE && trigPt < ADC_PRETRIGBUF_SIZE + ADC_TRIGBUF_SIZE){
+						waveIdxStart = (trigmodeVals[trigmode] == TRIGMODE_AUTO && trigPt == -1) ? ADC_PRETRIGBUF_SIZE : trigPt - toff;
+						dispIdxStart = 0;
 					}
 					else{
-						if(temp > CHDISPMODE_MERGE_SIGMAX)	temp = CHDISPMODE_MERGE_SIGMAX;
+						waveIdxStart = (trigmodeVals[trigmode] == TRIGMODE_AUTO && trigPt == -1) ? ADC_PRETRIGBUF_SIZE + ADC_TRIGBUF_SIZE - TOFF_LIMIT : trigPt - toff;
+						dispIdxStart = 0;
 					}
-					if(temp < 0)  temp = 0;
-					if(chDispMode == CHDISPMODE_SPLIT)
-						i = CHDISPMODE_SPLIT_CH1BOT - temp;
-					else
-						i = CHDISPMODE_MERGE_CHBOT - temp;
-					if(dispIdxStart+j < LCD_WIDTH)
-						pFrame[i][dispIdxStart+j] = CH1_COLOR;
 
-					/* CH2 */
-					if(chDispMode != CHDISPMODE_SNGL){
-						temp = (float32_t)(voff2 + CH2_ADC_vals[waveIdxStart+j])/vscaleVals[vscale2];
+					for(j = 0; j < LCD_WIDTH - waveIdxStart; j++){
+						/* CH1 */
+						temp = (float32_t)(voff1 + CH1_ADC_vals[waveIdxStart+j])/vscaleVals[vscale1];
 						if(chDispMode == CHDISPMODE_SPLIT){
 							if(temp > CHDISPMODE_SPLIT_SIGMAX)	temp = CHDISPMODE_SPLIT_SIGMAX;
 						}
@@ -133,11 +114,49 @@ int main(void)
 						}
 						if(temp < 0)  temp = 0;
 						if(chDispMode == CHDISPMODE_SPLIT)
-							i = CHDISPMODE_SPLIT_CH2BOT - temp;
+							i = CHDISPMODE_SPLIT_CH1BOT - temp;
 						else
 							i = CHDISPMODE_MERGE_CHBOT - temp;
 						if(dispIdxStart+j < LCD_WIDTH)
-							pFrame[i][dispIdxStart+j] = CH2_COLOR;
+							pFrame[i][dispIdxStart+j] = CH1_COLOR;
+
+						/* CH2 */
+						if(chDispMode != CHDISPMODE_SNGL){
+							temp = (float32_t)(voff2 + CH2_ADC_vals[waveIdxStart+j])/vscaleVals[vscale2];
+							if(chDispMode == CHDISPMODE_SPLIT){
+								if(temp > CHDISPMODE_SPLIT_SIGMAX)	temp = CHDISPMODE_SPLIT_SIGMAX;
+							}
+							else{
+								if(temp > CHDISPMODE_MERGE_SIGMAX)	temp = CHDISPMODE_MERGE_SIGMAX;
+							}
+							if(temp < 0)  temp = 0;
+							if(chDispMode == CHDISPMODE_SPLIT)
+								i = CHDISPMODE_SPLIT_CH2BOT - temp;
+							else
+								i = CHDISPMODE_MERGE_CHBOT - temp;
+							if(dispIdxStart+j < LCD_WIDTH)
+								pFrame[i][dispIdxStart+j] = CH2_COLOR;
+						}
+					}
+				}
+				/* Draw spectrum */
+				else{
+					if(measPending){
+						/* clear the wave draw buffer */
+						fillScreenWave(C_BLACK);
+						while(DMA2D->CR & 0x01);
+
+						calcSpectrum(fftSrcChannel);
+
+						for(j = 0; j < LCD_WIDTH; j++){
+							temp = chSpectrum[j];
+							if(temp > CHDISPMODE_MERGE_SIGMAX)	temp = CHDISPMODE_MERGE_SIGMAX;
+
+							for(int32_t k = 0; k <= temp; k++){
+								i = CHDISPMODE_MERGE_CHBOT - k;
+								pFrame[i][j] = FFT_COLOR;
+							}
+						}
 					}
 				}
 
@@ -168,7 +187,7 @@ int main(void)
 				/* a touch to the center of the screen starts static mode */
 				if(TS_DetectNumTouches() > 0){
 					TS_GetXY(&TS_Y, &TS_X);
-					if(100 < TS_X && TS_X < 380 && 50 < TS_Y && TS_Y < 220){
+					if(chDispMode != CHDISPMODE_FFT && 100 < TS_X && TS_X < 380 && 50 < TS_Y && TS_Y < 220){
 						staticMode = 1;
 						oldtscale = origtscale;
 						toffStm = toff;

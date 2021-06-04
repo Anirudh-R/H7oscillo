@@ -46,6 +46,9 @@
 #include "triggers.h"
 
 
+#define max(a, b)	((a) > (b) ? (a) : (b))
+#define min(a, b)	((a) < (b) ? (a) : (b))
+
 /* LED1 */
 #define LED1_GPIO_PORT                     		GPIOI
 #define LED1_PIN                           		LL_GPIO_PIN_1

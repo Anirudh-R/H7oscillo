@@ -19,6 +19,8 @@ static void window_3_callback(UG_MESSAGE* msg);
 static void window_4_callback(UG_MESSAGE* msg);
 static void window_5_callback(UG_MESSAGE* msg);
 static void window_6_callback(UG_MESSAGE* msg);
+static void window_7_callback(UG_MESSAGE* msg);
+static void window_8_callback(UG_MESSAGE* msg);
 
 /* uGUI related globals */
 UG_GUI gui;
@@ -73,17 +75,28 @@ UG_WINDOW window_6;
 UG_OBJECT obj_buff_wnd_6[2];
 UG_TEXTBOX txtb6_0;
 UG_BUTTON button6_0;
+/* window 7 - FFT submenu */
+UG_WINDOW window_7;
+UG_OBJECT obj_buff_wnd_7[2];
+UG_TEXTBOX txtb7_0;
+UG_BUTTON button7_0;
+/* window 8 - FFT submenu sub-menu */
+UG_WINDOW window_8;
+UG_OBJECT obj_buff_wnd_8[1];
+UG_TEXTBOX txtb8_0;
 
 /* Menu page display selector flags */
 static uint8_t showWindow3 = 0;
 static uint8_t showWindow4 = 0;
 static uint8_t showWindow5 = 0;
 static uint8_t showWindow6 = 0;
+static uint8_t showWindow7 = 0;
+static uint8_t showWindow8 = 0;
 
 static uint8_t wind5OpenedBy = MEASURE_NONE;
 static uint8_t currField = FLD_NONE;					/* currently selected field in the top and bottom menubar */
 
-static char bufw1tb3[8] = "Trg:", bufw1tb4[6], bufw2tb0[6], bufw2tb1[6], bufw2tb2[8];
+static char bufw1tb3[8] = "Trg:", bufw1tb4[6], bufw2tb0[6], bufw2tb1[6], bufw2tb2[8], bufw8tb0[9];
 
 static uint8_t trigCursorImg[CURSOR_WIDTH][CURSOR_LENGTH] = {
 	   {1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0},
@@ -345,7 +358,7 @@ void initUI(void)
 	UG_TextboxSetAlignment(&window_5, TXB_ID_1, ALIGN_CENTER_RIGHT);
 	UG_TextboxSetText(&window_5, TXB_ID_1, "param:");
 
-	UG_ButtonCreate(&window_5, &button5_0, BTN_ID_0, 71, 1, 71 + WIND5_BTN_WIDTH - 1, WIND5_BTN_HEIGHT);		/* source select */
+	UG_ButtonCreate(&window_5, &button5_0, BTN_ID_0, 71, 1, 71 + WIND5_BTN_WIDTH - 1, WIND5_BTN_HEIGHT);	/* source select */
 	UG_ButtonSetFont(&window_5, BTN_ID_0, &FONT_6X8);
 	UG_ButtonSetBackColor(&window_5, BTN_ID_0, C_OLIVE);
 	UG_ButtonSetText(&window_5, BTN_ID_0, "CH1");
@@ -361,15 +374,42 @@ void initUI(void)
 	UG_WindowResize(&window_6, WIND6_X_START, WIND6_Y_START, WIND6_X_START + WIND6_WIDTH - 1, WIND6_Y_START + WIND6_HEIGHT - 1);
 	UG_WindowSetBackColor(&window_6, C_WHITE);
 
-	UG_TextboxCreate(&window_6, &txtb6_0, TXB_ID_0, 1, 1, WIND6_BTN_WIDTH, WIND6_BTN_HEIGHT);		/* label */
+	UG_TextboxCreate(&window_6, &txtb6_0, TXB_ID_0, 1, 1, WIND6_BTN_WIDTH, WIND6_BTN_HEIGHT);	/* label */
 	UG_TextboxSetFont(&window_6, TXB_ID_0, &FONT_6X8);
 	UG_TextboxSetAlignment(&window_6, TXB_ID_0, ALIGN_CENTER_RIGHT);
 	UG_TextboxSetText(&window_6, TXB_ID_0, "Mode:");
 
-	UG_ButtonCreate(&window_6, &button6_0, BTN_ID_0, 71, 1, 71 + WIND6_BTN_WIDTH - 1, WIND6_BTN_HEIGHT);		/* mode select */
+	UG_ButtonCreate(&window_6, &button6_0, BTN_ID_0, 71, 1, 71 + WIND6_BTN_WIDTH - 1, WIND6_BTN_HEIGHT);	/* mode select */
 	UG_ButtonSetFont(&window_6, BTN_ID_0, &FONT_6X8);
 	UG_ButtonSetBackColor(&window_6, BTN_ID_0, C_OLIVE);
 	UG_ButtonSetText(&window_6, BTN_ID_0, "Split");
+
+	/*** Create Window 7 (FFT sub-menu) ***/
+	UG_WindowCreate(&window_7, obj_buff_wnd_7, 2, window_7_callback);
+	UG_WindowSetStyle(&window_7, WND_STYLE_3D | WND_STYLE_HIDE_TITLE);
+	UG_WindowResize(&window_7, WIND7_X_START, WIND7_Y_START, WIND7_X_START + WIND7_WIDTH - 1, WIND7_Y_START + WIND7_HEIGHT - 1);
+	UG_WindowSetBackColor(&window_7, C_WHITE);
+
+	UG_TextboxCreate(&window_7, &txtb7_0, TXB_ID_0, 1, 1, WIND7_BTN_WIDTH, WIND7_BTN_HEIGHT);	/* label */
+	UG_TextboxSetFont(&window_7, TXB_ID_0, &FONT_6X8);
+	UG_TextboxSetAlignment(&window_7, TXB_ID_0, ALIGN_CENTER_RIGHT);
+	UG_TextboxSetText(&window_7, TXB_ID_0, "Source:");
+
+	UG_ButtonCreate(&window_7, &button7_0, BTN_ID_0, 71, 1, 71 + WIND7_BTN_WIDTH - 1, WIND7_BTN_HEIGHT);	/* FFT source select */
+	UG_ButtonSetFont(&window_7, BTN_ID_0, &FONT_6X8);
+	UG_ButtonSetBackColor(&window_7, BTN_ID_0, C_OLIVE);
+	UG_ButtonSetText(&window_7, BTN_ID_0, "OFF");
+
+	/*** Create Window 8 (FFT sub-menu sub-menu) ***/
+	UG_WindowCreate(&window_8, obj_buff_wnd_8, 1, window_8_callback);
+	UG_WindowSetStyle(&window_8, WND_STYLE_2D | WND_STYLE_HIDE_TITLE);
+	UG_WindowResize(&window_8, WIND8_X_START, WIND8_Y_START, WIND8_X_START + WIND8_WIDTH - 1, WIND8_Y_START + WIND8_HEIGHT - 1);
+	UG_WindowSetBackColor(&window_8, C_WHITE);
+
+	UG_TextboxCreate(&window_8, &txtb8_0, TXB_ID_0, 1, 1, WIND8_BTN_WIDTH, WIND8_BTN_HEIGHT);	/* label */
+	UG_TextboxSetFont(&window_8, TXB_ID_0, &FONT_6X8);
+	UG_TextboxSetAlignment(&window_8, TXB_ID_0, ALIGN_CENTER_LEFT);
+	UG_TextboxSetText(&window_8, TXB_ID_0, "0Hz");
 }
 
 /**
@@ -405,7 +445,7 @@ static void drawGridHoriz(void)
 
 	if(chDispMode == CHDISPMODE_SPLIT){
 		/* Draw separator between the two channels */
-		i = 135;
+		i = CH_SEPARATOR_POS;
 		for(j = 0; j < LCD_WIDTH; j += 1){
 			pFrame[i][j] = CH_SEPARATOR_COLOR;
 		}
@@ -444,7 +484,7 @@ void voltsToStr(uint8_t val, char* buf)
 	char buf2[5];
 	uint8_t len;
 
-	volts = (val * 3.3) / 255;
+	volts = (val * 3.3f) / 255;
 
 	if(volts < 1){
 		itoa(volts*1000, buf2, 10);
@@ -482,7 +522,7 @@ void voltsToStr(uint8_t val, char* buf)
   */
 void hertzToStr(float32_t freq, char* buf)
 {
-	float32_t Khz;
+	float32_t Khz, Mhz;
 	char buf2[5];
 	uint8_t len;
 
@@ -501,8 +541,8 @@ void hertzToStr(float32_t freq, char* buf)
 		strcat(buf, buf2);
 		strcat(buf, "Hz");
 	}
-	else{
-		Khz = freq/1000.0;
+	else if(freq < 1000000){
+		Khz = freq/1000.0f;
 		gcvt(Khz, 4, buf2);
 
 		/* append spaces to make it constant-length string */
@@ -516,6 +556,22 @@ void hertzToStr(float32_t freq, char* buf)
 
 		strcat(buf, buf2);
 		strcat(buf, "KHz");
+	}
+	else{
+		Mhz = freq/1000000.0f;
+		gcvt(Mhz, 4, buf2);
+
+		/* append spaces to make it constant-length string */
+		len = strlen(buf2);
+		if(len == 1)
+			strcat(buf, "    ");
+		else if(len == 3)
+			strcat(buf, "  ");
+		else if(len == 4)
+			strcat(buf, " ");
+
+		strcat(buf, buf2);
+		strcat(buf, "MHz");
 	}
 }
 
@@ -568,6 +624,7 @@ static void window_1_callback(UG_MESSAGE* msg)
 						showWindow4 = 0;
 						showWindow5 = 0;
 						showWindow6 = 0;
+						showWindow7 = 0;
 						wind5OpenedBy = MEASURE_NONE;
 						menu_button_state = 0;
 						fillFrameUGUI(LCD_WIDTH - WIND3_WIDTH, MENUBAR_HEIGHT + 10, LCD_WIDTH - 1, LCD_HEIGHT - MENUBAR_HEIGHT - 11, C_BLACK);	/* clear menu area */
@@ -752,6 +809,7 @@ static void window_4_callback(UG_MESSAGE* msg)
 			 	 case BTN_ID_0:
 					if(showWindow6 == 0){
 						showWindow6 = 1;			/* show submenu */
+						showWindow7 = 0;			/* close other submenus */
 					}
 					else{
 						showWindow6 = 0;			/* close submenu */
@@ -760,10 +818,24 @@ static void window_4_callback(UG_MESSAGE* msg)
 					}
 			 		break;
 
+				 /* FFT */
+				 case BTN_ID_1:
+					if(showWindow7 == 0){
+						showWindow7 = 1;			/* show submenu */
+						showWindow6 = 0;			/* close other submenus */
+					}
+					else{
+						showWindow7 = 0;			/* close submenu */
+						fillFrameUGUI(WIND7_X_START, WIND7_Y_START, WIND7_X_START + WIND7_WIDTH - 1, WIND7_Y_START + WIND7_HEIGHT - 1, C_BLACK);
+						drawGrid();
+					}
+					break;
+
 			 	 /* Previous button */
 			 	 case BTN_ID_4:
 			 		showWindow4 = 0;
 					showWindow6 = 0;			/* close any window 4 sub-menus */
+					showWindow7 = 0;
 					fillFrameUGUI(WIND5_X_START, WIND5_Y_START, WIND5_X_START + WIND5_WIDTH - 1, WIND5_Y_START + WIND5_HEIGHT - 1, C_BLACK);
 					showWindow3 = 1;			/* Go to Page 1 (Measurements) */
 					drawGrid();
@@ -790,33 +862,103 @@ static void window_6_callback(UG_MESSAGE* msg)
 			 {
 			 	 /* change display mode */
 			 	 case BTN_ID_0:
-			 		chDispMode = (chDispMode + 1) % 3;
-					UG_ButtonSetText(&window_6, BTN_ID_0, (chDispMode == CHDISPMODE_SPLIT) ? "Split" : (chDispMode == CHDISPMODE_MERGE ? "Merge" : "Single"));
+			 		if(chDispMode != CHDISPMODE_FFT){
+						chDispMode = (chDispMode + 1) % 3;
+						UG_ButtonSetText(&window_6, BTN_ID_0, chDispMode == CHDISPMODE_SPLIT ? "Split" : (chDispMode == CHDISPMODE_MERGE ? "Merge" : "Single"));
 
-					if(chDispMode != CHDISPMODE_SPLIT){
-						/* Erase separator between the two channels */
-						i = 135;
-						for(j = 0; j < LCD_WIDTH; j += 1){
-							pFrame[i][j] = C_BLACK;
+						if(chDispMode != CHDISPMODE_SPLIT){
+							/* Erase separator between the two channels */
+							i = CH_SEPARATOR_POS;
+							for(j = 0; j < LCD_WIDTH; j += 1){
+								pFrame[i][j] = C_BLACK;
+							}
+
+							drawGrid();
 						}
 
-						drawGrid();
-					}
+						/* force trigsrc to be ch1 in single display mode */
+						if(chDispMode == CHDISPMODE_SNGL && trigsrcVals[trigsrc] == TRIGSRC_CH2){
+							goToField(FLD_TRIGSRC);
+							changeFieldValue(1);
+						}
 
-					/* force trigsrc to be ch1 in single display mode */
-					if(chDispMode == CHDISPMODE_SNGL && trigsrcVals[trigsrc] == TRIGSRC_CH2){
-						goToField(FLD_TRIGSRC);
-						changeFieldValue(1);
-					}
-
-					/* force the cursors to be redrawn */
-					changeFieldValue(2);
-
+						/* force the cursors to be redrawn */
+						goToField(FLD_NONE);
+						changeFieldValue(2);
+			 		}
 			 		break;
 			 }
 		  }
 	  }
 	}
+}
+
+/* Callback function for window 7 (FFT sub-menu) */
+static void window_7_callback(UG_MESSAGE* msg)
+{
+	__IO uint16_t (*pFrame)[LCD_WIDTH] = (uint16_t (*)[LCD_WIDTH])LCD_DRAW_BUFFER_UGUI;
+	int32_t i, j;
+
+	if (msg->type == MSG_TYPE_OBJECT)
+	{
+	  if (msg->id == OBJ_TYPE_BUTTON)
+	  {
+		  if(msg->event == OBJ_EVENT_PRESSED)
+		  {
+			 switch(msg->sub_id)
+			 {
+			 	 /* change FFT source channel */
+			 	 case BTN_ID_0:
+					if(fftSrcChannel == CHANNEL1)
+						fftSrcChannel = CHANNEL2;
+					else if(fftSrcChannel == CHANNEL2)
+						fftSrcChannel = CHANNELNONE;
+					else
+						fftSrcChannel = CHANNEL1;
+
+					UG_ButtonSetText(&window_7, BTN_ID_0, fftSrcChannel == CHANNEL1 ? "CH1" : (fftSrcChannel == CHANNEL2 ? "CH2" : "OFF"));
+
+					if(fftSrcChannel != CHANNELNONE){
+						chDispMode = CHDISPMODE_FFT;
+
+						/* Erase separator between the two channels */
+						i = CH_SEPARATOR_POS;
+						for(j = 0; j < LCD_WIDTH; j += 1){
+							pFrame[i][j] = C_BLACK;
+						}
+
+						bufw8tb0[0] = '\0';		/* update frequency display value */
+						hertzToStr(0.5f*toff*samprateVals[tscale]/(float32_t)LCD_WIDTH, bufw8tb0);
+						UG_TextboxSetText(&window_8, TXB_ID_0, bufw8tb0);
+						showWindow8 = 1;		/* show sub-submenu */
+						drawGrid();
+					}
+					else{
+						UG_S16 xs;
+
+						chDispMode = CHDISPMODE_SPLIT;
+						UG_ButtonSetText(&window_6, BTN_ID_0, "Split");
+
+						showWindow8 = 0;		/* close sub-submenu */
+						xs = UG_WindowGetXStart(&window_8);
+						fillFrameUGUI(xs, WIND8_Y_START, xs + WIND8_WIDTH - 1, WIND8_Y_START + WIND8_HEIGHT - 1, C_BLACK);
+						drawGrid();
+					}
+
+					/* force the cursors to be redrawn */
+					goToField(FLD_NONE);
+					changeFieldValue(2);
+			 		break;
+			 }
+		  }
+	  }
+	}
+}
+
+/* Callback function for window 8 (FFT submenu sub-menu) */
+static void window_8_callback(UG_MESSAGE* msg)
+{
+	/* Nothing to do */
 }
 
 /**
@@ -827,36 +969,47 @@ static void window_6_callback(UG_MESSAGE* msg)
 void switchNextWindow(void)
 {
 	static uint8_t currWind = WINDOW1;
+	uint8_t done = 0;
 
-	if(currWind == WINDOW1){
+	if(!done && currWind == WINDOW1){
 		UG_WindowShow(&window_2);	/* bottom menubar */
 		currWind = WINDOW2;
+		done = 1;
 	}
-	else if(currWind == WINDOW2){
-		if(showWindow3){
-			UG_WindowShow(&window_3);	/* menu page 1 */
-			currWind = WINDOW3;
-		}
-		else if(showWindow4){			/* menu page 2 */
-			UG_WindowShow(&window_4);
-			currWind = WINDOW4;
-		}
-		else{
-			UG_WindowShow(&window_1);
-			currWind = WINDOW1;
-		}
+	if(!done && currWind <= WINDOW2 && showWindow3){
+		UG_WindowShow(&window_3);	/* menu page 1 */
+		currWind = WINDOW3;
+		done = 1;
 	}
-	else if((currWind == WINDOW3) && showWindow5){
+	if(!done && currWind <= WINDOW3 && showWindow4){
+		UG_WindowShow(&window_4);
+		currWind = WINDOW4;
+		done = 1;
+	}
+	if(!done && currWind <= WINDOW4 && showWindow5){
 		UG_WindowShow(&window_5);
 		currWind = WINDOW5;
+		done = 1;
 	}
-	else if((currWind == WINDOW4) && showWindow6){
+	if(!done && currWind <= WINDOW5 && showWindow6){
 		UG_WindowShow(&window_6);
 		currWind = WINDOW6;
+		done = 1;
 	}
-	else{
-		UG_WindowShow(&window_1);	/* top menubar */
+	if(!done && currWind <= WINDOW6 && showWindow7){
+		UG_WindowShow(&window_7);
+		currWind = WINDOW7;
+		done = 1;
+	}
+	if(!done && currWind <= WINDOW7 && showWindow8){
+		UG_WindowShow(&window_8);
+		currWind = WINDOW8;
+		done = 1;
+	}
+	if(!done && currWind <= WINDOW8){
+		UG_WindowShow(&window_1);
 		currWind = WINDOW1;
+		done = 1;
 	}
 
 	return;
@@ -1093,8 +1246,8 @@ static void selectField(uint8_t field, uint8_t sel)
 void changeFieldValue(uint8_t dir)
 {
 	static int32_t trigCurPosPrev = 52, ch1offCurPosPrev = 130, ch2offCurPosPrev = 250,
-			toffCurPosPrev = TOFF_INITVAL - TOFF_CURSOR_WIDTH/2 + 1;
-	int32_t temp, trigCurPos, ch1offCurPos, ch2offCurPos, toffCurPos, i, j;
+			toffCurPosPrev = TOFF_INITVAL - TOFF_CURSOR_WIDTH/2 + 1, wind8PosPrev = TOFF_INITVAL + 10;
+	int32_t temp, trigCurPos, ch1offCurPos, ch2offCurPos, toffCurPos, wind8Pos, i, j;
 	__IO uint16_t (*pFrame)[LCD_WIDTH] = (__IO uint16_t (*)[LCD_WIDTH])LCD_DRAW_BUFFER_UGUI;
 
 	/* increment/decrement value of the current field */
@@ -1190,7 +1343,7 @@ void changeFieldValue(uint8_t dir)
 
 		case FLD_TOFF:
 			toff += dir?(toff==TOFF_LIMIT?0:-6):(toff==ADC_TRIGBUF_SIZE-TOFF_LIMIT?0:6);
-			secToStr((float32_t)(toff-240)/(float32_t)samprateVals[tscale], bufw2tb2);
+			secToStr((float32_t)(toff-LCD_WIDTH/2)/(float32_t)samprateVals[tscale], bufw2tb2);
 			UG_TextboxSetText(&window_2, TXB_ID_2, bufw2tb2);
 
 			/* clear previous toff cursor and redraw */
@@ -1230,8 +1383,23 @@ void changeFieldValue(uint8_t dir)
 							pFrame[i][j] = toffRightCursorImg[i-MENUBAR_HEIGHT][j-toffCurPos] ? TOFF_CURSOR_COLOR : C_BLACK;
 				}
 
-				secToStr((float32_t)(toffStm-240)/(float32_t)samprateVals[tscale], bufw2tb2);
+				secToStr((float32_t)(toffStm-LCD_WIDTH/2)/(float32_t)samprateVals[tscale], bufw2tb2);
 				UG_TextboxSetText(&window_2, TXB_ID_2, bufw2tb2);
+			}
+			else if(chDispMode == CHDISPMODE_FFT){
+				if(toff > 400)
+					wind8Pos = toff - 80;
+				else
+					wind8Pos = toff + 10;
+
+				UG_WindowHide(&window_8);
+				fillFrameUGUI(wind8PosPrev, WIND8_Y_START, wind8PosPrev + WIND8_WIDTH - 1, WIND8_Y_START + WIND8_HEIGHT - 1, C_BLACK);
+				UG_WindowResize(&window_8, wind8Pos, WIND8_Y_START, wind8Pos + WIND8_WIDTH - 1, WIND8_Y_START + WIND8_HEIGHT - 1);
+				wind8PosPrev = wind8Pos;
+
+				bufw8tb0[0] = '\0';
+				hertzToStr(0.5f*toff*samprateVals[tscale]/(float32_t)LCD_WIDTH, bufw8tb0);
+				UG_TextboxSetText(&window_8, TXB_ID_0, bufw8tb0);
 			}
 
 			drawGridVerti();
@@ -1269,11 +1437,11 @@ void changeFieldValue(uint8_t dir)
 	}
 
 	/* Update the positions of ch1 cursors, if required */
-	if(currField == FLD_CH1_VSCALE || currField == FLD_TRIGSRC ||
+	if((currField == FLD_CH1_VSCALE || currField == FLD_TRIGSRC ||
 			(currField == FLD_TRIGLVL && trigsrcVals[trigsrc] == TRIGSRC_CH1) || currField == FLD_CH1_VOFF ||
 			(chDispMode == CHDISPMODE_MERGE && (currField == FLD_CH2_VSCALE ||
 			(currField == FLD_TRIGLVL && trigsrcVals[trigsrc] == TRIGSRC_CH2) || currField == FLD_CH2_VOFF)) ||
-			dir == 2){
+			dir == 2) && chDispMode != CHDISPMODE_FFT){
 
 		if(trigsrcVals[trigsrc] == TRIGSRC_CH1){
 			/* clear previous trigger cursor and redraw */
@@ -1331,7 +1499,7 @@ void changeFieldValue(uint8_t dir)
 			(currField == FLD_TRIGLVL && trigsrcVals[trigsrc] == TRIGSRC_CH2) || currField == FLD_CH2_VOFF ||
 			(chDispMode == CHDISPMODE_MERGE && (currField == FLD_CH1_VSCALE ||
 			(currField == FLD_TRIGLVL && trigsrcVals[trigsrc] == TRIGSRC_CH1) || currField == FLD_CH1_VOFF)) ||
-			dir == 2) && chDispMode != CHDISPMODE_SNGL){
+			dir == 2) && chDispMode != CHDISPMODE_SNGL && chDispMode != CHDISPMODE_FFT){
 
 		if(trigsrcVals[trigsrc] == TRIGSRC_CH2){
 			/* clear previous trigger cursor and redraw */
@@ -1387,7 +1555,7 @@ void changeFieldValue(uint8_t dir)
 
 	/* update horizontal offset if there is a change in time scale */
 	if(currField == FLD_TSCALE){
-		secToStr((float32_t)(toff-240)/(float32_t)samprateVals[tscale], bufw2tb2);
+		secToStr((float32_t)(toff-LCD_WIDTH/2)/(float32_t)samprateVals[tscale], bufw2tb2);
 		UG_TextboxSetText(&window_2, TXB_ID_2, bufw2tb2);
 	}
 
@@ -1404,7 +1572,7 @@ void dispToff(void)
 	int32_t toffCurPos, i, j;
 	__IO uint16_t (*pFrame)[LCD_WIDTH] = (__IO uint16_t (*)[LCD_WIDTH])LCD_DRAW_BUFFER_UGUI;
 
-	secToStr((float32_t)(toff-240)/(float32_t)samprateVals[tscale], bufw2tb2);
+	secToStr((float32_t)(toff-LCD_WIDTH/2)/(float32_t)samprateVals[tscale], bufw2tb2);
 	UG_TextboxSetText(&window_2, TXB_ID_2, bufw2tb2);
 
 	toffCurPos = toff - TOFF_CURSOR_WIDTH/2 + 1;
@@ -1542,7 +1710,7 @@ void initFields(void)
 	}
 
 	/* time offset */
-	secToStr((float32_t)(toff-240)/(float32_t)samprateVals[tscale], bufw2tb2);
+	secToStr((float32_t)(toff-LCD_WIDTH/2)/(float32_t)samprateVals[tscale], bufw2tb2);
 	UG_TextboxSetText(&window_2, TXB_ID_2, bufw2tb2);
 	curPos = toff - TOFF_CURSOR_WIDTH/2 + 1;
 	for(i = MENUBAR_HEIGHT; i < MENUBAR_HEIGHT + TOFF_CURSOR_LENGTH; i++)

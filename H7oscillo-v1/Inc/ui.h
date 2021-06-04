@@ -20,6 +20,8 @@
 #define WINDOW4				 4
 #define WINDOW5				 5
 #define WINDOW6				 6
+#define WINDOW7				 7
+#define WINDOW8				 8
 
 /* Colors and dimensions of GUI elements */
 #define CH1_COLOR			 	 	C_GREEN				/* colors of CH1 waveform and related parameter displays */
@@ -39,6 +41,7 @@
 #define GRID_VERT_DIVS	     	 	5					/* no. of vertical divisions in grid */
 #define GRID_DOT_SPACING	 	 	10					/* grid dotted line spacing */
 #define GRID_COLOR			 	 	C_DARK_GRAY			/* grid color */
+#define CH_SEPARATOR_POS			135					/* channel separator position */
 #define CH_SEPARATOR_COLOR		 	C_WHITE				/* channel separator color */
 #define WIND3_WIDTH	 		 	 	80					/* window 3 & 4 width */
 #define WIND3_BTN_SPACING	 	 	10					/* window 3 & 4 vertical spacing between buttons */
@@ -56,11 +59,24 @@
 #define WIND6_BTN_HEIGHT	 	 	20					/* window 6 button heights */
 #define WIND6_X_START	 	 	 	250					/* window 6 X start position */
 #define WIND6_Y_START	 	 	 	90					/* window 6 Y start position */
+#define WIND7_WIDTH	 		 	 	140					/* window 7 width */
+#define WIND7_HEIGHT	 	 	 	30					/* window 7 height */
+#define WIND7_BTN_WIDTH	 	 		60					/* window 7 button widths */
+#define WIND7_BTN_HEIGHT	 	 	20					/* window 7 button heights */
+#define WIND7_X_START	 	 	 	250					/* window 7 X start position */
+#define WIND7_Y_START	 	 	 	90					/* window 7 Y start position */
+#define WIND8_WIDTH	 		 	 	70					/* window 8 width */
+#define WIND8_HEIGHT	 	 	 	15					/* window 8 height */
+#define WIND8_BTN_WIDTH	 	 		65					/* window 8 button widths */
+#define WIND8_BTN_HEIGHT	 	 	10					/* window 8 button heights */
+#define WIND8_X_START	 	 	 	(TOFF_INITVAL + 10)	/* window 8 X start position */
+#define WIND8_Y_START	 	 	 	20					/* window 8 Y start position */
 #define CURSOR_LENGTH	 	 	 	13					/* length of trigger and vertical offset cursors */
 #define CURSOR_WIDTH	 	 	 	10					/* width of trigger and vertical offset cursors */
 #define TOFF_CURSOR_LENGTH	 	 	10					/* length of horizontal offset cursors */
 #define TOFF_CURSOR_WIDTH	 	 	10					/* width of horizontal offset cursors */
 #define TOFF_CURSOR_COLOR	 	 	C_PLUM				/* color of horizontal offset cursors */
+#define FFT_COLOR					C_MEDIUM_ORCHID		/* spectrum color */
 
 /* Fields in the top and bottom menubars */
 #define FLD_NONE			0
@@ -123,6 +139,13 @@ extern UG_WINDOW window_6;
 extern UG_OBJECT obj_buff_wnd_6[2];
 extern UG_TEXTBOX txtb6_0;
 extern UG_BUTTON button6_0;
+extern UG_WINDOW window_7;
+extern UG_OBJECT obj_buff_wnd_7[2];
+extern UG_TEXTBOX txtb7_0;
+extern UG_BUTTON button7_0;
+extern UG_WINDOW window_8;
+extern UG_OBJECT obj_buff_wnd_8[1];
+extern UG_TEXTBOX txtb8_0;
 
 char* gcvt(double value, int ndigit, char* buf);
 void initUI(void);
