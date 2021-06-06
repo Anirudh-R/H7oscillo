@@ -81,6 +81,14 @@
 #define CHDISPMODE_MERGE_SIGMAX		239
 #define CHDISPMODE_MERGE_CHBOT		254
 
+#define MATH_OP_NONE		0
+#define MATH_OP_1P2			1
+#define MATH_OP_1M2			2
+#define MATH_OP_2M1			3
+#define MATH_OP_1X2			4
+
+#define MATHVSCALE_INITVAL	5
+#define MATHVOFF_INITVAL	210
 
 extern __IO uint32_t Tick_1ms;
 extern uint32_t SystemCoreClock;
@@ -129,5 +137,9 @@ extern uint8_t vscale1Changed, vscale2Changed, voff1Changed, voff2Changed, toffC
 extern uint8_t chDispMode;
 
 extern uint8_t fftSrcChannel;
+
+extern uint8_t mathOp;
+extern uint8_t mathVscale;
+extern int16_t mathVoff;
 
 #endif /* __GLOBALS_H */

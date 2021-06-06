@@ -22,6 +22,7 @@
 #define WINDOW6				 6
 #define WINDOW7				 7
 #define WINDOW8				 8
+#define WINDOW9				 9
 
 /* Colors and dimensions of GUI elements */
 #define CH1_COLOR			 	 	C_GREEN				/* colors of CH1 waveform and related parameter displays */
@@ -71,12 +72,20 @@
 #define WIND8_BTN_HEIGHT	 	 	10					/* window 8 button heights */
 #define WIND8_X_START	 	 	 	(TOFF_INITVAL + 10)	/* window 8 X start position */
 #define WIND8_Y_START	 	 	 	20					/* window 8 Y start position */
+#define WIND9_WIDTH	 		 	 	140					/* window 9 width */
+#define WIND9_HEIGHT	 	 	 	80					/* window 9 height */
+#define WIND9_BTN_SPACING	 	 	5					/* window 9 vertical spacing between buttons */
+#define WIND9_BTN_WIDTH	 	 		60					/* window 9 button widths */
+#define WIND9_BTN_HEIGHT	 	 	20					/* window 9 button heights */
+#define WIND9_X_START	 	 	 	250					/* window 9 X start position */
+#define WIND9_Y_START	 	 	 	90					/* window 9 Y start position */
 #define CURSOR_LENGTH	 	 	 	13					/* length of trigger and vertical offset cursors */
 #define CURSOR_WIDTH	 	 	 	10					/* width of trigger and vertical offset cursors */
 #define TOFF_CURSOR_LENGTH	 	 	10					/* length of horizontal offset cursors */
 #define TOFF_CURSOR_WIDTH	 	 	10					/* width of horizontal offset cursors */
 #define TOFF_CURSOR_COLOR	 	 	C_PLUM				/* color of horizontal offset cursors */
 #define FFT_COLOR					C_MEDIUM_ORCHID		/* spectrum color */
+#define MATH_COLOR					C_MEDIUM_ORCHID		/* math waveform color */
 
 /* Fields in the top and bottom menubars */
 #define FLD_NONE			0
@@ -92,6 +101,10 @@
 #define FLD_CH2_VOFF		10
 #define FLD_TOFF			11
 #define FLD_MAXVALS			12		/* number of fields */
+
+#define MATHFLD_NONE		0
+#define MATHFLD_VSCALE		1
+#define MATHFLD_VOFF		2
 
 extern UG_GUI gui;
 extern UG_WINDOW window_1;
@@ -146,6 +159,14 @@ extern UG_BUTTON button7_0;
 extern UG_WINDOW window_8;
 extern UG_OBJECT obj_buff_wnd_8[1];
 extern UG_TEXTBOX txtb8_0;
+extern UG_WINDOW window_9;
+extern UG_OBJECT obj_buff_wnd_9[6];
+extern UG_TEXTBOX txtb9_0;
+extern UG_TEXTBOX txtb9_1;
+extern UG_TEXTBOX txtb9_2;
+extern UG_BUTTON button9_0;
+extern UG_BUTTON button9_1;
+extern UG_BUTTON button9_2;
 
 char* gcvt(double value, int ndigit, char* buf);
 void initUI(void);
@@ -160,6 +181,8 @@ void goToField(uint8_t field);
 void switchNextField(void);
 void changeFieldValue(uint8_t dir);
 void dispToff(void);
+void changeFieldValueMath(int8_t dir);
+uint8_t getCurrMathField(void);
 void initFields(void);
 void drawRedBorder(void);
 void clearRedBorder(void);

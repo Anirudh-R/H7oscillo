@@ -21,6 +21,7 @@ static void window_5_callback(UG_MESSAGE* msg);
 static void window_6_callback(UG_MESSAGE* msg);
 static void window_7_callback(UG_MESSAGE* msg);
 static void window_8_callback(UG_MESSAGE* msg);
+static void window_9_callback(UG_MESSAGE* msg);
 
 /* uGUI related globals */
 UG_GUI gui;
@@ -63,7 +64,7 @@ UG_BUTTON button4_1;
 UG_BUTTON button4_2;
 UG_BUTTON button4_3;
 UG_BUTTON button4_4;
-/* window 5 - Menu page 1 submenu */
+/* window 5 - Measure submenu */
 UG_WINDOW window_5;
 UG_OBJECT obj_buff_wnd_5[4];
 UG_TEXTBOX txtb5_0;
@@ -84,6 +85,15 @@ UG_BUTTON button7_0;
 UG_WINDOW window_8;
 UG_OBJECT obj_buff_wnd_8[1];
 UG_TEXTBOX txtb8_0;
+/* window 9 - Math submenu */
+UG_WINDOW window_9;
+UG_OBJECT obj_buff_wnd_9[6];
+UG_TEXTBOX txtb9_0;
+UG_TEXTBOX txtb9_1;
+UG_TEXTBOX txtb9_2;
+UG_BUTTON button9_0;
+UG_BUTTON button9_1;
+UG_BUTTON button9_2;
 
 /* Menu page display selector flags */
 static uint8_t showWindow3 = 0;
@@ -92,11 +102,14 @@ static uint8_t showWindow5 = 0;
 static uint8_t showWindow6 = 0;
 static uint8_t showWindow7 = 0;
 static uint8_t showWindow8 = 0;
+static uint8_t showWindow9 = 0;
 
 static uint8_t wind5OpenedBy = MEASURE_NONE;
 static uint8_t currField = FLD_NONE;					/* currently selected field in the top and bottom menubar */
 
-static char bufw1tb3[8] = "Trg:", bufw1tb4[6], bufw2tb0[6], bufw2tb1[6], bufw2tb2[8], bufw8tb0[9];
+static uint8_t mathField = MATHFLD_NONE;				/* currently selected field in the math menu */
+
+static char bufw1tb3[8] = "Trg:", bufw1tb4[6], bufw2tb0[6], bufw2tb1[6], bufw2tb2[8], bufw8tb0[9], bufw9btn2[6];
 
 static uint8_t trigCursorImg[CURSOR_WIDTH][CURSOR_LENGTH] = {
 	   {1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0},
@@ -169,6 +182,18 @@ static uint8_t toffRightCursorImg[CURSOR_LENGTH][CURSOR_WIDTH] = {
 	   {0, 0, 0, 1, 1, 1, 1, 1, 0, 0},
 	   {0, 0, 0, 1, 1, 1, 1, 0, 0, 0},
 	   {0, 0, 0, 1, 1, 1, 0, 0, 0, 0}};
+
+static uint8_t mathRefCursorImg[CURSOR_WIDTH][CURSOR_LENGTH] = {
+	   {1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0},
+	   {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0},
+	   {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0},
+	   {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0},
+	   {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
+	   {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
+	   {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0},
+	   {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0},
+	   {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0},
+	   {1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0}};
 
 /**
   * @brief  Create windows and other basic ui elements.
@@ -410,6 +435,42 @@ void initUI(void)
 	UG_TextboxSetFont(&window_8, TXB_ID_0, &FONT_6X8);
 	UG_TextboxSetAlignment(&window_8, TXB_ID_0, ALIGN_CENTER_LEFT);
 	UG_TextboxSetText(&window_8, TXB_ID_0, "0Hz");
+
+	/*** Create Window 9 (Math sub-menu) ***/
+	UG_WindowCreate(&window_9, obj_buff_wnd_9, 6, window_9_callback);
+	UG_WindowSetStyle(&window_9, WND_STYLE_3D | WND_STYLE_HIDE_TITLE);
+	UG_WindowResize(&window_9, WIND9_X_START, WIND9_Y_START, WIND9_X_START + WIND9_WIDTH - 1, WIND9_Y_START + WIND9_HEIGHT - 1);
+	UG_WindowSetBackColor(&window_9, C_WHITE);
+
+	UG_TextboxCreate(&window_9, &txtb9_0, TXB_ID_0, 1, 1, WIND9_BTN_WIDTH, WIND9_BTN_HEIGHT);	/* label */
+	UG_TextboxSetFont(&window_9, TXB_ID_0, &FONT_6X8);
+	UG_TextboxSetAlignment(&window_9, TXB_ID_0, ALIGN_CENTER_RIGHT);
+	UG_TextboxSetText(&window_9, TXB_ID_0, "Op:");
+
+	UG_TextboxCreate(&window_9, &txtb9_1, TXB_ID_1, 1, WIND9_BTN_HEIGHT + WIND9_BTN_SPACING + 1, WIND9_BTN_WIDTH, 2*WIND9_BTN_HEIGHT + WIND9_BTN_SPACING);	/* label */
+	UG_TextboxSetFont(&window_9, TXB_ID_1, &FONT_6X8);
+	UG_TextboxSetAlignment(&window_9, TXB_ID_1, ALIGN_CENTER_RIGHT);
+	UG_TextboxSetText(&window_9, TXB_ID_1, "Vscale:");
+
+	UG_TextboxCreate(&window_9, &txtb9_2, TXB_ID_2, 1, 2*WIND9_BTN_HEIGHT + 2*WIND9_BTN_SPACING + 1, WIND9_BTN_WIDTH, 3*WIND9_BTN_HEIGHT + 2*WIND9_BTN_SPACING);	/* label */
+	UG_TextboxSetFont(&window_9, TXB_ID_2, &FONT_6X8);
+	UG_TextboxSetAlignment(&window_9, TXB_ID_2, ALIGN_CENTER_RIGHT);
+	UG_TextboxSetText(&window_9, TXB_ID_2, "Offset:");
+
+	UG_ButtonCreate(&window_9, &button9_0, BTN_ID_0, 71, 1, 71 + WIND9_BTN_WIDTH - 1, WIND9_BTN_HEIGHT);	/* Operation select */
+	UG_ButtonSetFont(&window_9, BTN_ID_0, &FONT_6X8);
+	UG_ButtonSetBackColor(&window_9, BTN_ID_0, C_OLIVE);
+	UG_ButtonSetText(&window_9, BTN_ID_0, "OFF");
+
+	UG_ButtonCreate(&window_9, &button9_1, BTN_ID_1, 71, WIND9_BTN_HEIGHT + WIND9_BTN_SPACING + 1, 71 + WIND9_BTN_WIDTH - 1, 2*WIND9_BTN_HEIGHT + WIND9_BTN_SPACING + 1);	/* Vertical scale */
+	UG_ButtonSetFont(&window_9, BTN_ID_1, &FONT_6X8);
+	UG_ButtonSetBackColor(&window_9, BTN_ID_1, C_OLIVE);
+	UG_ButtonSetText(&window_9, BTN_ID_1, "1V");
+
+	UG_ButtonCreate(&window_9, &button9_2, BTN_ID_2, 71, 2*WIND9_BTN_HEIGHT + 2*WIND9_BTN_SPACING + 1, 71 + WIND9_BTN_WIDTH - 1, 3*WIND9_BTN_HEIGHT + 2*WIND9_BTN_SPACING + 1);	/* Vertical offset */
+	UG_ButtonSetFont(&window_9, BTN_ID_2, &FONT_6X8);
+	UG_ButtonSetBackColor(&window_9, BTN_ID_2, C_OLIVE);
+	UG_ButtonSetText(&window_9, BTN_ID_2, "0V");
 }
 
 /**
@@ -625,10 +686,12 @@ static void window_1_callback(UG_MESSAGE* msg)
 						showWindow5 = 0;
 						showWindow6 = 0;
 						showWindow7 = 0;
+						showWindow9 = 0;
 						wind5OpenedBy = MEASURE_NONE;
+						mathField = MATHFLD_NONE;
 						menu_button_state = 0;
 						fillFrameUGUI(LCD_WIDTH - WIND3_WIDTH, MENUBAR_HEIGHT + 10, LCD_WIDTH - 1, LCD_HEIGHT - MENUBAR_HEIGHT - 11, C_BLACK);	/* clear menu area */
-						fillFrameUGUI(WIND5_X_START, WIND5_Y_START, WIND5_X_START + WIND5_WIDTH, WIND5_Y_START + WIND5_HEIGHT, C_BLACK);	/* clear window 5 area */
+						fillFrameUGUI(WIND9_X_START, WIND9_Y_START, WIND9_X_START + WIND9_WIDTH, WIND9_Y_START + WIND9_HEIGHT, C_BLACK);	/* clear sub-menu area */
 						drawGrid();
 					}
 					break;
@@ -810,6 +873,8 @@ static void window_4_callback(UG_MESSAGE* msg)
 					if(showWindow6 == 0){
 						showWindow6 = 1;			/* show submenu */
 						showWindow7 = 0;			/* close other submenus */
+						showWindow9 = 0;
+						mathField = MATHFLD_NONE;
 					}
 					else{
 						showWindow6 = 0;			/* close submenu */
@@ -823,10 +888,29 @@ static void window_4_callback(UG_MESSAGE* msg)
 					if(showWindow7 == 0){
 						showWindow7 = 1;			/* show submenu */
 						showWindow6 = 0;			/* close other submenus */
+						showWindow9 = 0;
+						mathField = MATHFLD_NONE;
 					}
 					else{
 						showWindow7 = 0;			/* close submenu */
 						fillFrameUGUI(WIND7_X_START, WIND7_Y_START, WIND7_X_START + WIND7_WIDTH - 1, WIND7_Y_START + WIND7_HEIGHT - 1, C_BLACK);
+						drawGrid();
+					}
+					break;
+
+				 /* Math */
+				 case BTN_ID_3:
+					if(showWindow9 == 0){
+						showWindow9 = 1;			/* show submenu */
+						showWindow6 = 0;			/* close other submenus */
+						showWindow7 = 0;
+						UG_ButtonSetFont(&window_9, BTN_ID_1, &FONT_6X8);	/* de-highlight the math fields */
+						UG_ButtonSetFont(&window_9, BTN_ID_2, &FONT_6X8);
+					}
+					else{
+						showWindow9 = 0;			/* close submenu */
+						fillFrameUGUI(WIND9_X_START, WIND9_Y_START, WIND9_X_START + WIND9_WIDTH - 1, WIND9_Y_START + WIND9_HEIGHT - 1, C_BLACK);
+						mathField = MATHFLD_NONE;
 						drawGrid();
 					}
 					break;
@@ -836,8 +920,10 @@ static void window_4_callback(UG_MESSAGE* msg)
 			 		showWindow4 = 0;
 					showWindow6 = 0;			/* close any window 4 sub-menus */
 					showWindow7 = 0;
-					fillFrameUGUI(WIND5_X_START, WIND5_Y_START, WIND5_X_START + WIND5_WIDTH - 1, WIND5_Y_START + WIND5_HEIGHT - 1, C_BLACK);
-					showWindow3 = 1;			/* Go to Page 1 (Measurements) */
+					showWindow9 = 0;
+					fillFrameUGUI(WIND9_X_START, WIND9_Y_START, WIND9_X_START + WIND9_WIDTH - 1, WIND9_Y_START + WIND9_HEIGHT - 1, C_BLACK);
+					mathField = MATHFLD_NONE;
+					showWindow3 = 1;			/* Go to Page 1 */
 					drawGrid();
 					break;
 			 }
@@ -862,7 +948,7 @@ static void window_6_callback(UG_MESSAGE* msg)
 			 {
 			 	 /* change display mode */
 			 	 case BTN_ID_0:
-			 		if(chDispMode != CHDISPMODE_FFT){
+			 		if(chDispMode != CHDISPMODE_FFT && mathOp == MATH_OP_NONE){
 						chDispMode = (chDispMode + 1) % 3;
 						UG_ButtonSetText(&window_6, BTN_ID_0, chDispMode == CHDISPMODE_SPLIT ? "Split" : (chDispMode == CHDISPMODE_MERGE ? "Merge" : "Single"));
 
@@ -909,13 +995,7 @@ static void window_7_callback(UG_MESSAGE* msg)
 			 {
 			 	 /* change FFT source channel */
 			 	 case BTN_ID_0:
-					if(fftSrcChannel == CHANNEL1)
-						fftSrcChannel = CHANNEL2;
-					else if(fftSrcChannel == CHANNEL2)
-						fftSrcChannel = CHANNELNONE;
-					else
-						fftSrcChannel = CHANNEL1;
-
+					fftSrcChannel = (fftSrcChannel + 1) % 3;
 					UG_ButtonSetText(&window_7, BTN_ID_0, fftSrcChannel == CHANNEL1 ? "CH1" : (fftSrcChannel == CHANNEL2 ? "CH2" : "OFF"));
 
 					if(fftSrcChannel != CHANNELNONE){
@@ -931,7 +1011,7 @@ static void window_7_callback(UG_MESSAGE* msg)
 						hertzToStr(0.5f*toff*samprateVals[tscale]/(float32_t)LCD_WIDTH, bufw8tb0);
 						UG_TextboxSetText(&window_8, TXB_ID_0, bufw8tb0);
 						showWindow8 = 1;		/* show sub-submenu */
-						drawGrid();
+						drawGridVerti();
 					}
 					else{
 						UG_S16 xs;
@@ -959,6 +1039,93 @@ static void window_7_callback(UG_MESSAGE* msg)
 static void window_8_callback(UG_MESSAGE* msg)
 {
 	/* Nothing to do */
+}
+
+/* Callback function for window 9 (Math sub-menu) */
+static void window_9_callback(UG_MESSAGE* msg)
+{
+	__IO uint16_t (*pFrame)[LCD_WIDTH] = (uint16_t (*)[LCD_WIDTH])LCD_DRAW_BUFFER_UGUI;
+	int32_t i, j;
+
+	if (msg->type == MSG_TYPE_OBJECT)
+	{
+	  if (msg->id == OBJ_TYPE_BUTTON)
+	  {
+		  if(msg->event == OBJ_EVENT_PRESSED)
+		  {
+			 switch(msg->sub_id)
+			 {
+			 	 /* change math operation */
+			 	 case BTN_ID_0:
+					mathOp = (mathOp + 1) % 5;
+					if(mathOp == MATH_OP_NONE)
+						UG_ButtonSetText(&window_9, BTN_ID_0, "OFF");
+					else if(mathOp == MATH_OP_1P2)
+						UG_ButtonSetText(&window_9, BTN_ID_0, "1 + 2");
+					else if(mathOp == MATH_OP_1M2)
+						UG_ButtonSetText(&window_9, BTN_ID_0, "1 - 2");
+					else if(mathOp == MATH_OP_2M1)
+						UG_ButtonSetText(&window_9, BTN_ID_0, "2 - 1");
+					else
+						UG_ButtonSetText(&window_9, BTN_ID_0, "1 x 2");
+
+					if(mathOp != MATH_OP_NONE){
+						/* Erase separator between the two channels */
+						i = CH_SEPARATOR_POS;
+						for(j = 0; j < LCD_WIDTH; j += 1){
+							pFrame[i][j] = C_BLACK;
+						}
+
+						chDispMode = CHDISPMODE_MERGE;
+						UG_ButtonSetText(&window_6, BTN_ID_0, "Merge");
+
+						mathField = MATHFLD_VOFF;
+						changeFieldValueMath(2);		/* draw offset cursor */
+
+						mathField = MATHFLD_NONE;
+
+						drawGridVerti();
+					}
+					else{
+						chDispMode = CHDISPMODE_SPLIT;
+						UG_ButtonSetText(&window_6, BTN_ID_0, "Split");
+
+						mathField = MATHFLD_VOFF;
+						changeFieldValueMath(-1);		/* clear offset cursor */
+
+						mathField = MATHFLD_NONE;
+
+						drawGrid();
+					}
+
+					/* force the cursors to be redrawn */
+					goToField(FLD_NONE);
+					changeFieldValue(2);
+			 		break;
+
+			 	 /* Vertical scale */
+				 case BTN_ID_1:
+					if(mathOp != MATH_OP_NONE){
+						mathField = MATHFLD_VSCALE;
+						goToField(FLD_NONE);			/* de-highlight any fields in top & bottom menubars */
+						UG_ButtonSetFont(&window_9, BTN_ID_1, &FONT_7X12);	/* highlight vertical scale field */
+						UG_ButtonSetFont(&window_9, BTN_ID_2, &FONT_6X8);	/* de-highlight offset field */
+					}
+					break;
+
+				 /* Vertical offset */
+				 case BTN_ID_2:
+					if(mathOp != MATH_OP_NONE){
+						mathField = MATHFLD_VOFF;
+						goToField(FLD_NONE);
+						UG_ButtonSetFont(&window_9, BTN_ID_1, &FONT_6X8);	/* de-highlight vertical scale field */
+						UG_ButtonSetFont(&window_9, BTN_ID_2, &FONT_7X12);	/* highlight offset field */
+					}
+					break;
+			 }
+		  }
+	  }
+	}
 }
 
 /**
@@ -1006,7 +1173,12 @@ void switchNextWindow(void)
 		currWind = WINDOW8;
 		done = 1;
 	}
-	if(!done && currWind <= WINDOW8){
+	if(!done && currWind <= WINDOW8 && showWindow9){
+		UG_WindowShow(&window_9);
+		currWind = WINDOW9;
+		done = 1;
+	}
+	if(!done){
 		UG_WindowShow(&window_1);
 		currWind = WINDOW1;
 		done = 1;
@@ -1326,7 +1498,7 @@ void changeFieldValue(uint8_t dir)
 			break;
 
 		case FLD_CH1_VOFF:
-			voff1 += dir?(voff1==-255?0:-3):(voff1==255?0:3);
+			voff1 += dir?(voff1==-255?0:-3):(voff1==510?0:3);
 			gcvt((int32_t)((3.3f*(float32_t)voff1/(float32_t)255)*100)/100.0f, 3 + (voff1 < -1), bufw2tb0);
 			strcat(bufw2tb0, "V");
 			UG_TextboxSetText(&window_2, TXB_ID_0, bufw2tb0);
@@ -1334,7 +1506,7 @@ void changeFieldValue(uint8_t dir)
 			break;
 
 		case FLD_CH2_VOFF:
-			voff2 += dir?(voff2==-255?0:-3):(voff2==255?0:3);
+			voff2 += dir?(voff2==-255?0:-3):(voff2==510?0:3);
 			gcvt((int32_t)((3.3f*(float32_t)voff2/(float32_t)255)*100)/100.0f, 3 + (voff2 < -1), bufw2tb1);
 			strcat(bufw2tb1, "V");
 			UG_TextboxSetText(&window_2, TXB_ID_1, bufw2tb1);
@@ -1559,6 +1731,13 @@ void changeFieldValue(uint8_t dir)
 		UG_TextboxSetText(&window_2, TXB_ID_2, bufw2tb2);
 	}
 
+	/* update frequency display value */
+	if(chDispMode == CHDISPMODE_FFT && currField == FLD_TSCALE){
+		bufw8tb0[0] = '\0';
+		hertzToStr(0.5f*toff*samprateVals[tscale]/(float32_t)LCD_WIDTH, bufw8tb0);
+		UG_TextboxSetText(&window_8, TXB_ID_0, bufw8tb0);
+	}
+
 	return;
 }
 
@@ -1585,6 +1764,64 @@ void dispToff(void)
 	for(i = MENUBAR_HEIGHT; i < MENUBAR_HEIGHT + TOFF_CURSOR_LENGTH; i++)
 		for(j = toffCurPos; j < toffCurPos + TOFF_CURSOR_WIDTH; j++)
 			pFrame[i][j] = toffCursorImg[i-MENUBAR_HEIGHT][j-toffCurPos] ? TOFF_CURSOR_COLOR : C_BLACK;
+}
+
+/**
+  * @brief  Change field values in math mode.
+  * @param  dir: 0=increment, 1=decrement, 2=redraw offset cursor, -1=clear offset cursor
+  * @retval None
+  */
+void changeFieldValueMath(int8_t dir)
+{
+	static int32_t voffCurPosPrev = CHDISPMODE_MERGE_CHBOT - CURSOR_WIDTH/2 + 1;
+	int32_t voffCurPos, temp, i, j;
+	__IO uint16_t (*pFrame)[LCD_WIDTH] = (__IO uint16_t (*)[LCD_WIDTH])LCD_DRAW_BUFFER_UGUI;
+
+	if(mathField == MATHFLD_VOFF){
+		/* clear previous offset cursor */
+		for(i = voffCurPosPrev; i < voffCurPosPrev + CURSOR_WIDTH; i++)
+			for(j = 0; j < CURSOR_LENGTH; j++)
+				pFrame[i][j] = C_BLACK;
+
+		if(dir != -1){
+			if(dir != 2)
+				mathVoff += dir?(mathVoff==-255?0:-3):(mathVoff==510?0:3);
+
+			temp = (float32_t)(mathVoff)/vscaleVals[mathVscale];
+			if(temp > CHDISPMODE_MERGE_SIGMAX)	temp = CHDISPMODE_MERGE_SIGMAX;
+			if(temp < 0)  temp = 0;
+			voffCurPos = CHDISPMODE_MERGE_CHBOT - temp - CURSOR_WIDTH/2 + 1;
+
+			for(i = voffCurPos; i < voffCurPos + CURSOR_WIDTH; i++)
+				for(j = 0; j < CURSOR_LENGTH; j++)
+					pFrame[i][j] = mathRefCursorImg[i-voffCurPos][j] ? MATH_COLOR : C_BLACK;
+
+			voffCurPosPrev = voffCurPos;
+
+			if(dir != 2){
+				gcvt((int32_t)((3.3f*(float32_t)mathVoff/(float32_t)255)*100)/100.0f, 3 + (mathVoff < -1), bufw9btn2);
+				strcat(bufw9btn2, "V");
+				UG_ButtonSetText(&window_9, BTN_ID_2, bufw9btn2);
+
+				goToField(FLD_NONE);
+				changeFieldValue(2);
+			}
+		}
+	}
+	else if(mathField == MATHFLD_VSCALE && dir != 2 && dir != -1){
+		mathVscale += dir?(mathVscale==0?0:-1):(mathVscale==VSCALE_MAXVALS-1?0:1);
+		UG_ButtonSetText(&window_9, BTN_ID_1, vscaleDispVals[mathVscale]);
+	}
+}
+
+/**
+  * @brief  Get currently active math field.
+  * @param  None
+  * @retval Currently active math field
+  */
+uint8_t getCurrMathField(void)
+{
+	return mathField;
 }
 
 /**
@@ -1716,6 +1953,14 @@ void initFields(void)
 	for(i = MENUBAR_HEIGHT; i < MENUBAR_HEIGHT + TOFF_CURSOR_LENGTH; i++)
 		for(j = curPos; j < curPos + TOFF_CURSOR_WIDTH; j++)
 			pFrame[i][j] = toffCursorImg[i-MENUBAR_HEIGHT][j-curPos] ? TOFF_CURSOR_COLOR : C_BLACK;
+
+	/* math vertical scale */
+	UG_ButtonSetText(&window_9, BTN_ID_1, vscaleDispVals[mathVscale]);
+
+	/* math vertical offset */
+	gcvt((int32_t)((3.3f*(float32_t)mathVoff/(float32_t)255)*100)/100.0f, 3 + (mathVoff < -1), bufw9btn2);
+	strcat(bufw9btn2, "V");
+	UG_ButtonSetText(&window_9, BTN_ID_2, bufw9btn2);
 
 	return;
 }

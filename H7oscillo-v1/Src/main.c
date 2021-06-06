@@ -137,6 +137,24 @@ int main(void)
 							if(dispIdxStart+j < LCD_WIDTH)
 								pFrame[i][dispIdxStart+j] = CH2_COLOR;
 						}
+
+						/* Math waveform */
+						if(mathOp != MATH_OP_NONE){
+							if(mathOp == MATH_OP_1P2)
+								temp = (mathVoff + 0.5f*((float32_t)CH1_ADC_vals[waveIdxStart+j] + CH2_ADC_vals[waveIdxStart+j]))/vscaleVals[mathVscale];
+							else if(mathOp == MATH_OP_1M2)
+								temp = (mathVoff + (float32_t)CH1_ADC_vals[waveIdxStart+j] - CH2_ADC_vals[waveIdxStart+j])/vscaleVals[mathVscale];
+							else if(mathOp == MATH_OP_2M1)
+								temp = (mathVoff + (float32_t)CH2_ADC_vals[waveIdxStart+j] - CH1_ADC_vals[waveIdxStart+j])/vscaleVals[mathVscale];
+							else
+								temp = (mathVoff + ((float32_t)CH1_ADC_vals[waveIdxStart+j]*CH2_ADC_vals[waveIdxStart+j])/256.0f)/vscaleVals[mathVscale];
+
+							if(temp > CHDISPMODE_MERGE_SIGMAX)	temp = CHDISPMODE_MERGE_SIGMAX;
+							if(temp < 0)  temp = 0;
+							i = CHDISPMODE_MERGE_CHBOT - temp;
+							if(dispIdxStart+j < LCD_WIDTH)
+								pFrame[i][dispIdxStart+j] = MATH_COLOR;
+						}
 					}
 				}
 				/* Draw spectrum */
@@ -187,7 +205,7 @@ int main(void)
 				/* a touch to the center of the screen starts static mode */
 				if(TS_DetectNumTouches() > 0){
 					TS_GetXY(&TS_Y, &TS_X);
-					if(chDispMode != CHDISPMODE_FFT && 100 < TS_X && TS_X < 380 && 50 < TS_Y && TS_Y < 220){
+					if(chDispMode != CHDISPMODE_FFT && mathOp == MATH_OP_NONE && 100 < TS_X && TS_X < 380 && 50 < TS_Y && TS_Y < 220){
 						staticMode = 1;
 						oldtscale = origtscale;
 						toffStm = toff;
@@ -335,7 +353,10 @@ int main(void)
 		if(QE_Count != QE_Count_prev){
 			QE_direc = (TIM_QE->CR1 & 0x10) >> 4;	/* check rotation direction */
 
-			changeFieldValue(QE_direc);
+			if(getCurrMathField() == MATHFLD_NONE)
+				changeFieldValue(QE_direc);
+			else
+				changeFieldValueMath(QE_direc);
 
 			QE_Count_prev = QE_Count;
 		}
