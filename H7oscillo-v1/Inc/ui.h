@@ -23,10 +23,13 @@
 #define WINDOW7				 7
 #define WINDOW8				 8
 #define WINDOW9				 9
+#define WINDOW10			 10
 
 /* Colors and dimensions of GUI elements */
 #define CH1_COLOR			 	 	C_GREEN				/* colors of CH1 waveform and related parameter displays */
 #define CH2_COLOR			 	 	C_AQUA				/* colors of CH2 waveform and related parameter displays */
+#define FFT_COLOR					C_MEDIUM_ORCHID		/* spectrum color */
+#define MATH_COLOR					C_MEDIUM_ORCHID		/* math waveform color */
 #define TBASE_ICON_COLOR	 	 	C_YELLOW			/* color of the time base icon */
 #define MODE_ICON_COLOR		 	 	C_MEDIUM_ORCHID		/* color of the Mode icon */
 #define RUNSTOP_ICON_COLOR_RUN	 	C_YELLOW_GREEN		/* color of the Run/Stop icon for Run state */
@@ -79,13 +82,20 @@
 #define WIND9_BTN_HEIGHT	 	 	20					/* window 9 button heights */
 #define WIND9_X_START	 	 	 	250					/* window 9 X start position */
 #define WIND9_Y_START	 	 	 	90					/* window 9 Y start position */
+#define WIND10_WIDTH	 		 	140					/* window 10 width */
+#define WIND10_HEIGHT	 	 	 	160					/* window 10 height */
+#define WIND10_BTN_SPACING1			5					/* window 10 vertical spacing 1 between buttons */
+#define WIND10_BTN_SPACING2			25					/* window 10 vertical spacing 2 between buttons */
+#define WIND10_BTN_WIDTH	 	 	60					/* window 10 button widths */
+#define WIND10_BTN_HEIGHT	 	 	20					/* window 10 button heights */
+#define WIND10_X_START	 	 	 	250					/* window 10 X start position */
+#define WIND10_Y_START	 	 	 	90					/* window 10 Y start position */
 #define CURSOR_LENGTH	 	 	 	13					/* length of trigger and vertical offset cursors */
 #define CURSOR_WIDTH	 	 	 	10					/* width of trigger and vertical offset cursors */
 #define TOFF_CURSOR_LENGTH	 	 	10					/* length of horizontal offset cursors */
 #define TOFF_CURSOR_WIDTH	 	 	10					/* width of horizontal offset cursors */
 #define TOFF_CURSOR_COLOR	 	 	C_PLUM				/* color of horizontal offset cursors */
-#define FFT_COLOR					C_MEDIUM_ORCHID		/* spectrum color */
-#define MATH_COLOR					C_MEDIUM_ORCHID		/* math waveform color */
+#define CURSOR_COLOR	 	 		C_SILVER			/* color of dV/dt cursors */
 
 /* Fields in the top and bottom menubars */
 #define FLD_NONE			0
@@ -106,9 +116,13 @@
 #define MATHFLD_VSCALE		1
 #define MATHFLD_VOFF		2
 
+#define CURSORFLD_NONE		0
+#define CURSORFLD_CURA		1
+#define CURSORFLD_CURB		2
+
 extern UG_GUI gui;
 extern UG_WINDOW window_1;
-extern UG_OBJECT obj_buff_wnd_1[UGUI_MAX_OBJECTS];
+extern UG_OBJECT obj_buff_wnd_1[8];
 extern UG_BUTTON button1_0;
 extern UG_TEXTBOX txtb1_0;
 extern UG_TEXTBOX txtb1_1;
@@ -118,7 +132,7 @@ extern UG_TEXTBOX txtb1_4;
 extern UG_TEXTBOX txtb1_5;
 extern UG_TEXTBOX txtb1_6;
 extern UG_WINDOW window_2;
-extern UG_OBJECT obj_buff_wnd_2[UGUI_MAX_OBJECTS];
+extern UG_OBJECT obj_buff_wnd_2[7];
 extern UG_TEXTBOX txtb2_0;
 extern UG_TEXTBOX txtb2_1;
 extern UG_TEXTBOX txtb2_2;
@@ -127,7 +141,7 @@ extern UG_TEXTBOX txtb2_4;
 extern UG_TEXTBOX txtb2_5;
 extern UG_TEXTBOX txtb2_6;
 extern UG_WINDOW window_3;
-extern UG_OBJECT obj_buff_wnd_3[UGUI_MAX_OBJECTS];
+extern UG_OBJECT obj_buff_wnd_3[6];
 extern UG_TEXTBOX txtb3_0;
 extern UG_BUTTON button3_0;
 extern UG_BUTTON button3_1;
@@ -135,7 +149,7 @@ extern UG_BUTTON button3_2;
 extern UG_BUTTON button3_3;
 extern UG_BUTTON button3_4;
 extern UG_WINDOW window_4;
-extern UG_OBJECT obj_buff_wnd_4[UGUI_MAX_OBJECTS];
+extern UG_OBJECT obj_buff_wnd_4[6];
 extern UG_TEXTBOX txtb4_0;
 extern UG_BUTTON button4_0;
 extern UG_BUTTON button4_1;
@@ -175,6 +189,7 @@ void voltsToStr(uint8_t val, char* buf);
 void hertzToStr(float32_t freq, char* buf);
 void secToStr(float32_t t, char* buf);
 void switchNextWindow(void);
+void clearWind4Submenus(void);
 void DisplayMeasurements(void);
 uint8_t getCurrField(void);
 void goToField(uint8_t field);
@@ -182,7 +197,9 @@ void switchNextField(void);
 void changeFieldValue(uint8_t dir);
 void dispToff(void);
 void changeFieldValueMath(int8_t dir);
+void changeFieldValueCursor(int8_t dir);
 uint8_t getCurrMathField(void);
+uint8_t getCurrCursorField(void);
 void initFields(void);
 void drawRedBorder(void);
 void clearRedBorder(void);

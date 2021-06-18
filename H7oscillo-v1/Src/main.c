@@ -353,10 +353,12 @@ int main(void)
 		if(QE_Count != QE_Count_prev){
 			QE_direc = (TIM_QE->CR1 & 0x10) >> 4;	/* check rotation direction */
 
-			if(getCurrMathField() == MATHFLD_NONE)
+			if(getCurrMathField() == MATHFLD_NONE && getCurrCursorField() == CURSORFLD_NONE)
 				changeFieldValue(QE_direc);
-			else
+			else if(getCurrCursorField() == CURSORFLD_NONE)
 				changeFieldValueMath(QE_direc);
+			else
+				changeFieldValueCursor(QE_direc);
 
 			QE_Count_prev = QE_Count;
 		}

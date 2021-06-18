@@ -22,12 +22,13 @@ static void window_6_callback(UG_MESSAGE* msg);
 static void window_7_callback(UG_MESSAGE* msg);
 static void window_8_callback(UG_MESSAGE* msg);
 static void window_9_callback(UG_MESSAGE* msg);
+static void window_10_callback(UG_MESSAGE* msg);
 
 /* uGUI related globals */
 UG_GUI gui;
 /* window 1 - Top menubar */
 UG_WINDOW window_1;
-UG_OBJECT obj_buff_wnd_1[UGUI_MAX_OBJECTS];
+UG_OBJECT obj_buff_wnd_1[8];
 UG_BUTTON button1_0;
 UG_TEXTBOX txtb1_0;
 UG_TEXTBOX txtb1_1;
@@ -38,7 +39,7 @@ UG_TEXTBOX txtb1_5;
 UG_TEXTBOX txtb1_6;
 /* window 2 - Bottom menubar */
 UG_WINDOW window_2;
-UG_OBJECT obj_buff_wnd_2[UGUI_MAX_OBJECTS];
+UG_OBJECT obj_buff_wnd_2[7];
 UG_TEXTBOX txtb2_0;
 UG_TEXTBOX txtb2_1;
 UG_TEXTBOX txtb2_2;
@@ -48,7 +49,7 @@ UG_TEXTBOX txtb2_5;
 UG_TEXTBOX txtb2_6;
 /* window 3 - Menu page 1 */
 UG_WINDOW window_3;
-UG_OBJECT obj_buff_wnd_3[UGUI_MAX_OBJECTS];
+UG_OBJECT obj_buff_wnd_3[6];
 UG_TEXTBOX txtb3_0;
 UG_BUTTON button3_0;
 UG_BUTTON button3_1;
@@ -57,7 +58,7 @@ UG_BUTTON button3_3;
 UG_BUTTON button3_4;
 /* window 4 - Menu page 2 */
 UG_WINDOW window_4;
-UG_OBJECT obj_buff_wnd_4[UGUI_MAX_OBJECTS];
+UG_OBJECT obj_buff_wnd_4[6];
 UG_TEXTBOX txtb4_0;
 UG_BUTTON button4_0;
 UG_BUTTON button4_1;
@@ -94,6 +95,17 @@ UG_TEXTBOX txtb9_2;
 UG_BUTTON button9_0;
 UG_BUTTON button9_1;
 UG_BUTTON button9_2;
+/* window 10 - Cursors submenu */
+UG_WINDOW window_10;
+UG_OBJECT obj_buff_wnd_10[8];
+UG_TEXTBOX txtb10_0;
+UG_TEXTBOX txtb10_1;
+UG_TEXTBOX txtb10_2;
+UG_TEXTBOX txtb10_3;
+UG_TEXTBOX txtb10_4;
+UG_BUTTON button10_0;
+UG_BUTTON button10_1;
+UG_BUTTON button10_2;
 
 /* Menu page display selector flags */
 static uint8_t showWindow3 = 0;
@@ -103,13 +115,20 @@ static uint8_t showWindow6 = 0;
 static uint8_t showWindow7 = 0;
 static uint8_t showWindow8 = 0;
 static uint8_t showWindow9 = 0;
+static uint8_t showWindow10 = 0;
 
 static uint8_t wind5OpenedBy = MEASURE_NONE;
 static uint8_t currField = FLD_NONE;					/* currently selected field in the top and bottom menubar */
 
 static uint8_t mathField = MATHFLD_NONE;				/* currently selected field in the math menu */
 
-static char bufw1tb3[8] = "Trg:", bufw1tb4[6], bufw2tb0[6], bufw2tb1[6], bufw2tb2[8], bufw8tb0[9], bufw9btn2[6];
+static uint8_t cursorMode = CURSOR_MODE_OFF;
+static uint16_t cursorApos = CURSORA_SPLITCH1_INITPOS;
+static uint16_t cursorBpos = CURSORB_SPLITCH2_INITPOS;
+static uint8_t cursorField = CURSORFLD_NONE;			/* currently selected field in the cursor menu */
+
+/* strings to store button & textbox texts */
+static char bufw1tb3[8] = "Trg:", bufw1tb4[6], bufw2tb0[6], bufw2tb1[6], bufw2tb2[8], bufw8tb0[9], bufw9btn2[6], bufw10btn1[8], bufw10btn2[8], bufw10tb4[8];
 
 static uint8_t trigCursorImg[CURSOR_WIDTH][CURSOR_LENGTH] = {
 	   {1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0},
@@ -203,7 +222,7 @@ static uint8_t mathRefCursorImg[CURSOR_WIDTH][CURSOR_LENGTH] = {
 void initUI(void)
 {
 	/*** Create Window 1 (Top menubar) ***/
-	UG_WindowCreate(&window_1, obj_buff_wnd_1, UGUI_MAX_OBJECTS, window_1_callback);
+	UG_WindowCreate(&window_1, obj_buff_wnd_1, 8, window_1_callback);
 	UG_WindowSetStyle(&window_1, WND_STYLE_2D | WND_STYLE_HIDE_TITLE);
 	UG_WindowResize(&window_1, 0, 0, LCD_WIDTH - 1, MENUBAR_HEIGHT - 1);
 	UG_WindowSetBackColor(&window_1, C_KHAKI);
@@ -251,7 +270,7 @@ void initUI(void)
 	UG_TextboxSetText(&window_1, TXB_ID_6, "RUN");
 
 	/*** Create Window 2 (Bottom menubar) ***/
-	UG_WindowCreate(&window_2, obj_buff_wnd_2, UGUI_MAX_OBJECTS, window_2_callback);
+	UG_WindowCreate(&window_2, obj_buff_wnd_2, 7, window_2_callback);
 	UG_WindowSetStyle(&window_2, WND_STYLE_2D | WND_STYLE_HIDE_TITLE);
 	UG_WindowResize(&window_2, 0, LCD_HEIGHT - MENUBAR_HEIGHT, LCD_WIDTH - 1, LCD_HEIGHT - 1);
 	UG_WindowSetBackColor(&window_2, C_KHAKI);
@@ -296,7 +315,7 @@ void initUI(void)
 	drawGrid();
 
 	/*** Create Window 3 (Measure window) ***/
-	UG_WindowCreate(&window_3, obj_buff_wnd_3, UGUI_MAX_OBJECTS, window_3_callback);
+	UG_WindowCreate(&window_3, obj_buff_wnd_3, 6, window_3_callback);
 	UG_WindowSetStyle(&window_3, WND_STYLE_3D | WND_STYLE_HIDE_TITLE);
 	UG_WindowResize(&window_3, LCD_WIDTH - WIND3_WIDTH, MENUBAR_HEIGHT + 10, LCD_WIDTH - 1, LCD_HEIGHT - MENUBAR_HEIGHT - 11);
 	UG_WindowSetBackColor(&window_3, C_WHITE);
@@ -332,7 +351,7 @@ void initUI(void)
 	UG_ButtonSetText(&window_3, BTN_ID_4, ">");
 
 	/*** Create Window 4 (Display mode / FFT / Cursors / Math) ***/
-	UG_WindowCreate(&window_4, obj_buff_wnd_4, UGUI_MAX_OBJECTS, window_4_callback);
+	UG_WindowCreate(&window_4, obj_buff_wnd_4, 6, window_4_callback);
 	UG_WindowSetStyle(&window_4, WND_STYLE_3D | WND_STYLE_HIDE_TITLE);
 	UG_WindowResize(&window_4, LCD_WIDTH - WIND3_WIDTH, MENUBAR_HEIGHT + 10, LCD_WIDTH - 1, LCD_HEIGHT - MENUBAR_HEIGHT - 11);
 	UG_WindowSetBackColor(&window_4, C_WHITE);
@@ -471,6 +490,53 @@ void initUI(void)
 	UG_ButtonSetFont(&window_9, BTN_ID_2, &FONT_6X8);
 	UG_ButtonSetBackColor(&window_9, BTN_ID_2, C_OLIVE);
 	UG_ButtonSetText(&window_9, BTN_ID_2, "0V");
+
+	/*** Create Window 10 (Cursors sub-menu) ***/
+	UG_WindowCreate(&window_10, obj_buff_wnd_10, 8, window_10_callback);
+	UG_WindowSetStyle(&window_10, WND_STYLE_3D | WND_STYLE_HIDE_TITLE);
+	UG_WindowResize(&window_10, WIND10_X_START, WIND10_Y_START, WIND10_X_START + WIND10_WIDTH - 1, WIND10_Y_START + WIND10_HEIGHT - 1);
+	UG_WindowSetBackColor(&window_10, C_WHITE);
+
+	UG_TextboxCreate(&window_10, &txtb10_0, TXB_ID_0, 1, 1, WIND10_BTN_WIDTH, WIND10_BTN_HEIGHT);	/* label */
+	UG_TextboxSetFont(&window_10, TXB_ID_0, &FONT_6X8);
+	UG_TextboxSetAlignment(&window_10, TXB_ID_0, ALIGN_CENTER_RIGHT);
+	UG_TextboxSetText(&window_10, TXB_ID_0, "Type:");
+
+	UG_TextboxCreate(&window_10, &txtb10_1, TXB_ID_1, 1, WIND10_BTN_HEIGHT + WIND10_BTN_SPACING2 + 1, WIND10_BTN_WIDTH, 2*WIND10_BTN_HEIGHT + WIND10_BTN_SPACING2);	/* label */
+	UG_TextboxSetFont(&window_10, TXB_ID_1, &FONT_6X8);
+	UG_TextboxSetAlignment(&window_10, TXB_ID_1, ALIGN_CENTER_RIGHT);
+	UG_TextboxSetText(&window_10, TXB_ID_1, "CurA:");
+
+	UG_TextboxCreate(&window_10, &txtb10_2, TXB_ID_2, 1, 2*WIND10_BTN_HEIGHT + WIND10_BTN_SPACING1 + WIND10_BTN_SPACING2 + 1, WIND10_BTN_WIDTH, 3*WIND10_BTN_HEIGHT + WIND10_BTN_SPACING1 + WIND10_BTN_SPACING2);	/* label */
+	UG_TextboxSetFont(&window_10, TXB_ID_2, &FONT_6X8);
+	UG_TextboxSetAlignment(&window_10, TXB_ID_2, ALIGN_CENTER_RIGHT);
+	UG_TextboxSetText(&window_10, TXB_ID_2, "CurB:");
+
+	UG_TextboxCreate(&window_10, &txtb10_3, TXB_ID_3, 1, 3*WIND10_BTN_HEIGHT + WIND10_BTN_SPACING1 + 2*WIND10_BTN_SPACING2 + 1, WIND10_BTN_WIDTH, 4*WIND10_BTN_HEIGHT + WIND10_BTN_SPACING1 + 2*WIND10_BTN_SPACING2);	/* label */
+	UG_TextboxSetFont(&window_10, TXB_ID_3, &FONT_6X8);
+	UG_TextboxSetAlignment(&window_10, TXB_ID_3, ALIGN_CENTER_RIGHT);
+	UG_TextboxSetText(&window_10, TXB_ID_3, "A-B:");
+
+	UG_TextboxCreate(&window_10, &txtb10_4, TXB_ID_4, 71, 3*WIND10_BTN_HEIGHT + WIND10_BTN_SPACING1 + 2*WIND10_BTN_SPACING2 + 1, 71 + WIND10_BTN_WIDTH, 4*WIND10_BTN_HEIGHT + WIND10_BTN_SPACING1 + 2*WIND10_BTN_SPACING2);	/* label */
+	UG_TextboxSetFont(&window_10, TXB_ID_4, &FONT_6X8);
+	UG_TextboxSetBackColor(&window_10, TXB_ID_4, C_OLIVE);
+	UG_TextboxSetAlignment(&window_10, TXB_ID_4, ALIGN_CENTER);
+	UG_TextboxSetText(&window_10, TXB_ID_4, "--");
+
+	UG_ButtonCreate(&window_10, &button10_0, BTN_ID_0, 71, 1, 71 + WIND10_BTN_WIDTH, WIND10_BTN_HEIGHT);		/* Cursor type */
+	UG_ButtonSetFont(&window_10, BTN_ID_0, &FONT_6X8);
+	UG_ButtonSetBackColor(&window_10, BTN_ID_0, C_OLIVE);
+	UG_ButtonSetText(&window_10, BTN_ID_0, "OFF");
+
+	UG_ButtonCreate(&window_10, &button10_1, BTN_ID_1, 71, WIND10_BTN_HEIGHT + WIND10_BTN_SPACING2 + 1, 71 + WIND10_BTN_WIDTH, 2*WIND10_BTN_HEIGHT + WIND10_BTN_SPACING2);	/* Cursor A position */
+	UG_ButtonSetFont(&window_10, BTN_ID_1, &FONT_6X8);
+	UG_ButtonSetBackColor(&window_10, BTN_ID_1, C_OLIVE);
+	UG_ButtonSetText(&window_10, BTN_ID_1, "--");
+
+	UG_ButtonCreate(&window_10, &button10_2, BTN_ID_2, 71, 2*WIND10_BTN_HEIGHT + WIND10_BTN_SPACING1 + WIND10_BTN_SPACING2 + 1, 71 + WIND10_BTN_WIDTH, 3*WIND10_BTN_HEIGHT + WIND10_BTN_SPACING1 + WIND10_BTN_SPACING2);	/* Cursor B position */
+	UG_ButtonSetFont(&window_10, BTN_ID_2, &FONT_6X8);
+	UG_ButtonSetBackColor(&window_10, BTN_ID_2, C_OLIVE);
+	UG_ButtonSetText(&window_10, BTN_ID_2, "--");
 }
 
 /**
@@ -683,16 +749,23 @@ static void window_1_callback(UG_MESSAGE* msg)
 					else{
 						showWindow3 = 0;			/* close menus and sub-menus */
 						showWindow4 = 0;
+						fillFrameUGUI(LCD_WIDTH - WIND3_WIDTH, MENUBAR_HEIGHT + 10, LCD_WIDTH - 1, LCD_HEIGHT - MENUBAR_HEIGHT - 11, C_BLACK);	/* clear menu area */
+						if(showWindow5){
+							fillFrameUGUI(WIND5_X_START, WIND5_Y_START, WIND5_X_START + WIND5_WIDTH - 1, WIND5_Y_START + WIND5_HEIGHT - 1, C_BLACK);
+							drawGrid();
+						}
+						else{
+							clearWind4Submenus();
+						}
 						showWindow5 = 0;
 						showWindow6 = 0;
 						showWindow7 = 0;
 						showWindow9 = 0;
+						showWindow10 = 0;
 						wind5OpenedBy = MEASURE_NONE;
 						mathField = MATHFLD_NONE;
+						cursorField = CURSORFLD_NONE;
 						menu_button_state = 0;
-						fillFrameUGUI(LCD_WIDTH - WIND3_WIDTH, MENUBAR_HEIGHT + 10, LCD_WIDTH - 1, LCD_HEIGHT - MENUBAR_HEIGHT - 11, C_BLACK);	/* clear menu area */
-						fillFrameUGUI(WIND9_X_START, WIND9_Y_START, WIND9_X_START + WIND9_WIDTH, WIND9_Y_START + WIND9_HEIGHT, C_BLACK);	/* clear sub-menu area */
-						drawGrid();
 					}
 					break;
 			 }
@@ -871,10 +944,13 @@ static void window_4_callback(UG_MESSAGE* msg)
 			 	 /* Display mode */
 			 	 case BTN_ID_0:
 					if(showWindow6 == 0){
+						clearWind4Submenus();
 						showWindow6 = 1;			/* show submenu */
 						showWindow7 = 0;			/* close other submenus */
 						showWindow9 = 0;
+						showWindow10 = 0;
 						mathField = MATHFLD_NONE;
+						cursorField = CURSORFLD_NONE;
 					}
 					else{
 						showWindow6 = 0;			/* close submenu */
@@ -886,10 +962,13 @@ static void window_4_callback(UG_MESSAGE* msg)
 				 /* FFT */
 				 case BTN_ID_1:
 					if(showWindow7 == 0){
+						clearWind4Submenus();
 						showWindow7 = 1;			/* show submenu */
 						showWindow6 = 0;			/* close other submenus */
 						showWindow9 = 0;
+						showWindow10 = 0;
 						mathField = MATHFLD_NONE;
+						cursorField = CURSORFLD_NONE;
 					}
 					else{
 						showWindow7 = 0;			/* close submenu */
@@ -898,14 +977,37 @@ static void window_4_callback(UG_MESSAGE* msg)
 					}
 					break;
 
+				 /* Cursors */
+				 case BTN_ID_2:
+					if(showWindow10 == 0){
+						clearWind4Submenus();
+						showWindow10 = 1;			/* show submenu */
+						showWindow6 = 0;			/* close other submenus */
+						showWindow7 = 0;
+						showWindow9 = 0;
+						UG_ButtonSetFont(&window_10, BTN_ID_1, &FONT_6X8);	/* de-highlight the cursor fields */
+						UG_ButtonSetFont(&window_10, BTN_ID_2, &FONT_6X8);
+						mathField = MATHFLD_NONE;
+					}
+					else{
+						showWindow10 = 0;			/* close submenu */
+						fillFrameUGUI(WIND10_X_START, WIND10_Y_START, WIND10_X_START + WIND10_WIDTH - 1, WIND10_Y_START + WIND10_HEIGHT - 1, C_BLACK);
+						cursorField = CURSORFLD_NONE;
+						drawGrid();
+					}
+					break;
+
 				 /* Math */
 				 case BTN_ID_3:
 					if(showWindow9 == 0){
+						clearWind4Submenus();
 						showWindow9 = 1;			/* show submenu */
 						showWindow6 = 0;			/* close other submenus */
 						showWindow7 = 0;
+						showWindow10 = 0;
 						UG_ButtonSetFont(&window_9, BTN_ID_1, &FONT_6X8);	/* de-highlight the math fields */
 						UG_ButtonSetFont(&window_9, BTN_ID_2, &FONT_6X8);
+						cursorField = CURSORFLD_NONE;
 					}
 					else{
 						showWindow9 = 0;			/* close submenu */
@@ -918,13 +1020,14 @@ static void window_4_callback(UG_MESSAGE* msg)
 			 	 /* Previous button */
 			 	 case BTN_ID_4:
 			 		showWindow4 = 0;
-					showWindow6 = 0;			/* close any window 4 sub-menus */
+			 		clearWind4Submenus();	/* close any window 4 sub-menus */
+					showWindow6 = 0;
 					showWindow7 = 0;
 					showWindow9 = 0;
-					fillFrameUGUI(WIND9_X_START, WIND9_Y_START, WIND9_X_START + WIND9_WIDTH - 1, WIND9_Y_START + WIND9_HEIGHT - 1, C_BLACK);
+					showWindow10 = 0;
 					mathField = MATHFLD_NONE;
+					cursorField = CURSORFLD_NONE;
 					showWindow3 = 1;			/* Go to Page 1 */
-					drawGrid();
 					break;
 			 }
 		  }
@@ -948,7 +1051,7 @@ static void window_6_callback(UG_MESSAGE* msg)
 			 {
 			 	 /* change display mode */
 			 	 case BTN_ID_0:
-			 		if(chDispMode != CHDISPMODE_FFT && mathOp == MATH_OP_NONE){
+			 		if(chDispMode != CHDISPMODE_FFT && mathOp == MATH_OP_NONE && cursorMode == CURSOR_MODE_OFF){
 						chDispMode = (chDispMode + 1) % 3;
 						UG_ButtonSetText(&window_6, BTN_ID_0, chDispMode == CHDISPMODE_SPLIT ? "Split" : (chDispMode == CHDISPMODE_MERGE ? "Merge" : "Single"));
 
@@ -1094,6 +1197,8 @@ static void window_9_callback(UG_MESSAGE* msg)
 						changeFieldValueMath(-1);		/* clear offset cursor */
 
 						mathField = MATHFLD_NONE;
+						UG_ButtonSetFont(&window_9, BTN_ID_1, &FONT_6X8);	/* de-highlight the math fields */
+						UG_ButtonSetFont(&window_9, BTN_ID_2, &FONT_6X8);
 
 						drawGrid();
 					}
@@ -1120,6 +1225,93 @@ static void window_9_callback(UG_MESSAGE* msg)
 						goToField(FLD_NONE);
 						UG_ButtonSetFont(&window_9, BTN_ID_1, &FONT_6X8);	/* de-highlight vertical scale field */
 						UG_ButtonSetFont(&window_9, BTN_ID_2, &FONT_7X12);	/* highlight offset field */
+					}
+					break;
+			 }
+		  }
+	  }
+	}
+}
+
+/* Callback function for window 10 (Cursors sub-menu) */
+static void window_10_callback(UG_MESSAGE* msg)
+{
+	if (msg->type == MSG_TYPE_OBJECT)
+	{
+	  if (msg->id == OBJ_TYPE_BUTTON)
+	  {
+		  if(msg->event == OBJ_EVENT_PRESSED)
+		  {
+			 switch(msg->sub_id)
+			 {
+			 	 /* change cursor mode */
+			 	 case BTN_ID_0:
+					cursorField = CURSORFLD_NONE;	/* clear previous cursors */
+					changeFieldValueCursor(-1);
+					UG_ButtonSetFont(&window_10, BTN_ID_1, &FONT_6X8);	/* de-highlight the cursor fields */
+					UG_ButtonSetFont(&window_10, BTN_ID_2, &FONT_6X8);
+
+			 		cursorMode = (cursorMode + 1) % 4;
+
+					if(cursorMode == CURSOR_MODE_OFF)
+						UG_ButtonSetText(&window_10, BTN_ID_0, "OFF");
+					else if(cursorMode == CURSOR_MODE_DT)
+						UG_ButtonSetText(&window_10, BTN_ID_0, "dt");
+					else if(cursorMode == CURSOR_MODE_DVCH1)
+						UG_ButtonSetText(&window_10, BTN_ID_0, "dV CH1");
+					else
+						UG_ButtonSetText(&window_10, BTN_ID_0, "dV CH2");
+
+					if(cursorMode != CURSOR_MODE_OFF){
+						if(chDispMode == CHDISPMODE_SPLIT && cursorMode == CURSOR_MODE_DVCH1){
+							cursorApos = CURSORA_SPLITCH1_INITPOS;
+							cursorBpos = CURSORB_SPLITCH1_INITPOS;
+						}
+						else if(chDispMode == CHDISPMODE_SPLIT && cursorMode == CURSOR_MODE_DVCH2){
+							cursorApos = CURSORA_SPLITCH2_INITPOS;
+							cursorBpos = CURSORB_SPLITCH2_INITPOS;
+						}
+						else if(cursorMode == CURSOR_MODE_DT){
+							cursorApos = CURSORA_DT_INITPOS;
+							cursorBpos = CURSORB_DT_INITPOS;
+						}
+						else{
+							cursorApos = CURSORA_MERGE_INITPOS;
+							cursorBpos = CURSORB_MERGE_INITPOS;
+						}
+
+						cursorField = CURSORFLD_NONE;
+						changeFieldValueCursor(2);		/* draw cursors */
+					}
+					else{
+						cursorField = CURSORFLD_NONE;
+						changeFieldValueCursor(-1);		/* clear cursors */
+
+						goToField(FLD_NONE);
+						changeFieldValue(2);			/* force the cursors to be redrawn */
+
+						UG_ButtonSetFont(&window_10, BTN_ID_1, &FONT_6X8);	/* de-highlight the cursor fields */
+						UG_ButtonSetFont(&window_10, BTN_ID_2, &FONT_6X8);
+					}
+			 		break;
+
+			 	 /* cursor A position */
+			     case BTN_ID_1:
+			    	if(cursorMode != CURSOR_MODE_OFF){
+			    		cursorField = CURSORFLD_CURA;
+						goToField(FLD_NONE);			/* de-highlight any fields in top & bottom menubars */
+						UG_ButtonSetFont(&window_10, BTN_ID_1, &FONT_7X12);	/* highlight cursor A field */
+						UG_ButtonSetFont(&window_10, BTN_ID_2, &FONT_6X8);	/* de-highlight cursor B field */
+			    	}
+			 		break;
+
+				 /* cursor B position */
+				 case BTN_ID_2:
+					if(cursorMode != CURSOR_MODE_OFF){
+						cursorField = CURSORFLD_CURB;
+						goToField(FLD_NONE);			/* de-highlight any fields in top & bottom menubars */
+						UG_ButtonSetFont(&window_10, BTN_ID_1, &FONT_6X8);	/* de-highlight cursor A field */
+						UG_ButtonSetFont(&window_10, BTN_ID_2, &FONT_7X12);	/* highlight cursor B field */
 					}
 					break;
 			 }
@@ -1178,6 +1370,11 @@ void switchNextWindow(void)
 		currWind = WINDOW9;
 		done = 1;
 	}
+	if(!done && currWind <= WINDOW9 && showWindow10){
+		UG_WindowShow(&window_10);
+		currWind = WINDOW10;
+		done = 1;
+	}
 	if(!done){
 		UG_WindowShow(&window_1);
 		currWind = WINDOW1;
@@ -1185,6 +1382,25 @@ void switchNextWindow(void)
 	}
 
 	return;
+}
+
+/**
+  * @brief  Clear the open window 4 submenu.
+  * @param  None
+  * @retval None
+  */
+void clearWind4Submenus(void)
+{
+	if(showWindow6)
+		fillFrameUGUI(WIND6_X_START, WIND6_Y_START, WIND6_X_START + WIND6_WIDTH - 1, WIND6_Y_START + WIND6_HEIGHT - 1, C_BLACK);
+	else if(showWindow7)
+		fillFrameUGUI(WIND7_X_START, WIND7_Y_START, WIND7_X_START + WIND7_WIDTH - 1, WIND7_Y_START + WIND7_HEIGHT - 1, C_BLACK);
+	else if(showWindow9)
+		fillFrameUGUI(WIND9_X_START, WIND9_Y_START, WIND9_X_START + WIND9_WIDTH - 1, WIND9_Y_START + WIND9_HEIGHT - 1, C_BLACK);
+	else if(showWindow10)
+		fillFrameUGUI(WIND10_X_START, WIND10_Y_START, WIND10_X_START + WIND10_WIDTH - 1, WIND10_Y_START + WIND10_HEIGHT - 1, C_BLACK);
+
+	drawGrid();
 }
 
 /**
@@ -1815,6 +2031,124 @@ void changeFieldValueMath(int8_t dir)
 }
 
 /**
+  * @brief  Change field values in cursor mode.
+  * @param  dir: 0=increment, 1=decrement, 2=redraw cursors, -1=clear cursors
+  * @retval None
+  */
+void changeFieldValueCursor(int8_t dir)
+{
+	float32_t curAval, curBval;
+	int32_t temp, i, j;
+	__IO uint16_t (*pFrame)[LCD_WIDTH] = (__IO uint16_t (*)[LCD_WIDTH])LCD_DRAW_BUFFER_UGUI;
+
+	/* clear previous cursors */
+	if(cursorMode == CURSOR_MODE_DT){
+		for(i = CHDISPMODE_MERGE_CHTOP; i <= CHDISPMODE_MERGE_CHBOT - 2; i += 6){
+			pFrame[i][cursorApos] = pFrame[i + 1][cursorApos] = pFrame[i + 2][cursorApos] = C_BLACK;
+			pFrame[i][cursorBpos] = pFrame[i + 1][cursorBpos] = pFrame[i + 2][cursorBpos] = C_BLACK;
+		}
+	}
+	else{
+		for(j = 0; j < LCD_WIDTH - 2; j += 6){
+			pFrame[cursorApos][j] = pFrame[cursorApos][j + 1] = pFrame[cursorApos][j + 2] = C_BLACK;
+			pFrame[cursorBpos][j] = pFrame[cursorBpos][j + 1] = pFrame[cursorBpos][j + 2] = C_BLACK;
+		}
+	}
+
+	if(dir != -1){
+		if(dir != 2 && cursorField != CURSORFLD_NONE){
+			if(chDispMode == CHDISPMODE_SPLIT && cursorMode == CURSOR_MODE_DVCH1){
+				if(cursorField == CURSORFLD_CURA)	cursorApos += dir?(cursorApos==CHDISPMODE_SPLIT_CH1BOT?0:-1):(cursorApos==CHDISPMODE_SPLIT_CH1TOP?0:1);
+				else   cursorBpos += dir?(cursorBpos==CHDISPMODE_SPLIT_CH1BOT?0:-1):(cursorBpos==CHDISPMODE_SPLIT_CH1TOP?0:1);
+			}
+			else if(chDispMode == CHDISPMODE_SPLIT && cursorMode == CURSOR_MODE_DVCH2){
+				if(cursorField == CURSORFLD_CURA)	cursorApos += dir?(cursorApos==CHDISPMODE_SPLIT_CH2BOT?0:-1):(cursorApos==CHDISPMODE_SPLIT_CH2TOP?0:1);
+				else   cursorBpos += dir?(cursorBpos==CHDISPMODE_SPLIT_CH2BOT?0:-1):(cursorBpos==CHDISPMODE_SPLIT_CH2TOP?0:1);
+			}
+			else if(cursorMode == CURSOR_MODE_DT){
+				if(cursorField == CURSORFLD_CURA)	cursorApos += dir?(cursorApos==0?0:-1):(cursorApos==LCD_WIDTH-1?0:1);
+				else   cursorBpos += dir?(cursorBpos==0?0:-1):(cursorBpos==LCD_WIDTH-1?0:1);
+			}
+			else{
+				if(cursorField == CURSORFLD_CURA)	cursorApos += dir?(cursorApos==CHDISPMODE_MERGE_CHBOT?0:-1):(cursorApos==CHDISPMODE_MERGE_CHTOP?0:1);
+				else   cursorBpos += dir?(cursorBpos==CHDISPMODE_MERGE_CHBOT?0:-1):(cursorBpos==CHDISPMODE_MERGE_CHTOP?0:1);
+			}
+		}
+
+		/* draw cursors */
+		if(cursorMode == CURSOR_MODE_DT){
+			for(i = CHDISPMODE_MERGE_CHTOP; i <= CHDISPMODE_MERGE_CHBOT - 2; i += 6){
+				pFrame[i][cursorApos] = pFrame[i + 1][cursorApos] = pFrame[i + 2][cursorApos] = CURSOR_COLOR;
+				pFrame[i][cursorBpos] = pFrame[i + 1][cursorBpos] = pFrame[i + 2][cursorBpos] = CURSOR_COLOR;
+			}
+		}
+		else{
+			for(j = 0; j < LCD_WIDTH - 2; j += 6){
+				pFrame[cursorApos][j] = pFrame[cursorApos][j + 1] = pFrame[cursorApos][j + 2] = CURSOR_COLOR;
+				pFrame[cursorBpos][j] = pFrame[cursorBpos][j + 1] = pFrame[cursorBpos][j + 2] = CURSOR_COLOR;
+			}
+		}
+
+		/* calculate cursor position values */
+		if(chDispMode == CHDISPMODE_SPLIT && cursorMode == CURSOR_MODE_DVCH1){
+			temp = CHDISPMODE_SPLIT_CH1BOT - cursorApos;
+			curAval = round(temp*vscaleVals[vscale1] - voff1);
+			temp = CHDISPMODE_SPLIT_CH1BOT - cursorBpos;
+			curBval = round(temp*vscaleVals[vscale1] - voff1);
+		}
+		else if(chDispMode == CHDISPMODE_SPLIT && cursorMode == CURSOR_MODE_DVCH2){
+			temp = CHDISPMODE_SPLIT_CH2BOT - cursorApos;
+			curAval = round(temp*vscaleVals[vscale2] - voff2);
+			temp = CHDISPMODE_SPLIT_CH2BOT - cursorBpos;
+			curBval = round(temp*vscaleVals[vscale2] - voff2);
+		}
+		else if(chDispMode == CHDISPMODE_MERGE && cursorMode == CURSOR_MODE_DVCH1){
+			temp = CHDISPMODE_MERGE_CHBOT - cursorApos;
+			curAval = round(temp*vscaleVals[vscale1] - voff1);
+			temp = CHDISPMODE_MERGE_CHBOT - cursorBpos;
+			curBval = round(temp*vscaleVals[vscale1] - voff1);
+		}
+		else if(chDispMode == CHDISPMODE_MERGE && cursorMode == CURSOR_MODE_DVCH2){
+			temp = CHDISPMODE_MERGE_CHBOT - cursorApos;
+			curAval = round(temp*vscaleVals[vscale2] - voff2);
+			temp = CHDISPMODE_MERGE_CHBOT - cursorBpos;
+			curBval = round(temp*vscaleVals[vscale2] - voff2);
+		}
+		else{
+			curAval = cursorApos;
+			curBval = cursorBpos;
+		}
+
+		if(cursorMode == CURSOR_MODE_DT){
+			secToStr((curAval - LCD_WIDTH/2)/(float32_t)samprateVals[tscale], bufw10btn1);
+			UG_ButtonSetText(&window_10, BTN_ID_1, bufw10btn1);
+
+			secToStr((curBval - LCD_WIDTH/2)/(float32_t)samprateVals[tscale], bufw10btn2);
+			UG_ButtonSetText(&window_10, BTN_ID_2, bufw10btn2);
+
+			secToStr((curAval - curBval)/(float32_t)samprateVals[tscale], bufw10tb4);
+			UG_TextboxSetText(&window_10, TXB_ID_4, bufw10tb4);
+		}
+		else{
+			gcvt((int32_t)((3.3f*curAval/255.0f)*100)/100.0f, 3 + (curAval < -1), bufw10btn1);
+			strcat(bufw10btn1, "V");
+			UG_ButtonSetText(&window_10, BTN_ID_1, bufw10btn1);
+
+			gcvt((int32_t)((3.3f*curBval/255.0f)*100)/100.0f, 3 + (curBval < -1), bufw10btn2);
+			strcat(bufw10btn2, "V");
+			UG_ButtonSetText(&window_10, BTN_ID_2, bufw10btn2);
+
+			gcvt((int32_t)((3.3f*(curAval - curBval)/255.0f)*100)/100.0f, 3 + ((curAval - curBval) < -1), bufw10tb4);
+			strcat(bufw10tb4, "V");
+			UG_TextboxSetText(&window_10, TXB_ID_4, bufw10tb4);
+		}
+
+		goToField(FLD_NONE);
+		changeFieldValue(2);
+	}
+}
+
+/**
   * @brief  Get currently active math field.
   * @param  None
   * @retval Currently active math field
@@ -1822,6 +2156,16 @@ void changeFieldValueMath(int8_t dir)
 uint8_t getCurrMathField(void)
 {
 	return mathField;
+}
+
+/**
+  * @brief  Get currently active cursor field.
+  * @param  None
+  * @retval Currently active cursor field
+  */
+uint8_t getCurrCursorField(void)
+{
+	return cursorField;
 }
 
 /**
