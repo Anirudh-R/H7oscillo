@@ -176,10 +176,15 @@ void SystemCoreClockUpdate(void)
   SystemCoreClock >>= tmp;
 }
 
-/* Directs stdio output towards ITM trace. */
+/**
+  * @brief  Directs stdio output towards ITM trace. Used by printf etc.
+  * @param  file: not used
+  * @param  ptr: pointer to output string
+  * @param  len: length of output string
+  * @retval number of bytes written to the output
+  */
 int32_t _write(int32_t file, uint8_t *ptr, int32_t len)
 {
-	/* Implement your write code here, this is used by puts and printf for example */
 	int32_t i;
 	for(i = 0; i < len; i++){
 		ITM_SendChar(*ptr++);

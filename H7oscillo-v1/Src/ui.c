@@ -744,6 +744,14 @@ static void window_1_callback(UG_MESSAGE* msg)
 			 	 case BTN_ID_0:
 					if(menu_button_state == 0){
 						showWindow3 = 1;			/* show measurement menu */
+
+						/* de-select any active cursor fields */
+						if(cursorField != CURSORFLD_NONE){
+							cursorField = CURSORFLD_NONE;
+							UG_ButtonSetFont(&window_10, BTN_ID_1, &FONT_6X8);
+							UG_ButtonSetFont(&window_10, BTN_ID_2, &FONT_6X8);
+						}
+
 						menu_button_state = 1;
 					}
 					else{
@@ -757,6 +765,17 @@ static void window_1_callback(UG_MESSAGE* msg)
 						else{
 							clearWind4Submenus();
 						}
+
+						/* redraw red border since it would get erased due to the menu */
+						if(staticMode){
+							drawRedBorder();
+						}
+
+						/* redraw cursors, if required */
+						if(cursorMode != CURSOR_MODE_OFF){
+							changeFieldValueCursor(2);
+						}
+
 						showWindow5 = 0;
 						showWindow6 = 0;
 						showWindow7 = 0;
@@ -764,7 +783,6 @@ static void window_1_callback(UG_MESSAGE* msg)
 						showWindow10 = 0;
 						wind5OpenedBy = MEASURE_NONE;
 						mathField = MATHFLD_NONE;
-						cursorField = CURSORFLD_NONE;
 						menu_button_state = 0;
 					}
 					break;
@@ -1288,10 +1306,15 @@ static void window_10_callback(UG_MESSAGE* msg)
 						changeFieldValueCursor(-1);		/* clear cursors */
 
 						goToField(FLD_NONE);
-						changeFieldValue(2);			/* force the cursors to be redrawn */
+						changeFieldValue(2);			/* force the channel cursors to be redrawn */
 
 						UG_ButtonSetFont(&window_10, BTN_ID_1, &FONT_6X8);	/* de-highlight the cursor fields */
 						UG_ButtonSetFont(&window_10, BTN_ID_2, &FONT_6X8);
+
+						/* Invalidate cursor displays */
+						UG_ButtonSetText(&window_10, BTN_ID_1, "--");
+						UG_ButtonSetText(&window_10, BTN_ID_2, "--");
+						UG_TextboxSetText(&window_10, TXB_ID_4, "--");
 					}
 			 		break;
 
@@ -1536,7 +1559,7 @@ void goToField(uint8_t field)
 
 	currField = field;
 
-	selectField(currField, 1);		/* select next field */
+	selectField(currField, 1);		/* select field */
 
 	return;
 }
@@ -1698,10 +1721,10 @@ void changeFieldValue(uint8_t dir)
 
 		case FLD_RUNSTOP:
 			runstop += dir?(runstop==0?0:-1):(runstop==RUNSTOP_MAXVALS-1?0:1);
-			UG_TextboxSetText(&window_1, TXB_ID_6, runstopDispVals[runstop]);
 			if(runstopVals[runstop] == RUNSTOP_RUN){
 				ADC_Ch1_reinit();
 				ADC_Ch2_reinit();
+				UG_TextboxSetText(&window_1, TXB_ID_6, runstopDispVals[runstop]);
 				UG_TextboxSetBackColor(&window_1, TXB_ID_6, RUNSTOP_ICON_COLOR_RUN);
 			}
 			else{
@@ -1709,6 +1732,7 @@ void changeFieldValue(uint8_t dir)
 				while(CH1_ADC_DMA_STREAM->CR & 0x01);
 				CH2_ADC_DMA_STREAM->CR &= ~0x01;		/* disable ch2 stream and confirm */
 				while(CH2_ADC_DMA_STREAM->CR & 0x01);
+				UG_TextboxSetText(&window_1, TXB_ID_6, runstopDispVals[runstop]);
 				UG_TextboxSetBackColor(&window_1, TXB_ID_6, RUNSTOP_ICON_COLOR_STP);
 			}
 			break;
@@ -1954,6 +1978,12 @@ void changeFieldValue(uint8_t dir)
 		UG_TextboxSetText(&window_8, TXB_ID_0, bufw8tb0);
 	}
 
+	/* redraw cursors, if required */
+	if(cursorMode != CURSOR_MODE_OFF && (currField == FLD_CH1_VSCALE || currField == FLD_CH2_VSCALE ||
+			currField == FLD_CH1_VOFF || currField == FLD_CH2_VOFF || currField == FLD_TSCALE)){
+		changeFieldValueCursor(2);
+	}
+
 	return;
 }
 
@@ -2027,6 +2057,23 @@ void changeFieldValueMath(int8_t dir)
 	else if(mathField == MATHFLD_VSCALE && dir != 2 && dir != -1){
 		mathVscale += dir?(mathVscale==0?0:-1):(mathVscale==VSCALE_MAXVALS-1?0:1);
 		UG_ButtonSetText(&window_9, BTN_ID_1, vscaleDispVals[mathVscale]);
+
+		/* clear previous offset cursor */
+		for(i = voffCurPosPrev; i < voffCurPosPrev + CURSOR_WIDTH; i++)
+			for(j = 0; j < CURSOR_LENGTH; j++)
+				pFrame[i][j] = C_BLACK;
+
+		/* recalculate offset cursor position */
+		temp = (float32_t)(mathVoff)/vscaleVals[mathVscale];
+		if(temp > CHDISPMODE_MERGE_SIGMAX)	temp = CHDISPMODE_MERGE_SIGMAX;
+		if(temp < 0)  temp = 0;
+		voffCurPos = CHDISPMODE_MERGE_CHBOT - temp - CURSOR_WIDTH/2 + 1;
+
+		for(i = voffCurPos; i < voffCurPos + CURSOR_WIDTH; i++)
+			for(j = 0; j < CURSOR_LENGTH; j++)
+				pFrame[i][j] = mathRefCursorImg[i-voffCurPos][j] ? MATH_COLOR : C_BLACK;
+
+		voffCurPosPrev = voffCurPos;
 	}
 }
 
@@ -2058,20 +2105,20 @@ void changeFieldValueCursor(int8_t dir)
 	if(dir != -1){
 		if(dir != 2 && cursorField != CURSORFLD_NONE){
 			if(chDispMode == CHDISPMODE_SPLIT && cursorMode == CURSOR_MODE_DVCH1){
-				if(cursorField == CURSORFLD_CURA)	cursorApos += dir?(cursorApos==CHDISPMODE_SPLIT_CH1BOT?0:-1):(cursorApos==CHDISPMODE_SPLIT_CH1TOP?0:1);
-				else   cursorBpos += dir?(cursorBpos==CHDISPMODE_SPLIT_CH1BOT?0:-1):(cursorBpos==CHDISPMODE_SPLIT_CH1TOP?0:1);
+				if(cursorField == CURSORFLD_CURA)	cursorApos += dir?(cursorApos==CHDISPMODE_SPLIT_CH1TOP?0:1):(cursorApos==CHDISPMODE_SPLIT_CH1BOT?0:-1);
+				else   cursorBpos += dir?(cursorBpos==CHDISPMODE_SPLIT_CH1TOP?0:1):(cursorBpos==CHDISPMODE_SPLIT_CH1BOT?0:-1);
 			}
 			else if(chDispMode == CHDISPMODE_SPLIT && cursorMode == CURSOR_MODE_DVCH2){
-				if(cursorField == CURSORFLD_CURA)	cursorApos += dir?(cursorApos==CHDISPMODE_SPLIT_CH2BOT?0:-1):(cursorApos==CHDISPMODE_SPLIT_CH2TOP?0:1);
-				else   cursorBpos += dir?(cursorBpos==CHDISPMODE_SPLIT_CH2BOT?0:-1):(cursorBpos==CHDISPMODE_SPLIT_CH2TOP?0:1);
+				if(cursorField == CURSORFLD_CURA)	cursorApos += dir?(cursorApos==CHDISPMODE_SPLIT_CH2TOP?0:1):(cursorApos==CHDISPMODE_SPLIT_CH2BOT?0:-1);
+				else   cursorBpos += dir?(cursorBpos==CHDISPMODE_SPLIT_CH2TOP?0:1):(cursorBpos==CHDISPMODE_SPLIT_CH2BOT?0:-1);
 			}
 			else if(cursorMode == CURSOR_MODE_DT){
 				if(cursorField == CURSORFLD_CURA)	cursorApos += dir?(cursorApos==0?0:-1):(cursorApos==LCD_WIDTH-1?0:1);
 				else   cursorBpos += dir?(cursorBpos==0?0:-1):(cursorBpos==LCD_WIDTH-1?0:1);
 			}
 			else{
-				if(cursorField == CURSORFLD_CURA)	cursorApos += dir?(cursorApos==CHDISPMODE_MERGE_CHBOT?0:-1):(cursorApos==CHDISPMODE_MERGE_CHTOP?0:1);
-				else   cursorBpos += dir?(cursorBpos==CHDISPMODE_MERGE_CHBOT?0:-1):(cursorBpos==CHDISPMODE_MERGE_CHTOP?0:1);
+				if(cursorField == CURSORFLD_CURA)	cursorApos += dir?(cursorApos==CHDISPMODE_MERGE_CHTOP?0:1):(cursorApos==CHDISPMODE_MERGE_CHBOT?0:-1);
+				else   cursorBpos += dir?(cursorBpos==CHDISPMODE_MERGE_CHTOP?0:1):(cursorBpos==CHDISPMODE_MERGE_CHBOT?0:-1);
 			}
 		}
 
@@ -2119,6 +2166,7 @@ void changeFieldValueCursor(int8_t dir)
 			curBval = cursorBpos;
 		}
 
+		/* display cursor positions and difference */
 		if(cursorMode == CURSOR_MODE_DT){
 			secToStr((curAval - LCD_WIDTH/2)/(float32_t)samprateVals[tscale], bufw10btn1);
 			UG_ButtonSetText(&window_10, BTN_ID_1, bufw10btn1);
@@ -2143,8 +2191,16 @@ void changeFieldValueCursor(int8_t dir)
 			UG_TextboxSetText(&window_10, TXB_ID_4, bufw10tb4);
 		}
 
+		uint8_t tempFld = currField;
+		/* redraw the channel cursors and grid, in case they got erased from cursor movement */
 		goToField(FLD_NONE);
 		changeFieldValue(2);
+		goToField(tempFld);		/* restore the field which was active */
+
+		/* in static mode, redraw the red border, in case it got erased from cursor movement */
+		if(staticMode){
+			drawRedBorder();
+		}
 	}
 }
 

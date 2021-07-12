@@ -74,7 +74,7 @@ int main(void)
 			trigPt = processTriggers();
 
 			/* trigger condition not met */
-			if(trigPt == -1){
+			if(trigPt == -1 && runstopVals[runstop] != RUNSTOP_STOP){
 				UG_TextboxSetBackColor(&window_1, TXB_ID_6, RUNSTOP_ICON_COLOR_TRGWT);
 			}
 
@@ -205,7 +205,7 @@ int main(void)
 				/* a touch to the center of the screen starts static mode */
 				if(TS_DetectNumTouches() > 0){
 					TS_GetXY(&TS_Y, &TS_X);
-					if(chDispMode != CHDISPMODE_FFT && mathOp == MATH_OP_NONE && 100 < TS_X && TS_X < 380 && 50 < TS_Y && TS_Y < 220){
+					if(chDispMode != CHDISPMODE_FFT && mathOp == MATH_OP_NONE && 215 < TS_X && TS_X < 265 && 111 < TS_Y && TS_Y < 161){
 						staticMode = 1;
 						oldtscale = origtscale;
 						toffStm = toff;
@@ -219,7 +219,7 @@ int main(void)
 				/* a second touch to the center of the screen exits static mode */
 				if(TS_DetectNumTouches() > 0){
 					TS_GetXY(&TS_Y, &TS_X);
-					if(100 < TS_X && TS_X < 380 && 50 < TS_Y && TS_Y < 220){
+					if(215 < TS_X && TS_X < 265 && 111 < TS_Y && TS_Y < 161){
 						staticMode = 0;
 						clearRedBorder();
 						drawGrid();

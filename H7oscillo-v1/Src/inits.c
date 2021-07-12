@@ -36,8 +36,8 @@ void TimQE_init(void)
 
 	LL_GPIO_SetPinMode(TIM_QE_INP_PORT, TIM_QE_INP1_PIN, LL_GPIO_MODE_ALTERNATE);
 	LL_GPIO_SetPinMode(TIM_QE_INP_PORT, TIM_QE_INP2_PIN, LL_GPIO_MODE_ALTERNATE);
-	LL_GPIO_SetPinSpeed(TIM_QE_INP_PORT, TIM_QE_INP1_PIN, LL_GPIO_SPEED_FREQ_HIGH);
-	LL_GPIO_SetPinSpeed(TIM_QE_INP_PORT, TIM_QE_INP2_PIN, LL_GPIO_SPEED_FREQ_HIGH);
+	LL_GPIO_SetPinSpeed(TIM_QE_INP_PORT, TIM_QE_INP1_PIN, LL_GPIO_SPEED_FREQ_LOW);
+	LL_GPIO_SetPinSpeed(TIM_QE_INP_PORT, TIM_QE_INP2_PIN, LL_GPIO_SPEED_FREQ_LOW);
 	LL_GPIO_SetPinOutputType(TIM_QE_INP_PORT, TIM_QE_INP1_PIN | TIM_QE_INP2_PIN, LL_GPIO_OUTPUT_PUSHPULL);
 	LL_GPIO_SetPinPull(TIM_QE_INP_PORT, TIM_QE_INP1_PIN, LL_GPIO_PULL_UP);
 	LL_GPIO_SetPinPull(TIM_QE_INP_PORT, TIM_QE_INP2_PIN, LL_GPIO_PULL_UP);
@@ -48,7 +48,7 @@ void TimQE_init(void)
 	TIM_QE_CLK_ENABLE();
 	TIM_QE->CCER &= (uint32_t)~(TIM_CCER_CC1E | TIM_CCER_CC2E);		/* disable CC1 & CC2 */
 	TIM_QE->CCMR1 = 0x00000101;										/* no filter, no prescalar, direct mapping of inputs */
-	TIM_QE->CCER  = 0x00000002;										/* timer triggered on CC1 falling edge */
+	TIM_QE->CCER  = 0x00000002;										/* INP1 & INP2 are inverted */
 	TIM_QE->SMCR  = 0x00000001;										/* count up/down on CC1 edge depending on CC2 level */
 	TIM_QE->CCER |= (uint32_t)(TIM_CCER_CC1E | TIM_CCER_CC2E);		/* enable CC1 & CC2 */
 	TIM_QE->CR1  |= 0x01;											/* start timer */
