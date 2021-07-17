@@ -432,6 +432,7 @@ void calcSpectrum(uint8_t channel)
 	for(i = ADC_TRIGBUF_SIZE; i < 545; i++)
 		inp[i] = 0;
 
+	/* calculate the 480-point DFT of input signal */
 	czt(inp, oup, 0, 0.5, 545, 480, 1);
 
 	/* convert to 0.15 dB per div, subtract 61 to make values within display height */
