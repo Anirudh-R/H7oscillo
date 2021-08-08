@@ -1,0 +1,2 @@
+i2c.c:21:9:I2C_WriteSingle	24	static
+i2c.c:79:9:I2C_ReadSingle	24	static

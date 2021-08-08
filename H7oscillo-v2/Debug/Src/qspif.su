@@ -1,0 +1,13 @@
+qspif.c:352:13:QSPI_flash_statuspoll_single	0	static
+qspif.c:310:13:QSPI_flash_wren_single	8	static
+qspif.c:379:13:QSPI_flash_statuspoll_quad	0	static
+qspif.c:330:13:QSPI_flash_wren_quad	8	static
+qspif.c:448:16:QSPI_flash_read_reg_quad	0	static
+qspif.c:469:13:QSPI_flash_clr_errors_quad	8	static
+qspif.c:268:16:QSPI_flash_erase_subsector	8	static
+qspif.c:490:13:QSPI_DMA_config_read	0	static
+qspif.c:510:13:QSPI_DMA_config_write	0	static
+qspif.c:34:6:QSPI_init	24	static
+qspif.c:85:6:QSPI_flash_init	8	static
+qspif.c:150:9:QSPI_flash_read	16	static
+qspif.c:197:9:QSPI_flash_write	24	static
