@@ -17,17 +17,25 @@
   */
 int main(void)
 {
+	FRESULT fsres;
+	uint8_t fileStoreDone = 0, fileReadDone = 0;
+
 	uint32_t QE_Count = 0, QE_Count_prev = 1;
 	uint8_t QE_direc = 0;
+
 	__IO uint16_t (*pFrame)[LCD_WIDTH] = (__IO uint16_t (*)[LCD_WIDTH])LCD_DRAW_BUFFER_WAVE;
+
 	int32_t trigPt = -1, waveIdxStart = 0, dispIdxStart = 0, lenResampledSig = -1;
 	uint8_t origtscale = 0, oldtscale = 0;
 	int32_t	i, j, temp;
+
 
 	/* Enable the CPU Cache */
 	CPU_CACHE_Enable();
 	/* Configure the system clock to 200 MHz */
 	SystemClock_Config();
+	/* Configure MPU */
+	MPU_Config();
 
 	/* Initialize peripherals */
 	SDRAM_init();
@@ -67,6 +75,30 @@ int main(void)
 	/* Initialize QSPI perpheral and the Flash memory */
 	QSPI_init();
 	QSPI_flash_init();
+
+	/* if user button is pushed during reset, format the drive with FAT */
+	if(readUserBtnState()){
+		uint8_t* workBuf = (uint8_t *)SDRAM_BANK3_ADDR;		/* use SDRAM as working buffer for format process */
+
+		LL_GPIO_SetOutputPin(LED1_GPIO_PORT, LED1_PIN);
+
+		fsres = f_mkfs("", &mkfsParam, workBuf, SECTOR_SIZE);
+		if(fsres == FR_OK){	/* success */
+			printf("Successfully formatted flash.\n");
+			LL_GPIO_ResetOutputPin(LED1_GPIO_PORT, LED1_PIN);
+		}
+		else{				/* hang */
+			printf("Flash formatting failed, error: %d.\n", fsres);
+			hangFirmware();
+		}
+	}
+
+	/* force mount the FAT volume */
+	fsres = f_mount(&fatFs, "", 1);
+	if(fsres != FR_OK){
+		printf("FAT FS mounting failed, error: %d\n", fsres);
+		hangFirmware();
+	}
 
 	/* Main loop */
 	while(1)
@@ -372,6 +404,32 @@ int main(void)
 		/* Update screen */
 		updateToScreen();
 		while(DMA2D->CR & 0x01);
+
+		if(!fileStoreDone){
+			UINT bw;
+			f_open(&fp, "hello.txt", FA_CREATE_ALWAYS | FA_WRITE);
+			fsres = f_write(&fp, "Hello, World!\r\n", 15, &bw);
+			f_close(&fp);
+			if(bw != 15){
+				printf("File write error: %d.\n", fsres);
+				hangFirmware();
+			}
+			fileStoreDone = 1;
+		}
+		else if(fileStoreDone && !fileReadDone){
+			char readBuf[20];
+			UINT br;
+			f_open(&fp, "hello.txt", FA_READ);
+			fsres = f_read(&fp, readBuf, 15, &br);
+			f_close(&fp);
+			readBuf[br] = '\0';
+			if(br != 15){
+				printf("File read error: %d.\n", fsres);
+				hangFirmware();
+			}
+			printf("%s", readBuf);
+			fileReadDone = 1;
+		}
 	}
 }
 
@@ -386,22 +444,16 @@ __INLINE uint32_t Get_tick(void)
 	return (uint32_t)Tick_1ms;
 }
 
-#ifdef  USE_FULL_ASSERT
 /**
-  * @brief  Reports the name of the source file and the source line number
-  *         where the assert_param error has occurred.
-  * @param  file: pointer to the source file name
-  * @param  line: assert_param error line source number
+  * @brief  Hang the firmware forever.
+  * @param  None
   * @retval None
   */
-void assert_failed(uint8_t *file, uint32_t line)
+void hangFirmware(void)
 {
-  /* User can add his own implementation to report the file name and line number,
-     ex: printf("Wrong parameters value: file %s on line %d", file, line) */
-
-  /* Infinite loop */
-  while (1)
-  {
-  }
+	/* Infinite loop */
+	while (1){
+		LL_GPIO_TogglePin(LED1_GPIO_PORT, LED1_PIN);
+		LL_mDelay(100);
+	}
 }
-#endif

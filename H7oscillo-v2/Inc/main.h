@@ -10,7 +10,7 @@
 #ifndef __MAIN_H
 #define __MAIN_H
 
-/* Includes ------------------------------------------------------------------*/
+/* Includes */
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -29,14 +29,11 @@
 #include "stm32f7xx_ll_tim.h"
 #include "stm32f7xx_ll_i2c.h"
 #include "arm_math.h"
-
 #if defined(USE_FULL_ASSERT)
 #include "stm32_assert.h"
-#endif /* USE_FULL_ASSERT */
-
-#include "inits.h"
+#endif
 #include "params.h"
-#include "globals.h"
+#include "inits.h"
 #include "ugui_config.h"
 #include "ugui.h"
 #include "touch.h"
@@ -44,7 +41,10 @@
 #include "ui.h"
 #include "measure.h"
 #include "triggers.h"
+#include "ff.h"
+#include "diskio.h"
 #include "qspif.h"
+#include "globals.h"
 
 
 //#define DEBUG									/* Build the project for debugging */
@@ -70,6 +70,7 @@
                                                   LL_APB2_GRP1_EnableClock(LL_APB2_GRP1_PERIPH_SYSCFG);                  \
                                                   LL_SYSCFG_SetEXTISource(LL_SYSCFG_EXTI_PORTI, LL_SYSCFG_EXTI_LINE11);  \
                                                 } while(0)
+#define readUserBtnState()						(LL_GPIO_ReadInputPort(GPIOI) & LL_GPIO_PIN_11)
 
 /* Quadrature encoder */
 #define TIM_QE                         			TIM8
@@ -184,5 +185,6 @@
 
 /* Global function prototypes */
 extern uint32_t Get_tick(void);
+extern void hangFirmware(void);
 
 #endif /* __MAIN_H */

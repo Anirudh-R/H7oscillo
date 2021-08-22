@@ -15,8 +15,9 @@
 #include "stm32f7xx_ll_utils.h"
 
 
-#define SUBSECTOR_SIZE					4096
-#define PAGE_SIZE						256
+#define N25Q_SUBSECTOR_SIZE				4096
+#define N25Q_PAGE_SIZE					256
+#define N25Q_NUM_SUBSECTS				4096	/* number of subsectors in flash */
 
 #define FLASH_CMD_WR_ENABLE				0x06
 #define FLASH_CMD_RD_STATUSREG			0x05
@@ -33,6 +34,7 @@
 extern void QSPI_init(void);
 extern void QSPI_flash_init(void);
 extern uint8_t QSPI_flash_read(__IO uint8_t buf[], uint32_t addr, uint32_t len);
-extern uint8_t QSPI_flash_write(uint8_t buf[], uint32_t addr, uint32_t len);
+extern uint8_t QSPI_flash_write(const uint8_t buf[], uint32_t addr, uint32_t len);
+extern void QSPI_config_memmapped(void);
 
 #endif /* __QSPIF_H */

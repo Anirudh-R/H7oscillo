@@ -24,7 +24,7 @@ static void QSPI_flash_clr_errors_quad(void);
 static void QSPI_DMA_config_read(__IO uint8_t* rxbufptr, uint32_t tfrsize);
 static void QSPI_DMA_config_write(uint8_t* txbufptr, uint32_t tfrsize);
 
-__IO uint8_t subsectorBuf[SUBSECTOR_SIZE];			/* subsector buffer */
+__IO uint8_t subsectorBuf[N25Q_SUBSECTOR_SIZE];			/* subsector buffer */
 
 /**
   * @brief  Initialize the QSPI peripheral for accessing N25Q128A Flash.
@@ -84,6 +84,13 @@ void QSPI_init(void)
   */
 void QSPI_flash_init(void)
 {
+	static uint8_t flashInitDone = 0;
+
+	/* if initialization already done */
+	if(flashInitDone){
+		return;
+	}
+
 	/* force the Flash to extended SPI mode. This is needed if the STM32 operates in extended SPI mode
 	   following a button/debugger reset, but the flash continues to operate in quad SPI mode */
 	MODIFY_REG(QUADSPI->CCR, QUADSPI_CCR_FMODE, 0x00 << QUADSPI_CCR_FMODE_Pos);		/* indirect write mode */
@@ -138,6 +145,8 @@ void QSPI_flash_init(void)
 	while(QUADSPI->SR & QUADSPI_SR_BUSY);											/* to be '1' for it to work, unlike what the datasheet claims */
 	QUADSPI->CR &= ~QUADSPI_CR_EN;
 	QSPI_flash_statuspoll_quad(FLASH_CMD_RD_EVCONFREG, 0xFF, 0x7F);					/* wait for it to take effect */
+
+	flashInitDone = 1;
 }
 
 /**
@@ -188,33 +197,43 @@ uint8_t QSPI_flash_read(__IO uint8_t buf[], uint32_t addr, uint32_t len)
 }
 
 /**
-  * @brief  Write data to the flash using Quad IO. The data must fall within a 4KB subsector.
+  * @brief  Write data to the flash using Quad IO. The data must fall within a 4KiB subsector.
   * @param  buf: data bytes to be sent
   * @param  addr: start address of write
   * @param  len: number of bytes to write
   * @retval success = 0, fail = 1
   */
-uint8_t QSPI_flash_write(uint8_t buf[], uint32_t addr, uint32_t len)
+uint8_t QSPI_flash_write(const uint8_t buf[], uint32_t addr, uint32_t len)
 {
-	uint32_t temp, i;
+	uint8_t* pBuf;
+	uint8_t temp;
+	uint32_t i;
 
 	/* data larger than a subsector or crosses subsector boundaries */
-	if(len > SUBSECTOR_SIZE || ((addr & 0xFFF000) != ((addr + len - 1) & 0xFFF000))){
+	if(len > N25Q_SUBSECTOR_SIZE || ((addr & 0xFFF000) != ((addr + len - 1) & 0xFFF000)) || len == 0){
 		return 1;
 	}
 
-	if(QSPI_flash_read(subsectorBuf, addr & 0xFFF000, SUBSECTOR_SIZE)){					/* read the entire subsector */
-		return 1;
+	temp = !(addr & 0x000FFF) && len == N25Q_SUBSECTOR_SIZE;							/* full subsector write? */
+
+	if(!temp){
+		if(QSPI_flash_read(subsectorBuf, addr & 0xFFF000, N25Q_SUBSECTOR_SIZE)){		/* read the entire subsector */
+			return 1;
+		}
 	}
 
 	if(QSPI_flash_erase_subsector(addr)){												/* erase the subsector */
 		return 1;
 	}
 
-	/* modify the subsector buffer */
-	for(i = 0; i < len; i++){
-		subsectorBuf[(addr & 0xFFF) + i] = buf[i];
+	if(!temp){
+		/* modify the subsector buffer */
+		for(i = 0; i < len; i++){
+			subsectorBuf[(addr & 0xFFF) + i] = buf[i];
+		}
 	}
+
+	pBuf = temp ? (uint8_t *)buf : (uint8_t *)subsectorBuf;
 
 	QSPI_flash_clr_errors_quad();														/* clear flash errors */
 
@@ -222,7 +241,7 @@ uint8_t QSPI_flash_write(uint8_t buf[], uint32_t addr, uint32_t len)
 	for(i = 0; i < 16; i++){
 		QSPI_flash_wren_quad();															/* enable writes to the flash */
 
-		QSPI_DMA_config_write((uint8_t *)(subsectorBuf + i*PAGE_SIZE), PAGE_SIZE);		/* setup DMA for write */
+		QSPI_DMA_config_write(pBuf + i*N25Q_PAGE_SIZE, N25Q_PAGE_SIZE);					/* setup DMA for write */
 
 		QUADSPI->FCR = 0x03;															/* clear TC and TE flags */
 		MODIFY_REG(QUADSPI->CCR, QUADSPI_CCR_FMODE, 0x00 << QUADSPI_CCR_FMODE_Pos);		/* indirect write mode */
@@ -231,8 +250,8 @@ uint8_t QSPI_flash_write(uint8_t buf[], uint32_t addr, uint32_t len)
 		MODIFY_REG(QUADSPI->CCR, QUADSPI_CCR_ADMODE, 0x03 << QUADSPI_CCR_ADMODE_Pos);	/* quad-line address */
 		MODIFY_REG(QUADSPI->CCR, QUADSPI_CCR_DCYC, 0x00 << QUADSPI_CCR_DCYC_Pos);		/* no dummy cycles */
 		MODIFY_REG(QUADSPI->CCR, QUADSPI_CCR_DMODE, 0x03 << QUADSPI_CCR_DMODE_Pos);		/* quad-line data */
-		QUADSPI->DLR = PAGE_SIZE - 1;													/* no. of data bytes */
-		QUADSPI->AR = (addr & 0xFFF000) + i*PAGE_SIZE;									/* address */
+		QUADSPI->DLR = N25Q_PAGE_SIZE - 1;												/* no. of data bytes */
+		QUADSPI->AR = (addr & 0xFFF000) + i*N25Q_PAGE_SIZE;								/* address */
 		MODIFY_REG(QUADSPI->CR, QUADSPI_CR_DMAEN, 0x01 << QUADSPI_CR_DMAEN_Pos);		/* use DMA */
 		QUADSPI->CR |= QUADSPI_CR_EN;
 		while(!(QUADSPI->SR & QUADSPI_SR_TCF));
@@ -261,13 +280,13 @@ uint8_t QSPI_flash_write(uint8_t buf[], uint32_t addr, uint32_t len)
 }
 
 /**
-  * @brief  Erase a 4KB subsector of the flash using Quad IO.
+  * @brief  Erase a 4KiB subsector of the flash using Quad IO.
   * @param  addr: any address within the subsector that is to be erased
   * @retval success = 0, fail = 1
   */
 static uint8_t QSPI_flash_erase_subsector(uint32_t addr)
 {
-	uint32_t temp;
+	uint8_t temp;
 
 	QSPI_flash_clr_errors_quad();													/* clear flash errors */
 	QSPI_flash_wren_quad();															/* enable writes to the flash */
@@ -519,4 +538,21 @@ static void QSPI_DMA_config_write(uint8_t* txbufptr, uint32_t tfrsize)
 	QSPI_STREAM->PAR  = (uint32_t)&(QUADSPI->DR);		/* destination addr */
 	QSPI_STREAM->M0AR = (uint32_t)txbufptr;				/* source addr */
 	QSPI_STREAM->CR |= 0x01;							/* enable stream */
+}
+
+/**
+  * @brief  Configure QSPI for memory-mapped mode.
+  * @param  None
+  * @retval None
+  */
+void QSPI_config_memmapped(void)
+{
+	QUADSPI->FCR = 0x03;															/* clear TC and TE flags */
+	MODIFY_REG(QUADSPI->CCR, QUADSPI_CCR_FMODE, 0x03 << QUADSPI_CCR_FMODE_Pos);		/* memory-mapped mode */
+	MODIFY_REG(QUADSPI->CCR, QUADSPI_CCR_IMODE, 0x03 << QUADSPI_CCR_IMODE_Pos);		/* quad-line instruction */
+	MODIFY_REG(QUADSPI->CCR, QUADSPI_CCR_INSTRUCTION, FLASH_CMD_FASTRD_QUADIO << QUADSPI_CCR_INSTRUCTION_Pos);	/* set instruction */
+	MODIFY_REG(QUADSPI->CCR, QUADSPI_CCR_ADMODE, 0x03 << QUADSPI_CCR_ADMODE_Pos);	/* quad-line address */
+	MODIFY_REG(QUADSPI->CCR, QUADSPI_CCR_DCYC, 0x09 << QUADSPI_CCR_DCYC_Pos);		/* 9 dummy cycles */
+	MODIFY_REG(QUADSPI->CCR, QUADSPI_CCR_DMODE, 0x03 << QUADSPI_CCR_DMODE_Pos);		/* quad-line data */
+	QUADSPI->CR |= QUADSPI_CR_EN;
 }

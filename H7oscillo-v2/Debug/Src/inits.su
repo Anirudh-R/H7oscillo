@@ -15,3 +15,4 @@ inits.c:526:6:DMA2D_init	8	static
 inits.c:567:6:I2C_TS_init	8	static
 inits.c:609:6:SystemClock_Config	8	static
 inits.c:664:6:CPU_CACHE_Enable	4	static
+inits.c:678:6:MPU_Config	0	static

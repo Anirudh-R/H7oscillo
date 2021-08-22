@@ -29,5 +29,6 @@ extern void LEDs_Buttons_init(void);
 extern void I2C_TS_init(void);
 extern void SystemClock_Config(void);
 extern void CPU_CACHE_Enable(void);
+extern void MPU_Config(void);
 
 #endif /* __INITS_H */

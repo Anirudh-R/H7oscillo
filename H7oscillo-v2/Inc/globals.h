@@ -11,7 +11,6 @@
 
 #include "main.h"
 
-
 /* possible voltage scale values */
 #define VSCALE_10mV			0.01609f
 #define VSCALE_50mV			0.08049f
@@ -158,5 +157,9 @@ extern uint8_t fftSrcChannel;
 extern uint8_t mathOp;
 extern uint8_t mathVscale;
 extern int16_t mathVoff;
+
+extern FATFS fatFs;
+extern FIL fp;
+extern const MKFS_PARM mkfsParam;
 
 #endif /* __GLOBALS_H */

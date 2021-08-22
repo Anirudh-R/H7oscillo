@@ -54,6 +54,7 @@ __IO uint8_t CH2_acq_comp = 0;
 __IO uint8_t LTDC_error_flag = 0;
 __IO uint8_t DMA2D_error_flag = 0;
 
+/* Static mode related */
 uint8_t staticMode = 0;
 int32_t toffStm = TOFF_INITVAL;
 uint8_t vscale1Changed = 0, vscale2Changed = 0, voff1Changed = 0, voff2Changed = 0, toffChanged = 0;
@@ -66,5 +67,14 @@ uint8_t mathOp = MATH_OP_NONE;
 uint8_t mathVscale = MATHVSCALE_INITVAL;
 int16_t mathVoff = MATHVOFF_INITVAL;
 
-
+/* FatFs */
+FATFS fatFs;       					/* file system object */
+FIL fp;            					/* file object */
+const MKFS_PARM mkfsParam = {		/* file system parameters */
+	.fmt = FM_FAT,
+	.au_size = SECTOR_SIZE,
+	.align = 0,
+	.n_fat = 1,
+	.n_root = 128
+};
 

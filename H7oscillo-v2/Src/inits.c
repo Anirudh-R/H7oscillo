@@ -608,52 +608,52 @@ void I2C_TS_init(void)
   */
 void SystemClock_Config(void)
 {
-  /* Enable HSE */
-  LL_RCC_HSE_Enable();
-  while(LL_RCC_HSE_IsReady() != 1){
-  }
+	/* Enable HSE */
+	LL_RCC_HSE_Enable();
+	while(LL_RCC_HSE_IsReady() != 1){
+	}
 
-  /* Main PLL configuration and activation */
-  LL_RCC_PLL_ConfigDomain_SYS(LL_RCC_PLLSOURCE_HSE, LL_RCC_PLLM_DIV_25, 400, LL_RCC_PLLP_DIV_2);
-  LL_RCC_PLL_Enable();
-  while(LL_RCC_PLL_IsReady() != 1){
-  }
+	/* Main PLL configuration and activation */
+	LL_RCC_PLL_ConfigDomain_SYS(LL_RCC_PLLSOURCE_HSE, LL_RCC_PLLM_DIV_25, 400, LL_RCC_PLLP_DIV_2);
+	LL_RCC_PLL_Enable();
+	while(LL_RCC_PLL_IsReady() != 1){
+	}
 
-  /* Enable PWR clock */
-  LL_APB1_GRP1_EnableClock(LL_APB1_GRP1_PERIPH_PWR);
+	/* Enable PWR clock */
+	LL_APB1_GRP1_EnableClock(LL_APB1_GRP1_PERIPH_PWR);
 
-  /* Activation OverDrive Mode */
-  LL_PWR_EnableOverDriveMode();
-  while(LL_PWR_IsActiveFlag_OD() != 1){
-  }
+	/* Activation OverDrive Mode */
+	LL_PWR_EnableOverDriveMode();
+	while(LL_PWR_IsActiveFlag_OD() != 1){
+	}
 
-  /* Activation OverDrive Switching */
-  LL_PWR_EnableOverDriveSwitching();
-  while(LL_PWR_IsActiveFlag_ODSW() != 1){
-  }
+	/* Activation OverDrive Switching */
+	LL_PWR_EnableOverDriveSwitching();
+	while(LL_PWR_IsActiveFlag_ODSW() != 1){
+	}
 
-  /* Set FLASH latency */
-  LL_FLASH_SetLatency(LL_FLASH_LATENCY_6);
+	/* Set FLASH latency */
+	LL_FLASH_SetLatency(LL_FLASH_LATENCY_6);
 
-  /* Check if the new latency value has taken effect */
-  while(LL_FLASH_GetLatency() != LL_FLASH_LATENCY_6){
-  }
+	/* Check if the new latency value has taken effect */
+	while(LL_FLASH_GetLatency() != LL_FLASH_LATENCY_6){
+	}
 
-  /* Sysclk activation on the main PLL */
-  LL_RCC_SetAHBPrescaler(LL_RCC_SYSCLK_DIV_1);
-  LL_RCC_SetSysClkSource(LL_RCC_SYS_CLKSOURCE_PLL);
-  while(LL_RCC_GetSysClkSource() != LL_RCC_SYS_CLKSOURCE_STATUS_PLL){
-  }
+	/* Sysclk activation on the main PLL */
+	LL_RCC_SetAHBPrescaler(LL_RCC_SYSCLK_DIV_1);
+	LL_RCC_SetSysClkSource(LL_RCC_SYS_CLKSOURCE_PLL);
+	while(LL_RCC_GetSysClkSource() != LL_RCC_SYS_CLKSOURCE_STATUS_PLL){
+	}
 
-  /* Set APB1 & APB2 prescaler*/
-  LL_RCC_SetAPB1Prescaler(LL_RCC_APB1_DIV_4);
-  LL_RCC_SetAPB2Prescaler(LL_RCC_APB2_DIV_2);
+	/* Set APB1 & APB2 prescaler*/
+	LL_RCC_SetAPB1Prescaler(LL_RCC_APB1_DIV_4);
+	LL_RCC_SetAPB2Prescaler(LL_RCC_APB2_DIV_2);
 
-  /* Set systick to 1ms */
-  SysTick_Config(200000000 / 1000);
+	/* Set systick to 1ms */
+	SysTick_Config(200000000 / 1000);
 
-  /* Update CMSIS variable (which can be updated also through SystemCoreClockUpdate function) */
-  SystemCoreClock = 200000000;
+	/* Update CMSIS variable (which can be updated also through SystemCoreClockUpdate function) */
+	SystemCoreClock = 200000000;
 }
 
 /**
@@ -663,9 +663,31 @@ void SystemClock_Config(void)
   */
 void CPU_CACHE_Enable(void)
 {
-  /* Enable I-Cache */
-  SCB_EnableICache();
+	/* Enable I-Cache */
+	SCB_EnableICache();
 
-  /* Enable D-Cache */
-  SCB_EnableDCache();
+	/* Enable D-Cache */
+	SCB_EnableDCache();
+}
+
+/**
+  * @brief  Configure MPU.
+  * @param  None
+  * @retval None
+  */
+void MPU_Config(void)
+{
+	LL_MPU_Disable();
+
+	/*
+	 * Set the SDRAM memory region to a Normal Memory type, instead of Device Memory type (default).
+	 * This prevents unaligned accesses to the SDRAM from creating a Hard fault.
+	 */
+	LL_MPU_ConfigRegion(LL_MPU_REGION_NUMBER0, 0x00, SDRAM_BANK0_ADDR,
+			LL_MPU_REGION_SIZE_8MB | LL_MPU_REGION_FULL_ACCESS |
+			LL_MPU_TEX_LEVEL1 | LL_MPU_INSTRUCTION_ACCESS_DISABLE |
+			LL_MPU_ACCESS_NOT_SHAREABLE | LL_MPU_ACCESS_NOT_CACHEABLE |
+			LL_MPU_ACCESS_NOT_BUFFERABLE);
+
+	LL_MPU_Enable(LL_MPU_CTRL_PRIVILEGED_DEFAULT);
 }

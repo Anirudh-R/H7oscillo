@@ -146,7 +146,6 @@ void QE_IRQHandler(void)
 void User_Button_IRQHandler(void)
 {
 	LL_EXTI_ClearFlag_0_31(USER_BUTTON_EXTI_LINE);
-	LL_GPIO_TogglePin(LED1_GPIO_PORT, LED1_PIN);
 }
 
 /**
