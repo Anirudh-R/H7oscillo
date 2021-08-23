@@ -148,6 +148,7 @@
 #define LCD_FRAME_BUFFER						SDRAM_BANK0_ADDR	/* Frame buffer for display */
 #define LCD_DRAW_BUFFER_UGUI					SDRAM_BANK1_ADDR	/* Draw buffer for uGUI graphics (windows, texts, etc) */
 #define LCD_DRAW_BUFFER_WAVE					SDRAM_BANK2_ADDR	/* Draw buffer for the waveforms */
+#define SCRATCH_BUFFER							SDRAM_BANK3_ADDR	/* Sratch buffer (general work area) */
 #define UGUI_FRAME_ALPHA						0x8F				/* Blending Alpha factor for the uGUI Layer */
 #define WAVE_FRAME_ALPHA						0xFF				/* Blending Alpha factor for the Wave Layer */
 

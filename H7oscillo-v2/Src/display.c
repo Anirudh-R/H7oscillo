@@ -45,6 +45,8 @@ void clearScreen(void)
 
 	DMA2D->IFCR |= 0x3F;					/* clear all flags */
 	DMA2D->CR |= 0x01;						/* start transfer */
+
+	while(DMA2D->CR & 0x01);
 }
 
 /**
@@ -68,6 +70,8 @@ void fillScreenWave(UG_COLOR color)
 
 	DMA2D->IFCR |= 0x3F;					/* clear all flags */
 	DMA2D->CR |= 0x01;						/* start transfer */
+
+	while(DMA2D->CR & 0x01);
 }
 
 /**
@@ -182,4 +186,6 @@ void updateToScreen(void)
 
 	DMA2D->IFCR |= 0x3F;						/* clear all flags */
 	DMA2D->CR |= 0x01;							/* start transfer */
+
+	while(DMA2D->CR & 0x01);
 }

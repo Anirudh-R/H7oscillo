@@ -19,6 +19,7 @@ int main(void)
 {
 	FRESULT fsres;
 	uint8_t fileStoreDone = 0, fileReadDone = 0;
+	uint8_t skip = 0;
 
 	uint32_t QE_Count = 0, QE_Count_prev = 1;
 	uint8_t QE_direc = 0;
@@ -48,7 +49,7 @@ int main(void)
 	/* clear the screen */
 	clearScreen();
 
-	/* Init µGUI */
+	/* Initialize uGUI */
 	UG_Init(&gui, (void(*)(UG_S16,UG_S16,UG_COLOR))pset, LCD_WIDTH, LCD_HEIGHT);
 
 	/* Hardware-accelerated graphics functions */
@@ -69,16 +70,13 @@ int main(void)
 	/* Initialize measurement module */
 	measure_init();
 
-	/* Initialize and start data capture */
-	ADC_init();
-
-	/* Initialize QSPI perpheral and the Flash memory */
+	/* Initialize QSPI peripheral and the flash memory */
 	QSPI_init();
 	QSPI_flash_init();
 
 	/* if user button is pushed during reset, format the drive with FAT */
 	if(readUserBtnState()){
-		uint8_t* workBuf = (uint8_t *)SDRAM_BANK3_ADDR;		/* use SDRAM as working buffer for format process */
+		uint8_t* workBuf = (uint8_t *)SCRATCH_BUFFER;		/* use SDRAM as working buffer for format process */
 
 		LL_GPIO_SetOutputPin(LED1_GPIO_PORT, LED1_PIN);
 
@@ -100,6 +98,9 @@ int main(void)
 		hangFirmware();
 	}
 
+	/* Initialize and start data capture */
+	ADC_init();
+
 	/* Main loop */
 	while(1)
 	{
@@ -120,9 +121,7 @@ int main(void)
 					(trigmodeVals[trigmode] == TRIGMODE_NORM && trigPt != -1 && runstopVals[runstop] != RUNSTOP_STOP))
 			{
 				if(chDispMode != CHDISPMODE_FFT){
-					/* clear the wave draw buffer */
-					fillScreenWave(C_BLACK);
-					while(DMA2D->CR & 0x01);
+					fillScreenWave(C_BLACK);	/* clear the wave draw buffer */
 
 					origtscale = tscale;		/* store the original time scale of waveform */
 
@@ -196,9 +195,7 @@ int main(void)
 				/* Draw spectrum */
 				else{
 					if(measPending){
-						/* clear the wave draw buffer */
-						fillScreenWave(C_BLACK);
-						while(DMA2D->CR & 0x01);
+						fillScreenWave(C_BLACK);			/* clear the wave draw buffer */
 
 						calcSpectrum(fftSrcChannel);
 
@@ -307,9 +304,7 @@ int main(void)
 					else if(toffStm - trigPtStm > LCD_WIDTH - 1)
 						toffStm = trigPtStm + LCD_WIDTH - 1;
 
-					/* clear the wave draw buffer */
-					fillScreenWave(C_BLACK);
-					while(DMA2D->CR & 0x01);
+					fillScreenWave(C_BLACK);				/* clear the wave draw buffer */
 
 					/* Draw the resampled signal */
 					for(j = 0; j < LCD_WIDTH && waveIdxStartStm+j < lenResampledSig; j++){
@@ -403,32 +398,45 @@ int main(void)
 
 		/* Update screen */
 		updateToScreen();
-		while(DMA2D->CR & 0x01);
 
-		if(!fileStoreDone){
+		/* file operations */
+		if(!fileStoreDone && skip++ == 5){
 			UINT bw;
-			f_open(&fp, "hello.txt", FA_CREATE_ALWAYS | FA_WRITE);
-			fsres = f_write(&fp, "Hello, World!\r\n", 15, &bw);
+
+			f_open(&fp, "screen.img", FA_CREATE_ALWAYS | FA_WRITE);
+			fsres = f_write(&fp, (const void *)LCD_FRAME_BUFFER, 130560, &bw);
 			f_close(&fp);
-			if(bw != 15){
+			if(bw != 130560){
 				printf("File write error: %d.\n", fsres);
 				hangFirmware();
 			}
+
+			printf("Stored image\n");
+			LL_mDelay(3000);
+
+			clearScreen();			/* clear screen */
+
+			printf("Cleared screen\n");
+			LL_mDelay(3000);
+
 			fileStoreDone = 1;
 		}
 		else if(fileStoreDone && !fileReadDone){
-			char readBuf[20];
 			UINT br;
-			f_open(&fp, "hello.txt", FA_READ);
-			fsres = f_read(&fp, readBuf, 15, &br);
+
+			f_open(&fp, "screen.img", FA_READ);
+			fsres = f_read(&fp, (void *)LCD_FRAME_BUFFER, 130560, &br);
 			f_close(&fp);
-			readBuf[br] = '\0';
-			if(br != 15){
+
+			if(br != 130560){
 				printf("File read error: %d.\n", fsres);
 				hangFirmware();
 			}
-			printf("%s", readBuf);
+
+			printf("Read image\n");
+
 			fileReadDone = 1;
+			while(1);
 		}
 	}
 }

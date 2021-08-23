@@ -72,7 +72,7 @@ FATFS fatFs;       					/* file system object */
 FIL fp;            					/* file object */
 const MKFS_PARM mkfsParam = {		/* file system parameters */
 	.fmt = FM_FAT,
-	.au_size = SECTOR_SIZE,
+	.au_size = 32*SECTOR_SIZE,
 	.align = 0,
 	.n_fat = 1,
 	.n_root = 128
