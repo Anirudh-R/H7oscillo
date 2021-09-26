@@ -33,9 +33,12 @@ void QE_IRQHandler(void);
 void User_Button_IRQHandler(void);
 void CH1_ADC_DMA_IRQHandler(void);
 void CH2_ADC_DMA_IRQHandler(void);
+void QSPI_DMA_IRQHandler(void);
 void LTDC_ER_IRQHandler(void);
 void DMA2D_IRQHandler(void);
 void TIM4_IRQHandler(void);
+void TIM3_IRQHandler(void);
+void QUADSPI_IRQHandler(void);
 
 #ifdef __cplusplus
 }

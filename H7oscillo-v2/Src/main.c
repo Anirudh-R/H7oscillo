@@ -76,7 +76,7 @@ int main(void)
 
 	/* if user button is pushed during reset, format the drive with FAT */
 	if(readUserBtnState()){
-		uint8_t* workBuf = (uint8_t *)SCRATCH_BUFFER;		/* use SDRAM as working buffer for format process */
+		uint8_t* workBuf = (uint8_t *)SCRATCH_BUFFER0;		/* working buffer for format process */
 
 		LL_GPIO_SetOutputPin(LED1_GPIO_PORT, LED1_PIN);
 

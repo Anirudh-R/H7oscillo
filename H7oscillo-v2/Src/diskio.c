@@ -23,7 +23,6 @@ DSTATUS disk_status (
 }
 
 
-
 /*-----------------------------------------------------------------------*/
 /* Initialize a Drive                                                    */
 /*-----------------------------------------------------------------------*/
@@ -36,7 +35,6 @@ DSTATUS disk_initialize (
 
 	return 0;				/* success */
 }
-
 
 
 /*-----------------------------------------------------------------------*/
@@ -52,14 +50,18 @@ DRESULT disk_read (
 {
 	UINT i;
 
+#if QSPI_USE_NONBLK_WRITES
+	while(QSPI_is_busy());		/* finish pending writes */
+#endif
+
 	for(i = 0; i < count; i++){
-		if(QSPI_flash_read(buff + i*SECTOR_SIZE, (sector + i)*SECTOR_SIZE, SECTOR_SIZE))
+		if(QSPI_flash_read(buff + i*SECTOR_SIZE, (sector + i)*SECTOR_SIZE, SECTOR_SIZE)){
 			return RES_ERROR;
+		}
 	}
 
 	return RES_OK;
 }
-
 
 
 /*-----------------------------------------------------------------------*/
@@ -77,10 +79,25 @@ DRESULT disk_write (
 {
 	UINT i;
 
-	for(i = 0; i < count; i++){
-		if(QSPI_flash_write(buff + i*SECTOR_SIZE, (sector + i)*SECTOR_SIZE, SECTOR_SIZE))
-			return RES_ERROR;
+#if QSPI_USE_NONBLK_WRITES
+	while(QSPI_is_busy());		/* finish pending writes */
+
+	/* copy data to scratch buffer, as buff becomes invalid once function returns */
+	uint8_t* pScrBuf = (uint8_t *)SCRATCH_BUFFER1;
+	for(i = 0; i < count*SECTOR_SIZE; i++){
+		pScrBuf[i] = buff[i];
 	}
+
+	if(QSPI_flash_write_nb(pScrBuf, sector*SECTOR_SIZE, count)){
+		return RES_ERROR;
+	}
+#else
+	for(i = 0; i < count; i++){
+		if(QSPI_flash_write(buff + i*SECTOR_SIZE, (sector + i)*SECTOR_SIZE, SECTOR_SIZE)){
+			return RES_ERROR;
+		}
+	}
+#endif
 
 	return RES_OK;
 }
@@ -100,7 +117,10 @@ DRESULT disk_ioctl (
 {
 	switch(cmd)
 	{
-		case CTRL_SYNC:						/* nothing to do as we doing blocking writes */
+		case CTRL_SYNC:						/* complete pending writes */
+#if QSPI_USE_NONBLK_WRITES
+			while(QSPI_is_busy());
+#endif
 			return RES_OK;
 
 		case GET_SECTOR_COUNT:				/* number of sectors in flash */

@@ -233,3 +233,20 @@ void TIM3_IRQHandler(void)
 	measPending = 1;
 	TIM_MEAS->SR &= ~0x01;
 }
+
+/**
+  * @brief  This function handles QSPI interrupts.
+  * @param  None
+  * @retval None
+  */
+void QUADSPI_IRQHandler(void)
+{
+#if QSPI_USE_NONBLK_WRITES
+	if(qspiState != QSPI_STATE_IDLE){
+		NVIC_DisableIRQ(QUADSPI_IRQn);		/* disable QSPI interrupts */
+		QUADSPI->CR &= ~QUADSPI_CR_EN;		/* disable the QSPI peripheral */
+
+		QSPI_flash_write_nb(0, 0, 0);		/* continue the ongoing operation */
+	}
+#endif
+}

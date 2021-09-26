@@ -148,9 +148,12 @@
 #define LCD_FRAME_BUFFER						SDRAM_BANK0_ADDR	/* Frame buffer for display */
 #define LCD_DRAW_BUFFER_UGUI					SDRAM_BANK1_ADDR	/* Draw buffer for uGUI graphics (windows, texts, etc) */
 #define LCD_DRAW_BUFFER_WAVE					SDRAM_BANK2_ADDR	/* Draw buffer for the waveforms */
-#define SCRATCH_BUFFER							SDRAM_BANK3_ADDR	/* Sratch buffer (general work area) */
 #define UGUI_FRAME_ALPHA						0x8F				/* Blending Alpha factor for the uGUI Layer */
 #define WAVE_FRAME_ALPHA						0xFF				/* Blending Alpha factor for the Wave Layer */
+
+/* SDRAM Bank 3 used as scratch buffers (general work area) */
+#define SCRATCH_BUFFER0							((uint32_t)0xC0600000)	/* Scratch buffer 0 */
+#define SCRATCH_BUFFER1							((uint32_t)0xC0700000)	/* Scratch buffer 1 */
 
 /* Touch screen */
 #define TS_I2Cx                             	I2C3
