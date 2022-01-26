@@ -18,8 +18,6 @@
 int main(void)
 {
 	FRESULT fsres;
-	uint8_t fileStoreDone = 0, fileReadDone = 0;
-	uint8_t skip = 0;
 
 	uint32_t QE_Count = 0, QE_Count_prev = 1;
 	uint8_t QE_direc = 0;
@@ -97,6 +95,9 @@ int main(void)
 		printf("FAT FS mounting failed, error: %d\n", fsres);
 		hangFirmware();
 	}
+
+	/* Initialize USB peripheral */
+	USB_init();
 
 	/* Initialize and start data capture */
 	ADC_init();
@@ -398,46 +399,6 @@ int main(void)
 
 		/* Update screen */
 		updateToScreen();
-
-		/* file operations */
-		if(!fileStoreDone && skip++ == 5){
-			UINT bw;
-
-			f_open(&fp, "screen.img", FA_CREATE_ALWAYS | FA_WRITE);
-			fsres = f_write(&fp, (const void *)LCD_FRAME_BUFFER, 130560, &bw);
-			f_close(&fp);
-			if(bw != 130560){
-				printf("File write error: %d.\n", fsres);
-				hangFirmware();
-			}
-
-			printf("Stored image\n");
-			LL_mDelay(3000);
-
-			clearScreen();			/* clear screen */
-
-			printf("Cleared screen\n");
-			LL_mDelay(3000);
-
-			fileStoreDone = 1;
-		}
-		else if(fileStoreDone && !fileReadDone){
-			UINT br;
-
-			f_open(&fp, "screen.img", FA_READ);
-			fsres = f_read(&fp, (void *)LCD_FRAME_BUFFER, 130560, &br);
-			f_close(&fp);
-
-			if(br != 130560){
-				printf("File read error: %d.\n", fsres);
-				hangFirmware();
-			}
-
-			printf("Read image\n");
-
-			fileReadDone = 1;
-			while(1);
-		}
 	}
 }
 

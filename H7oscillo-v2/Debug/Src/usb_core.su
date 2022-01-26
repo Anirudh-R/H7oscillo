@@ -1,0 +1,4 @@
+usb_core.c:340:13:USB_handle_error	0	static
+usb_core.c:263:16:USB_IN_transfer	24	static
+usb_core.c:35:6:USB_init	32	static
+usb_core.c:121:6:USB_handle_event	16	static

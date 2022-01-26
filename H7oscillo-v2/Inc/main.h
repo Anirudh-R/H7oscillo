@@ -44,6 +44,7 @@
 #include "ff.h"
 #include "diskio.h"
 #include "qspif.h"
+#include "usb_core.h"
 #include "globals.h"
 
 

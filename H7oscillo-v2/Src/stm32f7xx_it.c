@@ -250,3 +250,18 @@ void QUADSPI_IRQHandler(void)
 	}
 #endif
 }
+
+/**
+  * @brief  This function handles OTG_FS interrupts.
+  * @param  None
+  * @retval None
+  */
+void OTG_FS_IRQHandler(void)
+{
+	NVIC_DisableIRQ(OTG_FS_IRQn);
+
+	USB_handle_event();
+
+	NVIC_ClearPendingIRQ(OTG_FS_IRQn);
+	NVIC_EnableIRQ(OTG_FS_IRQn);
+}
