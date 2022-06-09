@@ -1,26 +1,27 @@
 /**
   ******************************************************************************
-  * @file    usb_core.h
+  * @file    bot.h
   * @author  anirudhr
-  * @brief   Header file for usb_core.c.
+  * @brief   Header file for bot.c.
   ******************************************************************************
   */
 
 /* Define to prevent recursive inclusion -------------------------------------*/
-#ifndef __USB_CORE_H
-#define __USB_CORE_H
+#ifndef __BOT_H
+#define __BOT_H
 
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
-#include "usb_desc.h"
-#include "bot.h"
 
 
-#define MAX_PACKET_SZ			64		/* max packet size for all endpoints */
+#define CBW_SIGNATURE				((uint32_t)0x43425355)
+#define CSW_SIGNATURE				((uint32_t)0x53425355)
+#define CBW_SIZE					(31)
+#define CSW_SIZE					(13)
+
+#define BOT_CBW_INVALID				-1
 
 /* External function declarations */
-extern void USB_init(void);
-extern void USB_config_bulkEPs(void);
-extern void USB_handle_event(void);
+int32_t BOT_process(const uint8_t* buf, uint8_t len);
 
-#endif /* __USB_CORE_H */
+#endif /* __BOT_H */

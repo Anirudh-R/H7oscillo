@@ -18,14 +18,14 @@ static volatile USB_OTG_DeviceTypeDef* const USBFSD = (USB_OTG_DeviceTypeDef *)(
 static volatile USB_OTG_INEndpointTypeDef* const EP0IN = (USB_OTG_INEndpointTypeDef *)(USB_OTG_FS_PERIPH_BASE + USB_OTG_IN_ENDPOINT_BASE + 0*USB_OTG_EP_REG_SIZE);		/* Control endpoint IN registers */
 static volatile USB_OTG_OUTEndpointTypeDef* const EP0OUT = (USB_OTG_OUTEndpointTypeDef *)(USB_OTG_FS_PERIPH_BASE + USB_OTG_OUT_ENDPOINT_BASE + 0*USB_OTG_EP_REG_SIZE);	/* Control endpoint OUT registers */
 static volatile USB_OTG_INEndpointTypeDef* const EP1 = (USB_OTG_INEndpointTypeDef *)(USB_OTG_FS_PERIPH_BASE + USB_OTG_IN_ENDPOINT_BASE + 1*USB_OTG_EP_REG_SIZE);		/* Bulk-IN endpoint registers */
-static volatile USB_OTG_OUTEndpointTypeDef* const EP2 = (USB_OTG_OUTEndpointTypeDef *)(USB_OTG_FS_PERIPH_BASE + USB_OTG_OUT_ENDPOINT_BASE + 2*USB_OTG_EP_REG_SIZE);	/* Bulk-OUT endpoint registers */
+static volatile USB_OTG_OUTEndpointTypeDef* const EP2 = (USB_OTG_OUTEndpointTypeDef *)(USB_OTG_FS_PERIPH_BASE + USB_OTG_OUT_ENDPOINT_BASE + 2*USB_OTG_EP_REG_SIZE);		/* Bulk-OUT endpoint registers */
 static volatile uint32_t* const EP0FIFO = (uint32_t *)(USB_OTG_FS_PERIPH_BASE + USB_OTG_FIFO_BASE + 0*USB_OTG_FIFO_SIZE);												/* FIFO addresses for EP0, EP1, EP2 */
 static volatile uint32_t* const EP1FIFO = (uint32_t *)(USB_OTG_FS_PERIPH_BASE + USB_OTG_FIFO_BASE + 1*USB_OTG_FIFO_SIZE);
 static volatile uint32_t* const EP2FIFO = (uint32_t *)(USB_OTG_FS_PERIPH_BASE + USB_OTG_FIFO_BASE + 2*USB_OTG_FIFO_SIZE);
 
 static uint32_t usbRxPacket[16];
-static uint32_t usbTxPacketEP0[16];
-static uint32_t usbTxPacketEP1[16];
+uint8_t setAddrFlag = 0;
+uint8_t devAddr;
 
 /**
   * @brief  Initialize the USB core for device mode operation.
@@ -109,9 +109,26 @@ void USB_init(void)
 	return;
 }
 
-
-uint8_t setAddrFlag = 0;
-uint8_t devAddr;
+/**
+  * @brief  Configure EP1 and EP2 bulk endpoints for operation.
+  * @param  None
+  * @retval None
+  */
+void USB_config_bulkEPs(void)
+{
+	EP1->DIEPCTL |= USB_OTG_DIEPCTL_SNAK;
+	EP2->DOEPCTL |= USB_OTG_DOEPCTL_SNAK;
+	USBFSD->DAINTMSK |= (0x01 << 1) | (0x01 << 18);															/* unmask EP1 (IN) and EP2 (OUT) interrupts */
+	MODIFY_REG(EP1->DIEPCTL, USB_OTG_DIEPCTL_MPSIZ | USB_OTG_DIEPCTL_TXFNUM | USB_OTG_DIEPCTL_EPENA			/* 64-byte max packet size, bulk type, enable EP1 */
+			| USB_OTG_DIEPCTL_EPTYP | USB_OTG_DIEPCTL_SD0PID_SEVNFRM | USB_OTG_DIEPCTL_USBAEP,
+			0x40 << USB_OTG_DIEPCTL_MPSIZ_Pos | 0x01 << USB_OTG_DIEPCTL_TXFNUM_Pos | 0x01 << USB_OTG_DIEPCTL_EPENA_Pos |
+			0x02 << USB_OTG_DIEPCTL_EPTYP_Pos | 0x01 << USB_OTG_DIEPCTL_SD0PID_SEVNFRM_Pos | 0x01 << USB_OTG_DIEPCTL_USBAEP_Pos);
+	MODIFY_REG(EP2->DOEPCTL, USB_OTG_DOEPCTL_MPSIZ | USB_OTG_DOEPCTL_EPENA | USB_OTG_DOEPCTL_EPTYP | 		/* 64-byte max packet size, bulk type, enable EP2 */
+			USB_OTG_DOEPCTL_SD0PID_SEVNFRM | USB_OTG_DOEPCTL_USBAEP, 0x40 << USB_OTG_DOEPCTL_MPSIZ_Pos |
+			0x01 << USB_OTG_DOEPCTL_EPENA_Pos | 0x02 << USB_OTG_DOEPCTL_EPTYP_Pos | 0x01 << USB_OTG_DOEPCTL_SD0PID_SEVNFRM_Pos
+			| 0x01 << USB_OTG_DOEPCTL_USBAEP_Pos);
+	EP2->DOEPCTL |= USB_OTG_DOEPCTL_CNAK;
+}
 
 /**
   * @brief  Handle USB interrupt events.
@@ -124,10 +141,12 @@ void USB_handle_event(void)
 	if(USBFSG->GINTSTS & USB_OTG_GINTSTS_USBRST){
 		USBFSG->GINTSTS |= USB_OTG_GINTSTS_USBRST;
 		MODIFY_REG(USBFSG->GRSTCTL, USB_OTG_GRSTCTL_TXFNUM, 0x10 << USB_OTG_GRSTCTL_TXFNUM_Pos);
-		USBFSG->GRSTCTL |= USB_OTG_GRSTCTL_TXFFLSH;									/* flush TX FIFOs */
+		USBFSG->GRSTCTL |= USB_OTG_GRSTCTL_TXFFLSH;									/* flush all TX FIFOs */
 		while(USBFSG->GRSTCTL & USB_OTG_GRSTCTL_TXFFLSH);
 		MODIFY_REG(USBFSD->DCFG, USB_OTG_DCFG_DAD, 0 << USB_OTG_DCFG_DAD_Pos);		/* set addr to 0 */
 		setAddrFlag = 0;
+		EP0OUT->DOEPCTL |= USB_OTG_DOEPCTL_SNAK;									/* set NAK of OUT EPs */
+		EP2->DOEPCTL |= USB_OTG_DOEPCTL_SNAK;
 		printf("USB Reset\n");
 	}
 
@@ -154,25 +173,28 @@ void USB_handle_event(void)
 		uint32_t rxpacketsts = USBFSG->GRXSTSP;
 		uint8_t packettype = (rxpacketsts & USB_OTG_GRXSTSP_PKTSTS) >> USB_OTG_GRXSTSP_PKTSTS_Pos;
 		uint8_t bytecnt = (rxpacketsts & USB_OTG_GRXSTSP_BCNT) >> USB_OTG_GRXSTSP_BCNT_Pos;
+		uint8_t dstEP = (rxpacketsts & USB_OTG_GRXSTSP_EPNUM) >> USB_OTG_GRXSTSP_EPNUM_Pos;
 		uint8_t* packetPtr = (uint8_t *)usbRxPacket;
-		//printf("Rx %d bytes of type %d\n", bytecnt, packettype);
+		//printf("Rx %d bytes of type %d to ep %d\n", bytecnt, packettype, dstEP);
 
-		if(bytecnt){
-			for(uint32_t i = 0; i < bytecnt/4; i++)
-				usbRxPacket[i] = *EP0FIFO;
+		if(dstEP == 0){
+			if(bytecnt){
+				for(uint32_t i = 0; i < bytecnt/4; i++)
+					usbRxPacket[i] = *EP0FIFO;
 
-			for(uint32_t i = 0; i < bytecnt; i++)
-				printf("%02X ", packetPtr[i]);
-			printf("\n");
-		}
-		else if(packettype == 0x02){
-			printf("Rx ZLP\n", packettype);
-			EP0OUT->DOEPCTL |= USB_OTG_DOEPCTL_CNAK | USB_OTG_DOEPCTL_EPENA;		/* clear NAK bit and re-enable EP */	//
-			return;
-		}
-		else{
-			EP0OUT->DOEPCTL |= USB_OTG_DOEPCTL_CNAK | USB_OTG_DOEPCTL_EPENA;		/* clear NAK bit and re-enable EP */	//
-			return;
+				for(uint32_t i = 0; i < bytecnt; i++)
+					printf("%02X ", packetPtr[i]);
+				printf("\n");
+			}
+			else if(packettype == 0x02){
+				printf("Rx ZLP\n");
+				EP0OUT->DOEPCTL |= USB_OTG_DOEPCTL_CNAK | USB_OTG_DOEPCTL_EPENA;		/* clear NAK bit and re-enable EP */
+				return;
+			}
+			else{
+				EP0OUT->DOEPCTL |= USB_OTG_DOEPCTL_CNAK | USB_OTG_DOEPCTL_EPENA;		/* clear NAK bit and re-enable EP */
+				return;
+			}
 		}
 
 		/* SETUP packet */
@@ -187,6 +209,7 @@ void USB_handle_event(void)
 				devAddr = packetPtr[2];
 				setAddrFlag = 1;
 				USB_IN_transfer(EP0IN, EP0FIFO, NULL, 0);
+				printf("Tx ZLP\n");
 			}
 			/* Get Descriptor, Configuration Descriptor */
 			else if(packetPtr[1] == 0x06 && packetPtr[3] == 0x02){
@@ -227,22 +250,91 @@ void USB_handle_event(void)
 					printf("Tx %d bytes\n", nBytesToSend);
 				}
 				else{
-					printf("Here1\n");
+					printf("Req for undef str desc\n");
 				}
 			}
 			/* Get Descriptor, Device Qualifier */
 			else if(packetPtr[1] == 0x06 && packetPtr[3] == 0x06){
-				//while(USBFSG->GINTSTS & )
-				//USBFSD->DCTL |= USB_OTG_DCTL_SGINAK;
+				uint8_t nBytesToSend = min(packetPtr[6], SIZ_DEV_QUALIFIER);
+				USB_IN_transfer(EP0IN, EP0FIFO, devQualifier, nBytesToSend);
+				printf("Tx %d bytes\n", nBytesToSend);
+			}
+			/* Set Configuration */
+			else if(packetPtr[1] == 0x09){
+				if(packetPtr[2] == 0x01){
+					USB_config_bulkEPs();
+					USB_IN_transfer(EP0IN, EP0FIFO, NULL, 0);
+					printf("Tx ZLP\n");
+				}
+				else{
+					printf("Invalid config set\n");
+				}
+			}
+			/* Set Interface */
+			else if(packetPtr[1] == 0x0B){
+				if(packetPtr[4] == 0x00){
+					USB_config_bulkEPs();
+					USB_IN_transfer(EP0IN, EP0FIFO, NULL, 0);
+					printf("Tx ZLP\n");
+				}
+				else{
+					printf("Invalid intrf set\n");
+				}
+			}
+			/* Class request, Bulk-Only Mass Storage Reset */
+			else if(packetPtr[0] == 0x21 && packetPtr[1] == 0xFF){
+				/* Do nothing */
+			}
+			/* Class request, Get Max LUN */
+			else if(packetPtr[0] == 0xA1 && packetPtr[1] == 0xFE){
+				uint8_t nBytesToSend = min(packetPtr[6], 1);
+				uint8_t tempBuf[1] = {0x00};
+				USB_IN_transfer(EP0IN, EP0FIFO, tempBuf, nBytesToSend);
+				printf("Tx %d bytes\n", nBytesToSend);
 			}
 			else{
-				printf("Here2\n");
+				printf("Unknown SETUP pkt\n");
 			}
 
 			EP0OUT->DOEPCTL |= USB_OTG_DOEPCTL_CNAK | USB_OTG_DOEPCTL_EPENA;		/* clear NAK bit and re-enable EP, as it is changed by OTG core after SETUP rx */
 		}
+
+		/* Bulk EP2 (OUT) data */
+		else if(dstEP == 2){
+			if(bytecnt){
+				uint8_t *respDataPtr = (uint8_t *)USB_DATA_BUFFER;
+				uint32_t respLen;
+
+				for(uint32_t i = 0; i < bytecnt/4; i++)
+					usbRxPacket[i] = *EP2FIFO;
+
+				for(uint32_t i = 0; i < bytecnt; i++)
+					printf("%02X ", packetPtr[i]);
+				printf("\n");
+
+				respLen = BOT_process(packetPtr, bytecnt);
+
+				if(respLen > CSW_SIZE){
+					printf("Here1\n");
+					USB_IN_transfer(EP1, EP1FIFO, respDataPtr, respLen - CSW_SIZE);				/* send response data to host */
+					printf("Tx %lu bytes\n", respLen - CSW_SIZE);
+				}
+
+				printf("Here2\n");
+				USB_IN_transfer(EP1, EP1FIFO, respDataPtr + respLen - CSW_SIZE, CSW_SIZE);		/* send CSW to host */
+				printf("Tx %d bytes\n", CSW_SIZE);
+			}
+			else if(packettype == 0x02){
+				printf("Rx EP2 ZLP\n");
+			}
+
+			EP2->DOEPCTL |= USB_OTG_DOEPCTL_CNAK | USB_OTG_DOEPCTL_EPENA;
+		}
+
+		/* Could be transfer complete or NAK interrupts */
 		else{
-			printf("Here3\n");
+			EP0OUT->DOEPCTL |= USB_OTG_DOEPCTL_CNAK | USB_OTG_DOEPCTL_EPENA;
+			EP2->DOEPCTL |= USB_OTG_DOEPCTL_CNAK | USB_OTG_DOEPCTL_EPENA;
 		}
 	}
 
@@ -267,18 +359,19 @@ static uint8_t USB_IN_transfer(volatile USB_OTG_INEndpointTypeDef* ep, volatile 
 	uint8_t splen = len % MAX_PACKET_SZ;
 	uint32_t i, j;
 
-	ep->DIEPCTL &= ~USB_OTG_DIEPCTL_SD0PID_SEVNFRM;		/* force DATA1 PID */	//
+	if(ep == EP0IN){
+		ep->DIEPCTL &= ~USB_OTG_DIEPCTL_SD0PID_SEVNFRM;						/* force DATA1 PID for control transfers */
+	}
 
-	if(len == 0){			/* ZLP */
+	if(len == 0){															/* ZLP */
 		MODIFY_REG(ep->DIEPTSIZ, USB_OTG_DIEPTSIZ_XFRSIZ | USB_OTG_DIEPTSIZ_PKTCNT, 0 << USB_OTG_DIEPTSIZ_XFRSIZ_Pos |
 				1 << USB_OTG_DIEPTSIZ_PKTCNT_Pos);
-		if(setAddrFlag) ep->DIEPCTL &= ~USB_OTG_DIEPCTL_SD0PID_SEVNFRM;		/* force DATA1 PID */
 		ep->DIEPCTL |= USB_OTG_DIEPCTL_EPENA | USB_OTG_DIEPCTL_CNAK;
 
 		if(setAddrFlag){
 			MODIFY_REG(USBFSD->DCFG, USB_OTG_DCFG_DAD, devAddr << USB_OTG_DCFG_DAD_Pos);
 			setAddrFlag = 0;
-			printf("Addr = 0x%02X\n", (USBFSD->DCFG & USB_OTG_DCFG_DAD) >> USB_OTG_DCFG_DAD_Pos);
+			//printf("Addr = 0x%02X\n", (USBFSD->DCFG & USB_OTG_DCFG_DAD) >> USB_OTG_DCFG_DAD_Pos);
 		}
 
 		return 0;
@@ -291,7 +384,13 @@ static uint8_t USB_IN_transfer(volatile USB_OTG_INEndpointTypeDef* ep, volatile 
 
 	for(i = 0; i < pktcnt; i++){
 		/* wait for TX FIFO to become empty */
+		if(ep == EP1 && len == 13){			//
+			printf("%lu avl\n", ep->DTXFSTS);
+		}
 		while(!((ep->DIEPINT & USB_OTG_DIEPINT_TXFE) && (ep->DTXFSTS == MAX_PACKET_SZ/4)));
+//		if(ep == EP1 && len == 13){			//
+//			printf("TXF emp\n");
+//		}
 
 		/* the last packet is a short packet */
 		if(i == pktcnt - 1 && splen){
@@ -315,6 +414,10 @@ static uint8_t USB_IN_transfer(volatile USB_OTG_INEndpointTypeDef* ep, volatile 
 					//printf("%08X\n", *((uint32_t *)buf + i*(MAX_PACKET_SZ/4) + j));
 				}
 			}
+
+//			if(ep == EP1){			//
+//				printf("%lu avl\n", ep->DTXFSTS);
+//			}
 		}
 		/* max-size packet */
 		else{
@@ -328,6 +431,14 @@ static uint8_t USB_IN_transfer(volatile USB_OTG_INEndpointTypeDef* ep, volatile 
 	ep->DIEPINT |= USB_OTG_DIEPINT_XFRC;
 	while(!(ep->DIEPINT & USB_OTG_DIEPINT_XFRC));	/* wait for transfer complete and clear flag */
 	ep->DIEPINT |= USB_OTG_DIEPINT_XFRC;
+
+	if(ep == EP1){			//
+		ep->DIEPCTL |= USB_OTG_DIEPCTL_SNAK;
+	}
+
+	MODIFY_REG(USBFSG->GRSTCTL, USB_OTG_GRSTCTL_TXFNUM, 0x10 << USB_OTG_GRSTCTL_TXFNUM_Pos);			//
+	USBFSG->GRSTCTL |= USB_OTG_GRSTCTL_TXFFLSH;									/* flush all TX FIFOs */
+	while(USBFSG->GRSTCTL & USB_OTG_GRSTCTL_TXFFLSH);
 
 	return 0;
 }

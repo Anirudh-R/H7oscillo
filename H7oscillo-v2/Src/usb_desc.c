@@ -114,3 +114,6 @@ const uint8_t stringInterface[SIZ_STRING_INTERFACE] = {
     /* Interface 0: "ST Mass" */
     'S', 0, 'T', 0, ' ', 0, 'M', 0, 'a', 0, 's', 0, 's', 0
 };
+
+const uint8_t devQualifier[SIZ_DEV_QUALIFIER] = {0x0A, 0x06, 0x00, 0x02, 0x00, 0x00, 0x00, 0x40, 0x01, 0x00};	/* USB 2.0, 64 bytes rx endpoint */
+

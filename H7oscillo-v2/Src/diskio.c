@@ -83,7 +83,7 @@ DRESULT disk_write (
 	while(QSPI_is_busy());		/* finish pending writes */
 
 	/* copy data to scratch buffer, as buff becomes invalid once function returns */
-	uint8_t* pScrBuf = (uint8_t *)SCRATCH_BUFFER1;
+	uint8_t* pScrBuf = (uint8_t *)DISKIO_BUFFER;
 	for(i = 0; i < count*SECTOR_SIZE; i++){
 		pScrBuf[i] = buff[i];
 	}

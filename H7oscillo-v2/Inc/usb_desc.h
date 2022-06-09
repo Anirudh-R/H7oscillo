@@ -22,6 +22,7 @@
 #define SIZ_STRING_PRODUCT           	  38
 #define SIZ_STRING_SERIAL                 26
 #define SIZ_STRING_INTERFACE              16
+#define SIZ_DEV_QUALIFIER              	  10
 
 extern const uint8_t deviceDescriptor[SIZ_DEVICE_DESC];
 extern const uint8_t configDescriptor[SIZ_CONFIG_DESC];
@@ -30,5 +31,6 @@ extern const uint8_t stringManufac[SIZ_STRING_MANUFAC];
 extern const uint8_t stringProduct[SIZ_STRING_PRODUCT];
 extern const uint8_t stringSerial[SIZ_STRING_SERIAL];
 extern const uint8_t stringInterface[SIZ_STRING_INTERFACE];
+extern const uint8_t devQualifier[SIZ_DEV_QUALIFIER];
 
 #endif /* __USB_DESC_H */
