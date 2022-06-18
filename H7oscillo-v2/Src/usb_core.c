@@ -147,13 +147,17 @@ void USB_handle_event(void)
 		setAddrFlag = 0;
 		EP0OUT->DOEPCTL |= USB_OTG_DOEPCTL_SNAK;									/* set NAK of OUT EPs */
 		EP2->DOEPCTL |= USB_OTG_DOEPCTL_SNAK;
+		#ifdef USBDEBUG
 		printf("USB Reset\n");
+		#endif
 	}
 
 	/* Suspend */
 	else if(USBFSG->GINTSTS & USB_OTG_GINTSTS_USBSUSP){
 		USBFSG->GINTSTS |= USB_OTG_GINTSTS_USBSUSP;
+		#ifdef USBDEBUG
 		printf("USB Suspend\n");
+		#endif
 	}
 
 	/* USB Speed enumeration complete */
@@ -179,15 +183,19 @@ void USB_handle_event(void)
 
 		if(dstEP == 0){
 			if(bytecnt){
-				for(uint32_t i = 0; i < bytecnt/4; i++)
+				for(uint32_t i = 0; i < (bytecnt + 3)/4; i++)
 					usbRxPacket[i] = *EP0FIFO;
 
+				#ifdef USBDEBUG
 				for(uint32_t i = 0; i < bytecnt; i++)
 					printf("%02X ", packetPtr[i]);
 				printf("\n");
+				#endif
 			}
 			else if(packettype == 0x02){
+				#ifdef USBDEBUG
 				printf("Rx ZLP\n");
+				#endif
 				EP0OUT->DOEPCTL |= USB_OTG_DOEPCTL_CNAK | USB_OTG_DOEPCTL_EPENA;		/* clear NAK bit and re-enable EP */
 				return;
 			}
@@ -202,20 +210,26 @@ void USB_handle_event(void)
 			/* Get Descriptor, Device Descriptor */
 			if(packetPtr[1] == 0x06 && packetPtr[3] == 0x01){
 				USB_IN_transfer(EP0IN, EP0FIFO, deviceDescriptor, SIZ_DEVICE_DESC);
+				#ifdef USBDEBUG
 				printf("Tx %d bytes\n", SIZ_DEVICE_DESC);
+				#endif
 			}
 			/* Set Address */
 			else if(packetPtr[1] == 0x05){
 				devAddr = packetPtr[2];
 				setAddrFlag = 1;
 				USB_IN_transfer(EP0IN, EP0FIFO, NULL, 0);
+				#ifdef USBDEBUG
 				printf("Tx ZLP\n");
+				#endif
 			}
 			/* Get Descriptor, Configuration Descriptor */
 			else if(packetPtr[1] == 0x06 && packetPtr[3] == 0x02){
 				uint8_t nBytesToSend = min(packetPtr[6], SIZ_CONFIG_DESC);
 				USB_IN_transfer(EP0IN, EP0FIFO, configDescriptor, nBytesToSend);
+				#ifdef USBDEBUG
 				printf("Tx %d bytes\n", nBytesToSend);
+				#endif
 			}
 			/* Get Descriptor, String Descriptor */
 			else if(packetPtr[1] == 0x06 && packetPtr[3] == 0x03){
@@ -223,31 +237,41 @@ void USB_handle_event(void)
 				if(packetPtr[4] == 0x00 && packetPtr[5] == 0x00){
 					uint8_t nBytesToSend = min(packetPtr[6], SIZ_STRING_LANGID);
 					USB_IN_transfer(EP0IN, EP0FIFO, stringLangID, nBytesToSend);
+					#ifdef USBDEBUG
 					printf("Tx %d bytes\n", nBytesToSend);
+					#endif
 				}
 				/* String manufacturer */
 				else if(packetPtr[2] == 0x01){
 					uint8_t nBytesToSend = min(packetPtr[6], SIZ_STRING_MANUFAC);
 					USB_IN_transfer(EP0IN, EP0FIFO, stringManufac, nBytesToSend);
+					#ifdef USBDEBUG
 					printf("Tx %d bytes\n", nBytesToSend);
+					#endif
 				}
 				/* String product */
 				else if(packetPtr[2] == 0x02){
 					uint8_t nBytesToSend = min(packetPtr[6], SIZ_STRING_PRODUCT);
 					USB_IN_transfer(EP0IN, EP0FIFO, stringProduct, nBytesToSend);
+					#ifdef USBDEBUG
 					printf("Tx %d bytes\n", nBytesToSend);
+					#endif
 				}
 				/* String serial */
 				else if(packetPtr[2] == 0x03){
 					uint8_t nBytesToSend = min(packetPtr[6], SIZ_STRING_SERIAL);
 					USB_IN_transfer(EP0IN, EP0FIFO, stringSerial, nBytesToSend);
+					#ifdef USBDEBUG
 					printf("Tx %d bytes\n", nBytesToSend);
+					#endif
 				}
 				/* String interface */
 				else if(packetPtr[2] == 0x04){
 					uint8_t nBytesToSend = min(packetPtr[6], SIZ_STRING_INTERFACE);
 					USB_IN_transfer(EP0IN, EP0FIFO, stringInterface, nBytesToSend);
+					#ifdef USBDEBUG
 					printf("Tx %d bytes\n", nBytesToSend);
+					#endif
 				}
 				else{
 					printf("Req for undef str desc\n");
@@ -257,14 +281,26 @@ void USB_handle_event(void)
 			else if(packetPtr[1] == 0x06 && packetPtr[3] == 0x06){
 				uint8_t nBytesToSend = min(packetPtr[6], SIZ_DEV_QUALIFIER);
 				USB_IN_transfer(EP0IN, EP0FIFO, devQualifier, nBytesToSend);
+				#ifdef USBDEBUG
 				printf("Tx %d bytes\n", nBytesToSend);
+				#endif
+			}
+			/* Clear Feature */
+			else if(packetPtr[1] == 0x01 && packetPtr[3] == 0x00 && packetPtr[5] == 0x01){
+				EP1->DIEPCTL &= ~USB_OTG_DIEPCTL_STALL;									/* clear the STALL of bulk IN EP */
+				EP1->DIEPCTL |= USB_OTG_DIEPCTL_SD0PID_SEVNFRM;							/* reset data toggle */
+				#ifdef USBDEBUG
+				printf("STALL clred\n");
+				#endif
 			}
 			/* Set Configuration */
 			else if(packetPtr[1] == 0x09){
 				if(packetPtr[2] == 0x01){
 					USB_config_bulkEPs();
 					USB_IN_transfer(EP0IN, EP0FIFO, NULL, 0);
+					#ifdef USBDEBUG
 					printf("Tx ZLP\n");
+					#endif
 				}
 				else{
 					printf("Invalid config set\n");
@@ -275,7 +311,9 @@ void USB_handle_event(void)
 				if(packetPtr[4] == 0x00){
 					USB_config_bulkEPs();
 					USB_IN_transfer(EP0IN, EP0FIFO, NULL, 0);
+					#ifdef USBDEBUG
 					printf("Tx ZLP\n");
+					#endif
 				}
 				else{
 					printf("Invalid intrf set\n");
@@ -290,42 +328,54 @@ void USB_handle_event(void)
 				uint8_t nBytesToSend = min(packetPtr[6], 1);
 				uint8_t tempBuf[1] = {0x00};
 				USB_IN_transfer(EP0IN, EP0FIFO, tempBuf, nBytesToSend);
+				#ifdef USBDEBUG
 				printf("Tx %d bytes\n", nBytesToSend);
+				#endif
 			}
 			else{
 				printf("Unknown SETUP pkt\n");
 			}
 
-			EP0OUT->DOEPCTL |= USB_OTG_DOEPCTL_CNAK | USB_OTG_DOEPCTL_EPENA;		/* clear NAK bit and re-enable EP, as it is changed by OTG core after SETUP rx */
+			EP0OUT->DOEPCTL |= USB_OTG_DOEPCTL_CNAK | USB_OTG_DOEPCTL_EPENA;			/* clear NAK bit and re-enable EP, as it is changed by OTG core after SETUP rx */
 		}
 
 		/* Bulk EP2 (OUT) data */
 		else if(dstEP == 2){
 			if(bytecnt){
 				uint8_t *respDataPtr = (uint8_t *)USB_DATA_BUFFER;
-				uint32_t respLen;
+				int32_t respLen;
+				uint8_t stallReqd;
 
-				for(uint32_t i = 0; i < bytecnt/4; i++)
+				for(uint32_t i = 0; i < (bytecnt + 3)/4; i++)
 					usbRxPacket[i] = *EP2FIFO;
 
+				#ifdef USBDEBUG
 				for(uint32_t i = 0; i < bytecnt; i++)
 					printf("%02X ", packetPtr[i]);
 				printf("\n");
+				#endif
 
-				respLen = BOT_process(packetPtr, bytecnt);
+				respLen = BOT_process(packetPtr, bytecnt, &stallReqd);
 
 				if(respLen > CSW_SIZE){
-					printf("Here1\n");
-					USB_IN_transfer(EP1, EP1FIFO, respDataPtr, respLen - CSW_SIZE);				/* send response data to host */
+					USB_IN_transfer(EP1, EP1FIFO, respDataPtr, respLen - CSW_SIZE);					/* send response data to host */
+					#ifdef USBDEBUG
 					printf("Tx %lu bytes\n", respLen - CSW_SIZE);
+					#endif
 				}
 
-				printf("Here2\n");
-				USB_IN_transfer(EP1, EP1FIFO, respDataPtr + respLen - CSW_SIZE, CSW_SIZE);		/* send CSW to host */
-				printf("Tx %d bytes\n", CSW_SIZE);
+				if(respLen > 0){
+					USB_IN_transfer(EP1, EP1FIFO, respDataPtr + respLen - CSW_SIZE, CSW_SIZE);		/* send CSW to host */
+					#ifdef USBDEBUG
+					printf("Tx CSW\n");
+					#endif
+					BOT_setCmdDone();
+				}
 			}
 			else if(packettype == 0x02){
+				#ifdef USBDEBUG
 				printf("Rx EP2 ZLP\n");
+				#endif
 			}
 
 			EP2->DOEPCTL |= USB_OTG_DOEPCTL_CNAK | USB_OTG_DOEPCTL_EPENA;
@@ -384,13 +434,7 @@ static uint8_t USB_IN_transfer(volatile USB_OTG_INEndpointTypeDef* ep, volatile 
 
 	for(i = 0; i < pktcnt; i++){
 		/* wait for TX FIFO to become empty */
-		if(ep == EP1 && len == 13){			//
-			printf("%lu avl\n", ep->DTXFSTS);
-		}
-		while(!((ep->DIEPINT & USB_OTG_DIEPINT_TXFE) && (ep->DTXFSTS == MAX_PACKET_SZ/4)));
-//		if(ep == EP1 && len == 13){			//
-//			printf("TXF emp\n");
-//		}
+		while(!(ep->DIEPINT & USB_OTG_DIEPINT_TXFE));
 
 		/* the last packet is a short packet */
 		if(i == pktcnt - 1 && splen){
@@ -414,10 +458,6 @@ static uint8_t USB_IN_transfer(volatile USB_OTG_INEndpointTypeDef* ep, volatile 
 					//printf("%08X\n", *((uint32_t *)buf + i*(MAX_PACKET_SZ/4) + j));
 				}
 			}
-
-//			if(ep == EP1){			//
-//				printf("%lu avl\n", ep->DTXFSTS);
-//			}
 		}
 		/* max-size packet */
 		else{
@@ -429,14 +469,10 @@ static uint8_t USB_IN_transfer(volatile USB_OTG_INEndpointTypeDef* ep, volatile 
 	}
 
 	ep->DIEPINT |= USB_OTG_DIEPINT_XFRC;
-	while(!(ep->DIEPINT & USB_OTG_DIEPINT_XFRC));	/* wait for transfer complete and clear flag */
+	while(!(ep->DIEPINT & USB_OTG_DIEPINT_XFRC));								/* wait for transfer complete and clear flag */
 	ep->DIEPINT |= USB_OTG_DIEPINT_XFRC;
 
-	if(ep == EP1){			//
-		ep->DIEPCTL |= USB_OTG_DIEPCTL_SNAK;
-	}
-
-	MODIFY_REG(USBFSG->GRSTCTL, USB_OTG_GRSTCTL_TXFNUM, 0x10 << USB_OTG_GRSTCTL_TXFNUM_Pos);			//
+	MODIFY_REG(USBFSG->GRSTCTL, USB_OTG_GRSTCTL_TXFNUM, 0x10 << USB_OTG_GRSTCTL_TXFNUM_Pos);
 	USBFSG->GRSTCTL |= USB_OTG_GRSTCTL_TXFFLSH;									/* flush all TX FIFOs */
 	while(USBFSG->GRSTCTL & USB_OTG_GRSTCTL_TXFFLSH);
 

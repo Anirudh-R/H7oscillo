@@ -89,12 +89,12 @@ int main(void)
 		}
 	}
 
-	/* force mount the FAT volume */
-	fsres = f_mount(&fatFs, "", 1);
-	if(fsres != FR_OK){
-		printf("FAT FS mounting failed, error: %d\n", fsres);
-		hangFirmware();
-	}
+//	/* force mount the FAT volume */
+//	fsres = f_mount(&fatFs, "", 1);
+//	if(fsres != FR_OK){
+//		printf("FAT FS mounting failed, error: %d\n", fsres);
+//		hangFirmware();
+//	}
 
 	/* Initialize USB peripheral */
 	USB_init();

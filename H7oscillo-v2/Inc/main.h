@@ -49,6 +49,7 @@
 
 
 //#define DEBUG									/* Build the project for debugging */
+//#define USBDEBUG								/* Enable USB FS debug console prints */
 
 #define max(a, b)	((a) > (b) ? (a) : (b))
 #define min(a, b)	((a) < (b) ? (a) : (b))
