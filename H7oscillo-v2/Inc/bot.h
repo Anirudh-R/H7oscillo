@@ -40,17 +40,24 @@
 #define MODESNS6_DATA_LEN			4
 #define REQSENSE_DATA_LEN			20
 
+/* Sense key, ASC, ASCQ codes */
+#define SENSEKEY_ILLEGAL_REQUEST	0x05
+#define SENSEKEY_NOT_READY			0x02
+#define ASC_INVALID_CMD				0x20
+#define ASCQ_INVALID_CMD			0x00
+#define ASC_ADDR_OUTOFRANGE			0x21
+#define ASCQ_ADDR_OUTOFRANGE		0x00
+#define ASC_INV_CDB_FIELD			0x24
+#define ASCQ_INV_CDB_FIELD			0x00
+#define ASC_NOTRDY_BECOMINGRDY		0x04
+#define ASCQ_NOTRDY_BECOMINGRDY		0x01
+
 /* BOT return values */
 #define BOT_CBW_INVALID				-1
 #define BOT_DATAOUTSTAGE			-2
 
-#define BOT_NO_STALL				0
-#define BOT_IN_STALL				1
-#define BOT_OUT_STALL				2
-#define BOT_BOTH_STALL				3
-
 /* External function declarations */
-int32_t BOT_process(const uint8_t* buf, uint8_t len, uint8_t* stallReqd);
+int32_t BOT_process(const uint8_t* buf, uint8_t len);
 uint8_t BOT_isRdyForNxtCmd();
 void BOT_setCmdDone();
 

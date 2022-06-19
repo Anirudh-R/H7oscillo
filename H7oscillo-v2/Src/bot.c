@@ -37,19 +37,16 @@ static uint32_t dataOutCnt = 0;
   * @brief  Process a BOT cmd/data packet.
   * @param  buf: cmd/data OUT packet
   * @param  len: length of buf
-  * @param  stallReqd: return value 0:No stall, 1:IN EP stall, 2:OUT EP stall, 3:BOTH EP stall
-  * @retval Error code (or) Length of total IN data + CSW to send back to the host
+  * @retval Error code (or) Length of total IN data + CSW to send back to the host. Return data is stored at USB_DATA_BUFFER.
   */
-int32_t BOT_process(const uint8_t* buf, uint8_t len, uint8_t* stallReqd)
+int32_t BOT_process(const uint8_t* buf, uint8_t len)
 {
 	uint32_t dCBWTag, dCBWDataTransferLength;
-	uint8_t bmCBWFlags, bCBWCBLength, bCSWStatus;
+	uint8_t bmCBWFlags, bCSWStatus = 0x00;
 	const uint8_t* CBWCB = buf + 15;														/* the actual SCSI cmd */
 	uint8_t *respDataPtr = (uint8_t *)USB_DATA_BUFFER;
 	uint32_t dCSWDataResidue;
 	uint32_t alloclen, respLen, i;
-
-	*stallReqd = BOT_NO_STALL;
 
 	/* what has come must be a CBW */
 	if(rdyForNxtCBW){
@@ -62,8 +59,6 @@ int32_t BOT_process(const uint8_t* buf, uint8_t len, uint8_t* stallReqd)
 			dCBWTag = buf[7] << 24 | buf[6] << 16 | buf[5] << 8 | buf[4];
 			dCBWDataTransferLength = buf[11] << 24 | buf[10] << 16 | buf[9] << 8 | buf[8];
 			bmCBWFlags = buf[12];
-			bCBWCBLength = buf[14];
-			bCSWStatus = 0;
 
 			/* check the SCSI operation code */
 			switch(CBWCB[0])
@@ -159,10 +154,37 @@ int32_t BOT_process(const uint8_t* buf, uint8_t len, uint8_t* stallReqd)
 					uint32_t lba = CBWCB[2] << 24 | CBWCB[3] << 16 | CBWCB[4] << 8 | CBWCB[5];		/* starting block address */
 					uint16_t tfrlen = CBWCB[7] << 8 | CBWCB[8];										/* no. of blocks to read */
 
-					respLen = BLOCK_SIZE * tfrlen;
+					/* address out of range */
+					if(lba + tfrlen > NUM_BLOCKS){
+						bCSWStatus = 0x01;
+						senseKey = SENSEKEY_ILLEGAL_REQUEST;
+						addSnsCode = ASC_ADDR_OUTOFRANGE;
+						addSnsCodeQual = ASCQ_ADDR_OUTOFRANGE;
+						respLen = dCBWDataTransferLength;											/* send some dCBWDataTransferLength junk values */
+					}
+					/* transfer lengths don't match */
+					else if(BLOCK_SIZE * tfrlen != dCBWDataTransferLength){
+						bCSWStatus = 0x01;
+						senseKey = SENSEKEY_ILLEGAL_REQUEST;
+						addSnsCode = ASC_INV_CDB_FIELD;
+						addSnsCodeQual = ASCQ_INV_CDB_FIELD;
+						respLen = dCBWDataTransferLength;											/* send some dCBWDataTransferLength junk values */
+					}
+					else{
+						uint8_t fail = 0;
 
-					if(tfrlen != 0){
-						QSPI_flash_read(respDataPtr, lba*BLOCK_SIZE, respLen);
+						respLen = BLOCK_SIZE * tfrlen;
+						if(respLen != 0){
+							fail = QSPI_flash_read(respDataPtr, lba*BLOCK_SIZE, respLen);
+						}
+
+						/* read fail, set status as device not ready (host may retry later) */
+						if(fail){
+							bCSWStatus = 0x01;
+							senseKey = SENSEKEY_NOT_READY;
+							addSnsCode = ASC_NOTRDY_BECOMINGRDY;
+							addSnsCodeQual = ASCQ_NOTRDY_BECOMINGRDY;
+						}
 					}
 					break;
 
@@ -171,12 +193,16 @@ int32_t BOT_process(const uint8_t* buf, uint8_t len, uint8_t* stallReqd)
 					#ifdef USBDEBUG
 					printf("INVCMD %02X\n", CBWCB[0]);
 					#endif
-					respLen = 0;
 
-					bCSWStatus = 1;											/* cmd failed */
-					senseKey = 0x05;										/* store request sense field vals for use when it is issued */
-					addSnsCode = 0x20;
-					addSnsCodeQual = 0x00;
+					if(!(bmCBWFlags & 0x80))
+						respLen = 0;										/* data OUT cmd, nothing to send back */
+					else
+						respLen = dCBWDataTransferLength;					/* data IN cmd, send some dCBWDataTransferLength junk values */
+
+					bCSWStatus = 0x01;										/* cmd failed */
+					senseKey = SENSEKEY_ILLEGAL_REQUEST;					/* store request sense field vals for use when it is issued */
+					addSnsCode = ASC_INVALID_CMD;
+					addSnsCodeQual = ASCQ_INVALID_CMD;
 					break;
 			}
 
@@ -187,7 +213,7 @@ int32_t BOT_process(const uint8_t* buf, uint8_t len, uint8_t* stallReqd)
 			respLen = min(respLen, dCBWDataTransferLength);					/* transfer utmost dCBWDataTransferLength bytes */
 
 			/* append CSW to the response */
-			dCSWDataResidue = dCBWDataTransferLength - respLen;
+			dCSWDataResidue = (bCSWStatus == 0x00) ? dCBWDataTransferLength - respLen : dCBWDataTransferLength;
 			respDataPtr[respLen++] = (uint8_t)(CSW_SIGNATURE);
 			respDataPtr[respLen++] = (uint8_t)(CSW_SIGNATURE >> 8);
 			respDataPtr[respLen++] = (uint8_t)(CSW_SIGNATURE >> 16);
@@ -203,11 +229,11 @@ int32_t BOT_process(const uint8_t* buf, uint8_t len, uint8_t* stallReqd)
 			respDataPtr[respLen++] = bCSWStatus;
 
 			/* successful cmd */
-			if(bCSWStatus == 0){
+			if(bCSWStatus == 0x00){
 				return respLen;
 			}
 			/* there is going to be data OUT from the host */
-			else if(CBWCB[0] == SCSI_WRITE10){
+			else if(!(bmCBWFlags & 0x80) && dCBWDataTransferLength > 0){
 				dataOutCnt = dCBWDataTransferLength;						/* no. of bytes that will be tranferred in the data OUT stage */
 				return BOT_DATAOUTSTAGE;
 			}
@@ -225,7 +251,6 @@ int32_t BOT_process(const uint8_t* buf, uint8_t len, uint8_t* stallReqd)
 
 	/* it must be data (we don't accept writes to disk, so ignore the data) */
 	else{
-		printf("RX BOT DATA\n");//
 		dataOutCnt -= len;													/* no. of bytes pending */
 
 		if(dataOutCnt == 0)

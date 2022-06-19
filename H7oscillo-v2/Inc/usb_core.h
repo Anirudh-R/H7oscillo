@@ -20,7 +20,6 @@
 
 /* External function declarations */
 extern void USB_init(void);
-extern void USB_config_bulkEPs(void);
 extern void USB_handle_event(void);
 
 #endif /* __USB_CORE_H */

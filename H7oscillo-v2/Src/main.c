@@ -74,7 +74,7 @@ int main(void)
 
 	/* if user button is pushed during reset, format the drive with FAT */
 	if(readUserBtnState()){
-		uint8_t* workBuf = (uint8_t *)DISKIO_BUFFER;		/* working buffer for format process */
+		uint8_t* workBuf = (uint8_t *)SCRATCH_BUFFER2;		/* working buffer for format process */
 
 		LL_GPIO_SetOutputPin(LED1_GPIO_PORT, LED1_PIN);
 
@@ -89,12 +89,30 @@ int main(void)
 		}
 	}
 
-//	/* force mount the FAT volume */
-//	fsres = f_mount(&fatFs, "", 1);
-//	if(fsres != FR_OK){
-//		printf("FAT FS mounting failed, error: %d\n", fsres);
-//		hangFirmware();
-//	}
+	/* force mount the FAT volume */
+	fsres = f_mount(&fatFs, "", 1);
+	if(fsres != FR_OK){
+		printf("FAT FS mounting failed, error: %d\n", fsres);
+		hangFirmware();
+	}
+
+	//create sample text file
+	if(readUserBtnState()){
+		UINT bw;
+		char hellostr[] = "Hello World! I am Anirudh.";
+
+		f_open(&fp, "hello.txt", FA_CREATE_ALWAYS | FA_WRITE);
+		fsres = f_write(&fp, (const void *)hellostr, strlen(hellostr) + 1, &bw);
+		f_close(&fp);
+
+		if(bw != strlen(hellostr) + 1){
+			printf("File write error: %d.\n", fsres);
+			hangFirmware();
+		}
+		else{
+			printf("Created HELLO.TXT\n");
+		}
+	}
 
 	/* Initialize USB peripheral */
 	USB_init();
