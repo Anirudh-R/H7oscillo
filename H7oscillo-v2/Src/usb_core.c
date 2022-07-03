@@ -377,7 +377,7 @@ void USB_handle_event(void)
 					USB_IN_transfer(EP1, EP1FIFO, respDataPtr + respLen - CSW_SIZE, CSW_SIZE);		/* send CSW to host */
 					BOT_setCmdDone();
 					#ifdef USBDEBUG
-					printf("Tx CSW\n");
+					printf("Tx CSW\n\n");
 					#endif
 				}
 				else if(respLen == BOT_CBW_INVALID){

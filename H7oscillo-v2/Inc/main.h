@@ -45,6 +45,7 @@
 #include "diskio.h"
 #include "qspif.h"
 #include "usb_core.h"
+#include "bmp.h"
 #include "globals.h"
 
 
@@ -79,11 +80,11 @@
 #define TIM_QE_CLK_ENABLE()            			LL_APB2_GRP1_EnableClock(LL_APB2_GRP1_PERIPH_TIM8)
 #define TIM_QE_GPIO_CLK_ENABLE()	   			LL_AHB1_GRP1_EnableClock(LL_AHB1_GRP1_PERIPH_GPIOC)
 #define TIM_QE_INP_PORT				   			GPIOC
-#define TIM_QE_INP1_PIN				   			LL_GPIO_PIN_6
-#define TIM_QE_INP2_PIN				   			LL_GPIO_PIN_7
+#define TIM_QE_INP1_PIN				   			LL_GPIO_PIN_6		/* Arduino conn D1 */
+#define TIM_QE_INP2_PIN				   			LL_GPIO_PIN_7		/* Arduino conn D0 */
 /* Push button of quadrature encoder module */
 #define QE_PB_GPIO_PORT					   		GPIOG
-#define QE_PB_PIN					   			LL_GPIO_PIN_6
+#define QE_PB_PIN					   			LL_GPIO_PIN_6		/* Arduino conn D2 */
 #define QE_PB_GPIO_CLK_ENABLE()           		LL_AHB1_GRP1_EnableClock(LL_AHB1_GRP1_PERIPH_GPIOG)
 #define QE_PB_EXTI_LINE 						LL_EXTI_LINE_6
 #define QE_IRQn                    	   			EXTI9_5_IRQn
@@ -159,11 +160,11 @@
 #define SCRATCH_BUFFER2							((uint32_t)0xC0700000)
 #define SCRATCH_BUFFER3							((uint32_t)0xC0780000)
 
-/* FATfs */
 #define DISKIO_BUFFER							SCRATCH_BUFFER0			/* Buffer for Flash(Disk) IO operations  */
-
-/* USB */
 #define USB_DATA_BUFFER							SCRATCH_BUFFER1			/* Buffer for USB packet data */
+#define BMP_BUFFER								SCRATCH_BUFFER2			/* Buffer for storing the converted BMP image */
+
+#define MAX_SCRNSHOTS							50						/* max screenshots that can be saved */
 
 /* Touch screen */
 #define TS_I2Cx                             	I2C3

@@ -74,43 +74,42 @@ int main(void)
 
 	/* if user button is pushed during reset, format the drive with FAT */
 	if(readUserBtnState()){
-		uint8_t* workBuf = (uint8_t *)SCRATCH_BUFFER2;		/* working buffer for format process */
-
-		LL_GPIO_SetOutputPin(LED1_GPIO_PORT, LED1_PIN);
+		uint8_t* workBuf = (uint8_t *)SCRATCH_BUFFER3;		/* working buffer for format process */
+		uint8_t nScrnshots = 0;
+		UINT bytesTfr;
 
 		fsres = f_mkfs("", &mkfsParam, workBuf, SECTOR_SIZE);
-		if(fsres == FR_OK){	/* success */
-			printf("Successfully formatted flash.\n");
-			LL_GPIO_ResetOutputPin(LED1_GPIO_PORT, LED1_PIN);
-		}
-		else{				/* hang */
+		if(fsres != FR_OK){
 			printf("Flash formatting failed, error: %d.\n", fsres);
 			hangFirmware();
 		}
-	}
+		else{
+			printf("Successfully formatted flash.\n");
+		}
 
-	/* force mount the FAT volume */
-	fsres = f_mount(&fatFs, "", 1);
-	if(fsres != FR_OK){
-		printf("FAT FS mounting failed, error: %d\n", fsres);
-		hangFirmware();
-	}
-
-	//create sample text file
-	if(readUserBtnState()){
-		UINT bw;
-		char hellostr[] = "Hello World! I am Anirudh.";
-
-		f_open(&fp, "hello.txt", FA_CREATE_ALWAYS | FA_WRITE);
-		fsres = f_write(&fp, (const void *)hellostr, strlen(hellostr) + 1, &bw);
-		f_close(&fp);
-
-		if(bw != strlen(hellostr) + 1){
-			printf("File write error: %d.\n", fsres);
+		/* force mount the FAT volume */
+		fsres = f_mount(&fatFs, "", 1);
+		if(fsres != FR_OK){
+			printf("FAT FS mounting failed, error: %d\n", fsres);
 			hangFirmware();
 		}
-		else{
-			printf("Created HELLO.TXT\n");
+
+		/* create file which stores the no. of screenshots saved */
+		f_open(&fp, "ssinfo", FA_CREATE_ALWAYS | FA_WRITE);
+		fsres = f_write(&fp, &nScrnshots, 1, &bytesTfr);			/* 0 screenshots initially */
+		f_close(&fp);
+
+		if(bytesTfr != 1){
+			printf("ssinfo creation failed: %d.\n", fsres);
+			hangFirmware();
+		}
+	}
+	else{
+		/* force mount the FAT volume */
+		fsres = f_mount(&fatFs, "", 1);
+		if(fsres != FR_OK){
+			printf("FAT FS mounting failed, error: %d\n", fsres);
+			hangFirmware();
 		}
 	}
 
@@ -275,7 +274,7 @@ int main(void)
 						staticMode = 0;
 						clearRedBorder();
 						drawGrid();
-						dispToff();		/* re-display toff in case it was changed out of limits in static mode */
+						dispToff();				/* re-display toff in case it was changed out of limits in static mode */
 						goToField(FLD_RUNSTOP);
 						changeFieldValue(1);	/* RUN */
 						while(TS_DetectNumTouches() > 0);
@@ -305,7 +304,7 @@ int main(void)
 				}
 				else if(vscale1Changed || vscale2Changed || voff1Changed
 						|| voff2Changed || toffChanged){
-					drawRedBorder();	/* since it would have got erased due to moving cursors */
+					drawRedBorder();		/* since it would have got erased due to moving cursors */
 					redrawWf = 1;
 				}
 
@@ -417,6 +416,52 @@ int main(void)
 
 		/* Update screen */
 		updateToScreen();
+
+		/* take screenshot */
+		if(readUserBtnState()){
+			char filename[8];
+			uint8_t nScrnshots;
+			UINT bytesTfr;
+
+			f_open(&fp, "ssinfo", FA_READ);									/* read the current no. of screenshots saved */
+			f_read(&fp, &nScrnshots, 1, &bytesTfr);
+			f_close(&fp);
+
+			if(bytesTfr != 1){
+				printf("Screenshot failed\n");
+			}
+			else{
+				if(nScrnshots < MAX_SCRNSHOTS){
+					nScrnshots = nScrnshots + 1;
+					itoa(nScrnshots, filename, 10);								/* name the files starting from "1.bmp" */
+					strcat(filename, ".bmp");
+
+					raw2bmp((uint8_t *)LCD_FRAME_BUFFER, LCD_WIDTH*LCD_HEIGHT, (uint8_t *)BMP_BUFFER);		/* convert to BMP format */
+					f_open(&fp, filename, FA_CREATE_ALWAYS | FA_WRITE);
+					f_write(&fp, (const void *)BMP_BUFFER, BMP_FILE_SZ, &bytesTfr);
+					f_close(&fp);
+
+					if(bytesTfr != BMP_FILE_SZ){
+						printf("Screenshot failed\n");
+					}
+					else{
+						f_open(&fp, "ssinfo", FA_WRITE);						/* update no. of screenshots */
+						f_write(&fp, &nScrnshots, 1, &bytesTfr);
+						f_close(&fp);
+
+						if(bytesTfr != 1){
+							printf("Screenshot failed\n");
+						}
+						else{
+							printf("Screenshot success\n");
+						}
+					}
+				}
+				else{
+					printf("No. of screenshots exceeded\n");
+				}
+			}
+		}
 	}
 }
 

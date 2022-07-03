@@ -120,7 +120,7 @@ void TimMeas_init(void)
 	TIM_MEAS_CLK_ENABLE();
 	TIM_MEAS->CR1 &= ~(uint32_t)0x01;	/* disable timer */
 	TIM_MEAS->PSC  = 10000 - 1;			/* counter_clk = timer_inp_clk/10000 = 100MHz/10000 = 10KHz */
-	TIM_MEAS->ARR  = 2500 - 1;		    /* Touch screen polling frequency = counter_clk/2500 = 4Hz */
+	TIM_MEAS->ARR  = 2500 - 1;		    /* Measure frequency = counter_clk/2500 = 4Hz */
 	TIM_MEAS->DIER |= 0x01;				/* Enable interrupt on counter overflow */
 	TIM_MEAS->CR1 |= 0x01;				/* start timer */
 
@@ -461,7 +461,9 @@ void SDRAM_init(void)
 	GPIOH->OSPEEDR &= ~(0x3<<6 | 0x03<<10); GPIOH->OSPEEDR |= (0x2<<6 | 0x02<<10);
 	GPIOH->AFR[0] &= ~(0xF<<12 | 0xF<<20); GPIOH->AFR[0] |= (0xC<<12 | 0xC<<20);
 
-	/* Bank 1 configuration */
+	FMC_Bank1->BTCR[0] = 0x000030D2;		/* disable FMC bank 1 */
+
+	/* FMC configuration for SDRAM interface */
 	FMC_Bank5_6->SDCR[0] = (0x00)<<13 	|	/* RPIPE = 0 */
 						   (0x01)<<12 	|	/* Burst enable */
 						   (0x02)<<10	|	/* SDCLK = 2*HCLK */
@@ -480,8 +482,7 @@ void SDRAM_init(void)
 						   (0x06)<<4	|	/* Exit self-refresh delay = 7 */
 						   (0x01)<<0;		/* Load-to-active delay = 2 */
 
-	/* SDRAM device initialization */
-	/* Clock Configuration Enable */
+	/* SDRAM device initialization, clock Configuration Enable */
 	FMC_Bank5_6->SDCMR =   (0x00)<<9	|
 						   (0x00)<<5	|
 						   (0x01)<<4	|	/* cmd target Bank1 */

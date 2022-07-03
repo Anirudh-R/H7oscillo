@@ -1,25 +1,26 @@
 /**
   ******************************************************************************
-  * @file    usb_core.h
+  * @file    bmp.h
   * @author  anirudhr
-  * @brief   Header file for usb_core.c.
+  * @brief   Header file for bmp.c.
   ******************************************************************************
   */
 
 /* Define to prevent recursive inclusion -------------------------------------*/
-#ifndef __USB_CORE_H
-#define __USB_CORE_H
+#ifndef __BMP_H
+#define __BMP_H
 
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
-#include "usb_desc.h"
-#include "bot.h"
 
 
-#define MAX_PACKET_SZ					64		/* max packet size for all endpoints */
+#define BITMAP_FILEHEADER_LEN				14
+#define DIB_HEADER_LEN						40
+#define BIT_MASK_LEN						12
+
+#define BMP_FILE_SZ							261186				/* size of the full screen BMP image file */
 
 /* External function declarations */
-extern void USB_init(void);
-extern void USB_handle_event(void);
+extern uint32_t raw2bmp(const uint8_t* raw, uint32_t npixels, uint8_t* bmp);
 
-#endif /* __USB_CORE_H */
+#endif /* __BMP_H */

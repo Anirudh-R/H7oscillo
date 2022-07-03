@@ -175,7 +175,7 @@ void QSPI_flash_init(void)
   * @brief  Read data from flash using Quad IO.
   * @param  buf: read buffer
   * @param  addr: start address of read
-  * @param  len: number of bytes to read
+  * @param  len: number of bytes to read (max 65535)
   * @retval success = 0, fail = 1
   */
 uint8_t QSPI_flash_read(__IO uint8_t buf[], uint32_t addr, uint32_t len)
@@ -722,7 +722,7 @@ static void QSPI_flash_clr_errors_quad(void)
 /**
   * @brief  Configure DMA for flash read.
   * @param  rxbufptr: pointer to receive buffer
-  * @param  tfrsize: transfer size in bytes
+  * @param  tfrsize: transfer size in bytes (max 65535)
   * @retval None
   */
 static void QSPI_DMA_config_read(__IO uint8_t* rxbufptr, uint32_t tfrsize)
@@ -742,7 +742,7 @@ static void QSPI_DMA_config_read(__IO uint8_t* rxbufptr, uint32_t tfrsize)
 /**
   * @brief  Configure DMA for flash write.
   * @param  txbufptr: pointer to transmit buffer
-  * @param  tfrsize: transfer size in bytes
+  * @param  tfrsize: transfer size in bytes (max 65535)
   * @retval None
   */
 static void QSPI_DMA_config_write(uint8_t* txbufptr, uint32_t tfrsize)

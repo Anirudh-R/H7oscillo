@@ -2,7 +2,7 @@
   ******************************************************************************
   * @file    bot.c
   * @author  anirudhr
-  * @brief   Implements Bulk-only Transport functions.
+  * @brief   Implements Bulk-only Transport functions and SCSI commands.
   ******************************************************************************
   */
 
@@ -10,20 +10,20 @@
 #include "bot.h"
 
 
-const uint8_t INQUIRY_DATA[INQUIRY_DATA_LEN] = {0x00, 0x80, 0x04, 0x02, 0x20, 0x00, 0x00, 0x00,
+static const uint8_t INQUIRY_DATA[INQUIRY_DATA_LEN] = {0x00, 0x80, 0x04, 0x02, 0x20, 0x00, 0x00, 0x00,
 							'H',  '7',  '-',  'O',  's',  'c',  'i',  'l',
 							'l',  'o',  ' ',  'D',  'i',  's',  'k',  ' ',
 							0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
 							0x00, 0x00, 0x00, 0x00};
 
-const uint8_t READFMTCPTY_DATA[READFMTCPTY_DATA_LEN] = {0x00, 0x00, 0x00, 0x08, 0x00, 0x00, 0x10, 0x00,
+static const uint8_t READFMTCPTY_DATA[READFMTCPTY_DATA_LEN] = {0x00, 0x00, 0x00, 0x08, 0x00, 0x00, 0x10, 0x00,
 							0x02, 0x00, 0x01, 0x00};
 
-const uint8_t READCPTY10_DATA[READCPTY10_DATA_LEN] = {0x00, 0x00, 0x0F, 0xFF, 0x00, 0x00, 0x10, 0x00};
+static const uint8_t READCPTY10_DATA[READCPTY10_DATA_LEN] = {0x00, 0x00, 0x0F, 0xFF, 0x00, 0x00, 0x10, 0x00};
 
-const uint8_t MODESNS6_DATA[MODESNS6_DATA_LEN] = {0x03, 0x00, 0x00, 0x00};
+static const uint8_t MODESNS6_DATA[MODESNS6_DATA_LEN] = {0x03, 0x00, 0x00, 0x00};
 
-const uint8_t REQSENSE_DATA[REQSENSE_DATA_LEN] = {0x70, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x0C,
+static const uint8_t REQSENSE_DATA[REQSENSE_DATA_LEN] = {0x70, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x0C,
 							0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
 							0x00, 0x00, 0x00, 0x00};
 
@@ -171,11 +171,25 @@ int32_t BOT_process(const uint8_t* buf, uint8_t len)
 						respLen = dCBWDataTransferLength;											/* send some dCBWDataTransferLength junk values */
 					}
 					else{
+						uint32_t tfrLen1 = 0, tfrLen2 = 0;
 						uint8_t fail = 0;
 
 						respLen = BLOCK_SIZE * tfrlen;
-						if(respLen != 0){
-							fail = QSPI_flash_read(respDataPtr, lba*BLOCK_SIZE, respLen);
+
+						/* if transfer size is large, split into 2 transfers because Flash DMA has limit */
+						if(tfrlen > 8){
+							tfrLen1 = 8;
+							tfrLen2 = tfrlen - tfrLen1;
+						}
+						else{
+							tfrLen1 = tfrlen;
+						}
+
+						if(tfrLen1 != 0){
+							fail = QSPI_flash_read(respDataPtr, lba*BLOCK_SIZE, tfrLen1*BLOCK_SIZE);
+						}
+						if(!fail && tfrLen2 != 0){
+							fail = QSPI_flash_read(respDataPtr + tfrLen1*BLOCK_SIZE, (lba + tfrLen1)*BLOCK_SIZE, tfrLen2*BLOCK_SIZE);
 						}
 
 						/* read fail, set status as device not ready (host may retry later) */
@@ -207,7 +221,12 @@ int32_t BOT_process(const uint8_t* buf, uint8_t len)
 			}
 
 			#ifdef USBDEBUG
-			printf("reqd %lu\n", dCBWDataTransferLength);
+			if(bmCBWFlags & 0x80){
+				printf("reqd %lu\n", dCBWDataTransferLength);
+			}
+			if(bCSWStatus){
+				printf("cmd failed\n");
+			}
 			#endif
 
 			respLen = min(respLen, dCBWDataTransferLength);					/* transfer utmost dCBWDataTransferLength bytes */
@@ -251,6 +270,10 @@ int32_t BOT_process(const uint8_t* buf, uint8_t len)
 
 	/* it must be data (we don't accept writes to disk, so ignore the data) */
 	else{
+		#ifdef USBDEBUG
+		printf("BOT Data\n");
+		#endif
+
 		dataOutCnt -= len;													/* no. of bytes pending */
 
 		if(dataOutCnt == 0)
@@ -260,16 +283,6 @@ int32_t BOT_process(const uint8_t* buf, uint8_t len)
 	}
 
 	return 0;
-}
-
-/**
-  * @brief  Check if a BOT cmd is in progress.
-  * @param  None
-  * @retval 1=ready for next cmd, 0=current cmd still in progress
-  */
-uint8_t BOT_isRdyForNxtCmd()
-{
-	return rdyForNxtCBW;
 }
 
 /**

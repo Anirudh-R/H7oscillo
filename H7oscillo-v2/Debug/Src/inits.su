@@ -11,8 +11,8 @@ inits.c:255:6:ADC_Ch2_reinit	0	static
 inits.c:274:6:LEDs_Buttons_init	24	static
 inits.c:312:6:LTDC_init	40	static
 inits.c:411:6:SDRAM_init	48	static
-inits.c:526:6:DMA2D_init	8	static
-inits.c:567:6:I2C_TS_init	8	static
-inits.c:609:6:SystemClock_Config	8	static
-inits.c:664:6:CPU_CACHE_Enable	4	static
-inits.c:678:6:MPU_Config	0	static
+inits.c:527:6:DMA2D_init	8	static
+inits.c:568:6:I2C_TS_init	8	static
+inits.c:610:6:SystemClock_Config	8	static
+inits.c:665:6:CPU_CACHE_Enable	4	static
+inits.c:679:6:MPU_Config	0	static

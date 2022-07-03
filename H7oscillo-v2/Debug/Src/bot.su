@@ -1,3 +1,2 @@
-bot.c:42:9:BOT_process	24	static
-bot.c:270:9:BOT_isRdyForNxtCmd	0	static
-bot.c:280:6:BOT_setCmdDone	0	static
+bot.c:42:9:BOT_process	32	static
+bot.c:293:6:BOT_setCmdDone	0	static

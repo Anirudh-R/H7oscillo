@@ -57,8 +57,7 @@
 #define BOT_DATAOUTSTAGE			-2
 
 /* External function declarations */
-int32_t BOT_process(const uint8_t* buf, uint8_t len);
-uint8_t BOT_isRdyForNxtCmd();
-void BOT_setCmdDone();
+extern int32_t BOT_process(const uint8_t* buf, uint8_t len);
+extern void BOT_setCmdDone();
 
 #endif /* __BOT_H */
