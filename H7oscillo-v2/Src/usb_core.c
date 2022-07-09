@@ -275,9 +275,6 @@ void USB_handle_event(void)
 					printf("Tx %d bytes\n", nBytesToSend);
 					#endif
 				}
-				else{
-					printf("Req for undef str desc\n");
-				}
 			}
 			/* Get Descriptor, Device Qualifier */
 			else if(packetPtr[1] == 0x06 && packetPtr[3] == 0x06){
@@ -343,7 +340,9 @@ void USB_handle_event(void)
 				#endif
 			}
 			else{
+				#ifdef USBDEBUG
 				printf("Unknown SETUP pkt\n");
+				#endif
 			}
 
 			EP0OUT->DOEPCTL |= USB_OTG_DOEPCTL_CNAK | USB_OTG_DOEPCTL_EPENA;			/* clear NAK bit and re-enable EP, as it is changed by OTG core after SETUP rx */
@@ -434,7 +433,6 @@ static uint8_t USB_IN_transfer(volatile USB_OTG_INEndpointTypeDef* ep, volatile 
 		if(setAddrFlag){
 			MODIFY_REG(USBFSD->DCFG, USB_OTG_DCFG_DAD, devAddr << USB_OTG_DCFG_DAD_Pos);
 			setAddrFlag = 0;
-			//printf("Addr = 0x%02X\n", (USBFSD->DCFG & USB_OTG_DCFG_DAD) >> USB_OTG_DCFG_DAD_Pos);
 		}
 
 		return 0;
@@ -464,11 +462,9 @@ static uint8_t USB_IN_transfer(volatile USB_OTG_INEndpointTypeDef* ep, volatile 
 					}
 
 					*txfifo = temp;
-					//printf("%08X\n", temp);
 				}
 				else{
 					*txfifo = *((uint32_t *)buf + i*(MAX_PACKET_SZ/4) + j);
-					//printf("%08X\n", *((uint32_t *)buf + i*(MAX_PACKET_SZ/4) + j));
 				}
 			}
 		}
@@ -476,7 +472,6 @@ static uint8_t USB_IN_transfer(volatile USB_OTG_INEndpointTypeDef* ep, volatile 
 		else{
 			for(j = 0; j < MAX_PACKET_SZ/4; j++){
 				*txfifo = *((uint32_t *)buf + i*(MAX_PACKET_SZ/4) + j);
-				//printf("%08X\n", *((uint32_t *)buf + i*(MAX_PACKET_SZ/4) + j));
 			}
 		}
 	}

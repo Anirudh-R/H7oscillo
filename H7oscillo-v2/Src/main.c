@@ -389,9 +389,15 @@ int main(void)
 						if(scrnshtFound){
 							scrnshtViewMode = 1;
 						}
+						else{
+							displayInfo("No screenshots found", 1000);
+						}
 					}
 					else{
-						displayOlderScreenshot();
+						scrnshtFound = displayOlderScreenshot();
+						if(!scrnshtFound){
+							displayInfo("End of list", 1000);
+						}
 					}
 				}
 				else if(gestID == GEST_ID_SWIPE_RIGHT){		/* display more recent scrnshts or exit scrnsht view mode */

@@ -90,6 +90,10 @@
 #define WIND10_BTN_HEIGHT	 	 	20					/* window 10 button heights */
 #define WIND10_X_START	 	 	 	250					/* window 10 X start position */
 #define WIND10_Y_START	 	 	 	90					/* window 10 Y start position */
+#define WIND11_WIDTH	 		 	160					/* window 11 width */
+#define WIND11_HEIGHT	 	 	 	40					/* window 11 height */
+#define WIND11_X_START	 	 	 	150					/* window 11 X start position */
+#define WIND11_Y_START	 	 	 	70					/* window 11 Y start position */
 #define CURSOR_LENGTH	 	 	 	13					/* length of trigger and vertical offset cursors */
 #define CURSOR_WIDTH	 	 	 	10					/* width of trigger and vertical offset cursors */
 #define TOFF_CURSOR_LENGTH	 	 	10					/* length of horizontal offset cursors */
@@ -203,10 +207,11 @@ uint8_t getCurrCursorField(void);
 void initFields(void);
 void drawRedBorder(void);
 void clearRedBorder(void);
+void displayInfo(const char* text, uint32_t duration);
 void captureScreenshot(void);
 void deleteCurrScreenshot(void);
 void displayScreenshot(uint16_t x);
-void displayOlderScreenshot(void);
+uint8_t displayOlderScreenshot(void);
 uint8_t displayNewerScreenshot(void);
 uint8_t enterScrnshtViewMode(void);
 

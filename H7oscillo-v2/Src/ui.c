@@ -23,6 +23,7 @@ static void window_7_callback(UG_MESSAGE* msg);
 static void window_8_callback(UG_MESSAGE* msg);
 static void window_9_callback(UG_MESSAGE* msg);
 static void window_10_callback(UG_MESSAGE* msg);
+static void window_11_callback(UG_MESSAGE* msg);
 static uint16_t findNextValidFile(uint16_t x);
 static uint16_t findPrevValidFile(uint16_t x);
 static uint8_t readssinfo(uint8_t* nScrnshots, uint16_t* maxfilename);
@@ -110,6 +111,10 @@ UG_TEXTBOX txtb10_4;
 UG_BUTTON button10_0;
 UG_BUTTON button10_1;
 UG_BUTTON button10_2;
+/* window 11 - Cursors submenu */
+UG_WINDOW window_11;
+UG_OBJECT obj_buff_wnd_11[1];
+UG_TEXTBOX txtb11_0;
 
 /* Menu page display selector flags */
 static uint8_t showWindow3 = 0;
@@ -543,6 +548,17 @@ void initUI(void)
 	UG_ButtonSetFont(&window_10, BTN_ID_2, &FONT_6X8);
 	UG_ButtonSetBackColor(&window_10, BTN_ID_2, C_OLIVE);
 	UG_ButtonSetText(&window_10, BTN_ID_2, "--");
+
+	/*** Create Window 11 (Info window) ***/
+	UG_WindowCreate(&window_11, obj_buff_wnd_11, 1, window_11_callback);
+	UG_WindowSetStyle(&window_11, WND_STYLE_3D | WND_STYLE_HIDE_TITLE);
+	UG_WindowResize(&window_11, WIND11_X_START, WIND11_Y_START, WIND11_X_START + WIND11_WIDTH - 1, WIND11_Y_START + WIND11_HEIGHT - 1);
+	UG_WindowSetBackColor(&window_11, C_WHITE);
+
+	UG_TextboxCreate(&window_11, &txtb11_0, TXB_ID_0, 10, 10, WIND11_WIDTH - 10, WIND11_HEIGHT - 10);
+	UG_TextboxSetFont(&window_11, TXB_ID_0, &FONT_6X8);
+	UG_TextboxSetAlignment(&window_11, TXB_ID_0, ALIGN_CENTER);
+	UG_TextboxSetForeColor(&window_11, TXB_ID_0, C_RED);
 }
 
 /**
@@ -1347,6 +1363,12 @@ static void window_10_callback(UG_MESSAGE* msg)
 		  }
 	  }
 	}
+}
+
+/* Callback function for window 11 (Info window) */
+static void window_11_callback(UG_MESSAGE* msg)
+{
+	/* Nothing to do */
 }
 
 /**
@@ -2420,6 +2442,24 @@ void clearRedBorder(void)
 }
 
 /**
+  * @brief  Display the info text window for some time.
+  * @param  text: text to be displayed
+  * @param  duration: duration to display in ms
+  * @retval None
+  */
+void displayInfo(const char* text, uint32_t duration)
+{
+	UG_TextboxSetText(&window_11, TXB_ID_0, text);
+	UG_WindowShow(&window_11);
+	UG_Update();
+	updateToScreen();
+	LL_mDelay(duration);
+	UG_WindowHide(&window_11);
+	fillFrameUGUI(WIND11_X_START, WIND11_Y_START, WIND11_X_START + WIND11_WIDTH - 1, WIND11_Y_START + WIND11_HEIGHT - 1, C_BLACK);
+	drawGrid();
+}
+
+/**
   * @brief  Take a full-screen screenshot and store it.
   * @param  None
   * @retval None
@@ -2432,7 +2472,7 @@ void captureScreenshot(void)
 	UINT bytesTfr;
 
 	if(readssinfo(&nScrnshots, &maxfilename) != 0){
-		printf("Screenshot failed\n");
+		displayInfo("Screenshot Failed!", 2000);
 		return;
 	}
 
@@ -2449,19 +2489,17 @@ void captureScreenshot(void)
 		f_close(&fp);
 
 		if(bytesTfr != BMP_FILE_SZ){
-			printf("Screenshot failed\n");
+			displayInfo("Screenshot Failed!", 2000);
 			return;
 		}
 
 		if(writessinfo(nScrnshots, maxfilename) != 0){
-			printf("Screenshot failed\n");
+			displayInfo("Screenshot Failed!", 2000);
 			return;
 		}
-
-		printf("Screenshot success\n");
 	}
 	else{
-		printf("No. of screenshots exceeded\n");
+		displayInfo("Screenshot Limit!", 2000);
 		return;
 	}
 
@@ -2534,22 +2572,22 @@ void displayScreenshot(uint16_t x)
 /**
   * @brief  Display the next older screenshot to the currently displayed one.
   * @param  None
-  * @retval None
+  * @retval 0=no older screenshots found, 1=older screenshots found
   */
-void displayOlderScreenshot(void)
+uint8_t displayOlderScreenshot(void)
 {
 	uint16_t x;
 
 	x = findPrevValidFile(currScrnshot);		/* older screenshots will have a lower filename */
 
 	if(x == 0){									/* no older screenshot found */
-		return;
+		return 0;
 	}
 
 	currScrnshot = x;
 	displayScreenshot(currScrnshot);
 
-	return;
+	return 1;
 }
 
 /**
