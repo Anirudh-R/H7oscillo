@@ -1,2 +1,2 @@
-bot.c:42:9:BOT_process	32	static
+bot.c:42:9:BOT_process	80	static
 bot.c:293:6:BOT_setCmdDone	0	static

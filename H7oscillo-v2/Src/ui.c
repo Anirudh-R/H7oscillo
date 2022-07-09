@@ -23,6 +23,10 @@ static void window_7_callback(UG_MESSAGE* msg);
 static void window_8_callback(UG_MESSAGE* msg);
 static void window_9_callback(UG_MESSAGE* msg);
 static void window_10_callback(UG_MESSAGE* msg);
+static uint16_t findNextValidFile(uint16_t x);
+static uint16_t findPrevValidFile(uint16_t x);
+static uint8_t readssinfo(uint8_t* nScrnshots, uint16_t* maxfilename);
+static uint8_t writessinfo(uint8_t nScrnshots, uint16_t maxfilename);
 
 /* uGUI related globals */
 UG_GUI gui;
@@ -126,6 +130,8 @@ static uint8_t cursorMode = CURSOR_MODE_OFF;
 static uint16_t cursorApos = CURSORA_SPLITCH1_INITPOS;
 static uint16_t cursorBpos = CURSORB_SPLITCH2_INITPOS;
 static uint8_t cursorField = CURSORFLD_NONE;			/* currently selected field in the cursor menu */
+
+static uint16_t currScrnshot = 0;						/* currently displayed screenshot */
 
 /* strings to store button & textbox texts */
 static char bufw1tb3[8] = "Trg:", bufw1tb4[6], bufw2tb0[6], bufw2tb1[6], bufw2tb2[8], bufw8tb0[9], bufw9btn2[6], bufw10btn1[8], bufw10btn2[8], bufw10tb4[8];
@@ -2411,4 +2417,283 @@ void clearRedBorder(void)
 	drawGrid();
 
 	return;
+}
+
+/**
+  * @brief  Take a full-screen screenshot and store it.
+  * @param  None
+  * @retval None
+  */
+void captureScreenshot(void)
+{
+	char filename[10];
+	uint8_t nScrnshots;
+	uint16_t maxfilename;
+	UINT bytesTfr;
+
+	if(readssinfo(&nScrnshots, &maxfilename) != 0){
+		printf("Screenshot failed\n");
+		return;
+	}
+
+	if(nScrnshots < MAX_SCRNSHOTS){
+		nScrnshots = nScrnshots + 1;
+		maxfilename = maxfilename + 1;
+
+		itoa(maxfilename, filename, 10);							/* name the files starting from "1.bmp" */
+		strcat(filename, ".bmp");
+
+		raw2bmp((uint8_t *)LCD_FRAME_BUFFER, LCD_WIDTH*LCD_HEIGHT, (uint8_t *)BMP_BUFFER);		/* convert to BMP format */
+		f_open(&fp, filename, FA_CREATE_ALWAYS | FA_WRITE);
+		f_write(&fp, (const void *)BMP_BUFFER, BMP_FILE_SZ, &bytesTfr);
+		f_close(&fp);
+
+		if(bytesTfr != BMP_FILE_SZ){
+			printf("Screenshot failed\n");
+			return;
+		}
+
+		if(writessinfo(nScrnshots, maxfilename) != 0){
+			printf("Screenshot failed\n");
+			return;
+		}
+
+		printf("Screenshot success\n");
+	}
+	else{
+		printf("No. of screenshots exceeded\n");
+		return;
+	}
+
+	return;
+}
+
+/**
+  * @brief  Delete the currently displayed screenshot.
+  * @param  None
+  * @retval None
+  */
+void deleteCurrScreenshot(void)
+{
+	char filename[10];
+	FRESULT fsres;
+	uint8_t nScrnshots = 0;
+	uint16_t maxfilename = 0;
+
+	itoa(currScrnshot, filename, 10);
+	strcat(filename, ".bmp");
+
+	fsres = f_unlink(filename);
+
+	if(fsres != FR_NO_FILE){
+		readssinfo(&nScrnshots, &maxfilename);
+
+		if(nScrnshots != 0){
+			nScrnshots = nScrnshots - 1;
+		}
+		if(currScrnshot == maxfilename){
+			maxfilename = findPrevValidFile(currScrnshot);
+		}
+
+		writessinfo(nScrnshots, maxfilename);
+	}
+
+	return;
+}
+
+/**
+  * @brief  Display x.bmp.
+  * @param  x: file to be displayed
+  * @retval None
+  */
+void displayScreenshot(uint16_t x)
+{
+	char filename[10];
+	FRESULT fsres;
+	UINT bytesTfr;
+
+	itoa(x, filename, 10);
+	strcat(filename, ".bmp");
+
+	fsres = f_open(&fp, filename, FA_READ);
+
+	if(fsres != FR_NO_FILE){
+		f_read(&fp, (void *)BMP_BUFFER, BMP_FILE_SZ, &bytesTfr);
+		f_close(&fp);
+
+		if(bytesTfr != BMP_FILE_SZ){
+			return;
+		}
+
+		bmp2raw((const uint8_t *)BMP_BUFFER, LCD_WIDTH*LCD_HEIGHT, (uint8_t *)LCD_FRAME_BUFFER);
+	}
+
+	return;
+}
+
+/**
+  * @brief  Display the next older screenshot to the currently displayed one.
+  * @param  None
+  * @retval None
+  */
+void displayOlderScreenshot(void)
+{
+	uint16_t x;
+
+	x = findPrevValidFile(currScrnshot);		/* older screenshots will have a lower filename */
+
+	if(x == 0){									/* no older screenshot found */
+		return;
+	}
+
+	currScrnshot = x;
+	displayScreenshot(currScrnshot);
+
+	return;
+}
+
+/**
+  * @brief  Display the next recent screenshot to the currently displayed one.
+  * @param  None
+  * @retval 0=no newer screenshots found, 1=newer screenshots found
+  */
+uint8_t displayNewerScreenshot(void)
+{
+	uint16_t x;
+
+	x = findNextValidFile(currScrnshot);		/* newer screenshots will have a higher filename */
+
+	if(x == 0){									/* no newer screenshot found */
+		return 0;
+	}
+
+	currScrnshot = x;
+	displayScreenshot(currScrnshot);
+
+	return 1;
+}
+
+/**
+  * @brief  Enter screenshot view mode.
+  * @param  None
+  * @retval 0=no screenshots found, 1=screenshots found
+  */
+uint8_t enterScrnshtViewMode(void)
+{
+	uint8_t nScrnshots;
+	uint16_t maxfilename = 0;
+
+	readssinfo(&nScrnshots, &maxfilename);
+
+	if(maxfilename == 0){						/* no screenshots found */
+		return 0;
+	}
+
+	currScrnshot = maxfilename;
+	displayScreenshot(currScrnshot);
+
+	return 1;
+}
+
+/**
+  * @brief  Find the next valid file to x.bmp.
+  * @param  x: find file with name greater than x
+  * @retval Next filename or 0 if not found
+  */
+static uint16_t findNextValidFile(uint16_t x)
+{
+	char filename[10];
+	uint8_t nScrnshots;
+	uint16_t maxfilename = 0, i;
+
+	readssinfo(&nScrnshots, &maxfilename);
+
+	for(i = x + 1; i <= maxfilename; i++){
+		itoa(i, filename, 10);
+		strcat(filename, ".bmp");
+
+		if(f_open(&fp, filename, FA_OPEN_EXISTING) != FR_NO_FILE){	/* i.bmp exists */
+			f_close(&fp);
+			return i;
+		}
+	}
+
+	return 0;
+}
+
+/**
+  * @brief  Find the previous valid file to x.bmp.
+  * @param  x: find file with name lesser than x
+  * @retval Previous filename or 0 if not found
+  */
+static uint16_t findPrevValidFile(uint16_t x)
+{
+	char filename[10];
+	uint16_t i;
+
+	if(x == 0){
+		return 0;
+	}
+
+	for(i = x - 1; i >= 1; i--){
+		itoa(i, filename, 10);
+		strcat(filename, ".bmp");
+
+		if(f_open(&fp, filename, FA_OPEN_EXISTING) != FR_NO_FILE){	/* i.bmp exists */
+			f_close(&fp);
+			return i;
+		}
+	}
+
+	return 0;
+}
+
+/**
+  * @brief  Read the stored screenshots info.
+  * @param  nScrnshots: pointer to number of screenshots
+  * @param  maxfilename: pointer to max filename
+  * @retval success=0, failure=1
+  */
+static uint8_t readssinfo(uint8_t* nScrnshots, uint16_t* maxfilename)
+{
+	uint8_t fdata[3];
+	UINT bytesTfr;
+
+	f_open(&fp, "ssinfo", FA_READ);
+	f_read(&fp, fdata, 3, &bytesTfr);
+	f_close(&fp);
+
+	if(bytesTfr != 3){
+		return 1;
+	}
+
+	*nScrnshots = fdata[0];
+	*maxfilename = fdata[1] << 8 | fdata[2];
+
+	return 0;
+}
+
+/**
+  * @brief  Update info in the screenshot info file.
+  * @param  nScrnshots: number of screenshots
+  * @param  maxfilename: max filename
+  * @retval success=0, failure=1
+  */
+static uint8_t writessinfo(uint8_t nScrnshots, uint16_t maxfilename)
+{
+	uint8_t fdata[3];
+	UINT bytesTfr;
+
+	fdata[0] = nScrnshots;
+	fdata[1] = maxfilename >> 8;
+	fdata[2] = maxfilename;
+	f_open(&fp, "ssinfo", FA_WRITE);
+	f_write(&fp, fdata, 3, &bytesTfr);
+	f_close(&fp);
+
+	if(bytesTfr != 3){
+		return 1;
+	}
+
+	return 0;
 }

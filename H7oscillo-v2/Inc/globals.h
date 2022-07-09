@@ -158,6 +158,8 @@ extern uint8_t mathOp;
 extern uint8_t mathVscale;
 extern int16_t mathVoff;
 
+extern uint8_t scrnshtViewMode;
+
 extern FATFS fatFs;
 extern FIL fp;
 extern const MKFS_PARM mkfsParam;

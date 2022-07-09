@@ -28,7 +28,6 @@ int main(void)
 	uint8_t origtscale = 0, oldtscale = 0;
 	int32_t	i, j, temp;
 
-
 	/* Enable the CPU Cache */
 	CPU_CACHE_Enable();
 	/* Configure the system clock to 200 MHz */
@@ -43,6 +42,7 @@ int main(void)
 	Timers_init();
 	LEDs_Buttons_init();
 	I2C_TS_init();
+	TS_init();
 
 	/* clear the screen */
 	clearScreen();
@@ -73,18 +73,15 @@ int main(void)
 	QSPI_flash_init();
 
 	/* if user button is pushed during reset, format the drive with FAT */
-	if(readUserBtnState()){
+	if(readUserBtnState() == USERBTN_STATE_PRESSED){
 		uint8_t* workBuf = (uint8_t *)SCRATCH_BUFFER3;		/* working buffer for format process */
-		uint8_t nScrnshots = 0;
+		uint8_t fdata[3] = {0, 0, 0};						/* 1st byte is no. of screenshots, next 2 is max file name */
 		UINT bytesTfr;
 
 		fsres = f_mkfs("", &mkfsParam, workBuf, SECTOR_SIZE);
 		if(fsres != FR_OK){
-			printf("Flash formatting failed, error: %d.\n", fsres);
+			printf("Flash formatting failed, error: %d\n", fsres);
 			hangFirmware();
-		}
-		else{
-			printf("Successfully formatted flash.\n");
 		}
 
 		/* force mount the FAT volume */
@@ -94,15 +91,18 @@ int main(void)
 			hangFirmware();
 		}
 
-		/* create file which stores the no. of screenshots saved */
+		/* create file which stores the no. of screenshots saved and max file name */
 		f_open(&fp, "ssinfo", FA_CREATE_ALWAYS | FA_WRITE);
-		fsres = f_write(&fp, &nScrnshots, 1, &bytesTfr);			/* 0 screenshots initially */
+		f_write(&fp, fdata, 3, &bytesTfr);					/* 0 screenshots initially */
 		f_close(&fp);
 
-		if(bytesTfr != 1){
-			printf("ssinfo creation failed: %d.\n", fsres);
+		if(bytesTfr != 3){
+			printf("ssinfo file creation failed\n");
 			hangFirmware();
 		}
+
+		/* wait for button to be released to prevent accidental screenshot */
+		while(readUserBtnState() == USERBTN_STATE_PRESSED);
 	}
 	else{
 		/* force mount the FAT volume */
@@ -371,12 +371,53 @@ int main(void)
 		if(TS_read_pending){
 			/* Get touch inputs */
 			if(TS_DetectNumTouches() > 0){
-				/* currently, only single touch supported */
-				TS_GetXY(&TS_Y, &TS_X);		/* X & Y coords are swapped and passed, since TS physical orientation is reverse */
+				TS_GetXY(&TS_Y, &TS_X);			/* X & Y coords are swapped and passed, since TS physical orientation is reverse */
+				TS_ProcessTouch(TS_X, TS_Y);
 				UG_TouchUpdate(TS_X, TS_Y, TOUCH_STATE_PRESSED);
 			}
 			else{
+				TS_ReleaseTouch();
 				UG_TouchUpdate(-1, -1, TOUCH_STATE_RELEASED);
+
+				/* check if any gesture was performed */
+				uint8_t gestID, scrnshtFound;
+
+				gestID = TS_GetGesture();
+				if(gestID == GEST_ID_SWIPE_LEFT){			/* display older scrnshts or enter scrnsht view mode */
+					if(!scrnshtViewMode){
+						scrnshtFound = enterScrnshtViewMode();
+						if(scrnshtFound){
+							scrnshtViewMode = 1;
+						}
+					}
+					else{
+						displayOlderScreenshot();
+					}
+				}
+				else if(gestID == GEST_ID_SWIPE_RIGHT){		/* display more recent scrnshts or exit scrnsht view mode */
+					if(scrnshtViewMode){
+						scrnshtFound = displayNewerScreenshot();
+						if(!scrnshtFound){
+							ADC_Ch1_reinit();				/* reinit ADC DMA since it may have overflowed */
+							ADC_Ch2_reinit();
+							scrnshtViewMode = 0;
+						}
+					}
+				}
+				else if(gestID == GEST_ID_SWIPE_DOWN){		/* delete a screenshot */
+					if(scrnshtViewMode){
+						deleteCurrScreenshot();
+						scrnshtFound = displayNewerScreenshot();
+						if(!scrnshtFound){
+							ADC_Ch1_reinit();
+							ADC_Ch2_reinit();
+							scrnshtViewMode = 0;
+						}
+					}
+				}
+				else if(gestID == GEST_ID_SWIPE_UP){		/* exit scrnsht view mode */
+					scrnshtViewMode = 0;
+				}
 			}
 
 			/* uGUI can show only one window at a time. Switch between them to display multiple at the same time. */
@@ -415,52 +456,13 @@ int main(void)
 		UG_Update();
 
 		/* Update screen */
-		updateToScreen();
+		if(!scrnshtViewMode){
+			updateToScreen();
+		}
 
 		/* take screenshot */
-		if(readUserBtnState()){
-			char filename[8];
-			uint8_t nScrnshots;
-			UINT bytesTfr;
-
-			f_open(&fp, "ssinfo", FA_READ);									/* read the current no. of screenshots saved */
-			f_read(&fp, &nScrnshots, 1, &bytesTfr);
-			f_close(&fp);
-
-			if(bytesTfr != 1){
-				printf("Screenshot failed\n");
-			}
-			else{
-				if(nScrnshots < MAX_SCRNSHOTS){
-					nScrnshots = nScrnshots + 1;
-					itoa(nScrnshots, filename, 10);								/* name the files starting from "1.bmp" */
-					strcat(filename, ".bmp");
-
-					raw2bmp((uint8_t *)LCD_FRAME_BUFFER, LCD_WIDTH*LCD_HEIGHT, (uint8_t *)BMP_BUFFER);		/* convert to BMP format */
-					f_open(&fp, filename, FA_CREATE_ALWAYS | FA_WRITE);
-					f_write(&fp, (const void *)BMP_BUFFER, BMP_FILE_SZ, &bytesTfr);
-					f_close(&fp);
-
-					if(bytesTfr != BMP_FILE_SZ){
-						printf("Screenshot failed\n");
-					}
-					else{
-						f_open(&fp, "ssinfo", FA_WRITE);						/* update no. of screenshots */
-						f_write(&fp, &nScrnshots, 1, &bytesTfr);
-						f_close(&fp);
-
-						if(bytesTfr != 1){
-							printf("Screenshot failed\n");
-						}
-						else{
-							printf("Screenshot success\n");
-						}
-					}
-				}
-				else{
-					printf("No. of screenshots exceeded\n");
-				}
-			}
+		if(!scrnshtViewMode && readUserBtnState() == USERBTN_STATE_PRESSED){
+			captureScreenshot();
 		}
 	}
 }

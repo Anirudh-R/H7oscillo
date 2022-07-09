@@ -71,3 +71,24 @@ uint32_t raw2bmp(const uint8_t* raw, uint32_t npixels, uint8_t* bmp)
 
 	return i;
 }
+
+/**
+  * @brief  Convert BMP image to raw pixel data.
+  * @param  bmp: point to input BMP image
+  * @param  npixels: no. of pixels in the image
+  * @param  raw: pointer to store pixel data in RGB565 format
+  * @retval None
+  */
+void bmp2raw(const uint8_t* bmp, uint32_t npixels, uint8_t* raw)
+{
+	uint32_t totalHeaderSz, i;
+
+	totalHeaderSz = BITMAP_FILEHEADER_LEN + DIB_HEADER_LEN + BIT_MASK_LEN;
+
+	/* take only the image pixel data */
+	for(i = 0; i < 2*npixels; i++){
+		raw[i] = bmp[totalHeaderSz + i];
+	}
+
+	return;
+}

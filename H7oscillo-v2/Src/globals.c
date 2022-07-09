@@ -67,6 +67,8 @@ uint8_t mathOp = MATH_OP_NONE;
 uint8_t mathVscale = MATHVSCALE_INITVAL;
 int16_t mathVoff = MATHVOFF_INITVAL;
 
+uint8_t scrnshtViewMode = 0;
+
 /* FatFs */
 FATFS fatFs;       					/* file system object */
 FIL fp;            					/* file object */

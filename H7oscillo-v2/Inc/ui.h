@@ -203,5 +203,11 @@ uint8_t getCurrCursorField(void);
 void initFields(void);
 void drawRedBorder(void);
 void clearRedBorder(void);
+void captureScreenshot(void);
+void deleteCurrScreenshot(void);
+void displayScreenshot(uint16_t x);
+void displayOlderScreenshot(void);
+uint8_t displayNewerScreenshot(void);
+uint8_t enterScrnshtViewMode(void);
 
 #endif /* __UI_H */

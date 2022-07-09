@@ -22,5 +22,6 @@
 
 /* External function declarations */
 extern uint32_t raw2bmp(const uint8_t* raw, uint32_t npixels, uint8_t* bmp);
+extern void bmp2raw(const uint8_t* bmp, uint32_t npixels, uint8_t* raw);
 
 #endif /* __BMP_H */

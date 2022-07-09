@@ -75,6 +75,9 @@
                                                 } while(0)
 #define readUserBtnState()						(LL_GPIO_ReadInputPort(GPIOI) & LL_GPIO_PIN_11)
 
+#define USERBTN_STATE_PRESSED					(LL_GPIO_PIN_11)
+#define USERBTN_STATE_RELEASED					(0)
+
 /* Quadrature encoder */
 #define TIM_QE                         			TIM8
 #define TIM_QE_CLK_ENABLE()            			LL_APB2_GRP1_EnableClock(LL_APB2_GRP1_PERIPH_TIM8)

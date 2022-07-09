@@ -1,7 +1,4 @@
-usb_core.c:119:13:USB_config_bulkEPs	4	static
-usb_core.c:418:16:USB_IN_transfer	20	static
-usb_core.c:500:13:USB_BulkIN_stall	0	static
-usb_core.c:520:13:USB_BulkOUT_stall	0	static
-usb_core.c:536:13:USB_handle_error	0	static
-usb_core.c:37:6:USB_init	32	static
+usb_core.c:119:13:USB_config_bulkEPs	16	static
+usb_core.c:418:16:USB_IN_transfer	32	static
+usb_core.c:37:6:USB_init	40	static
 usb_core.c:140:6:USB_handle_event	88	static

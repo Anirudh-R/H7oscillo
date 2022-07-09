@@ -1,1 +1,2 @@
-bmp.c:48:10:raw2bmp	8	static
+bmp.c:48:10:raw2bmp	28	static
+bmp.c:82:6:bmp2raw	24	static
