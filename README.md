@@ -7,7 +7,7 @@ Features:
 3) Oscilloscope Channel 1 is Arduino-connector A0, Channel 2 is Arduino-connector A1. 
 4) Single quadrature encoder is used to change various oscilloscope parameters. Data1 output of the quadrature encoder is connected to Arduino connector D1, and Data2 output is connected to Arduino connector D0. The push button output of the quadrature encoder, which is used to select a particular field for changing, is connected to Arduino connector D2.
 5) The touchscreen functionality is used to select menus, etc.
-6) The GUI for the oscilloscope is built using the µGUI v0.31 embedded graphics library - https://github.com/achimdoebler/UGUI. 
+6) The GUI for the oscilloscope is built using the µGUI v0.31 embedded graphics library: https://github.com/achimdoebler/UGUI. 
 7) Uses 8 bits per sample. The oscilloscope uses a sample memory of 1.4K samples, and sample rates ranging from 48KHz to 2.22MHz depending on the time scale.
 8) The input signal voltage range is 0 - 3.3V (STM32 inbuilt ADC).
 9) Three trigger modes: Auto, Single, Normal. Sensitive on Rising, Falling or both the edges.
@@ -22,7 +22,7 @@ Features:
 18) Screenshots can be taken by pressing the on-board user button (Blue). The saved screenshots can be browsed by swiping left/right gestures. Down swipe 
 deletes the screenshot and Up swipe exits the screenshot display mode.
 19) Pressing the user button (Blue) when resetting the board reformats the QSPI flash and all the stored screenshots will be lost.
-
+‎
 
 Two versions are provided:
 
