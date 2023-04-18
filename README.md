@@ -22,3 +22,12 @@ Features:
 18) Screenshots can be taken by pressing the on-board user button (Blue). The saved screenshots can be browsed by swiping left/right gestures. Down swipe 
 deletes the screenshot and Up swipe exits the screenshot display mode.
 19) Pressing the user button (Blue) when resetting the board reformats the QSPI flash and all the stored screenshots will be lost.
+
+
+Two versions are provided:
+
+* H7oscillo-v1: H7oscillo basic version
+Basic version of the H7oscillo oscilloscope, with measurements, triggering, selectable display modes, FFT, math operations, dV & dT cursors, and captured waveform zoom-in/zoom-out features.
+
+* H7oscillo-v2: H7oscillo full-featured version
+In addition to the features of the previous release, added screenshot capture functionality and provided USB connectivity to the board to access the stored screenshots from host PC.
