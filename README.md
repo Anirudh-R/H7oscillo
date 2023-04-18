@@ -28,8 +28,8 @@ deletes the screenshot and Up swipe exits the screenshot display mode.
 
 Two versions are provided:
 
-* H7oscillo-v1: H7oscillo basic version
+* H7oscillo-v1: H7oscillo basic version  
 Basic version of the H7oscillo oscilloscope, with measurements, triggering, selectable display modes, FFT, math operations, dV & dT cursors, and captured waveform zoom-in/zoom-out features.
 
-* H7oscillo-v2: H7oscillo full-featured version
+* H7oscillo-v2: H7oscillo full-featured version  
 In addition to the features of the previous release, added screenshot capture functionality and provided USB connectivity to the board to access the stored screenshots from host PC.
