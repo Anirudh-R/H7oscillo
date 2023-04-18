@@ -24,6 +24,7 @@ deletes the screenshot and Up swipe exits the screenshot display mode.
 19) Pressing the user button (Blue) when resetting the board reformats the QSPI flash and all the stored screenshots will be lost.
 ‎
 
+‎
 Two versions are provided:
 
 * H7oscillo-v1: H7oscillo basic version
