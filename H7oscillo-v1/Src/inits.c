@@ -116,7 +116,7 @@ void TimTS_init(void)
   */
 void TimMeas_init(void)
 {
-	/* Configure TIM_MEAS for 20Hz frequency */
+	/* Configure TIM_MEAS for 4Hz frequency */
 	TIM_MEAS_CLK_ENABLE();
 	TIM_MEAS->CR1 &= ~(uint32_t)0x01;	/* disable timer */
 	TIM_MEAS->PSC  = 10000 - 1;			/* counter_clk = timer_inp_clk/10000 = 100MHz/10000 = 10KHz */
